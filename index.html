@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lali Gun House — Arms License Consultancy, Barnala, Punjab | Est. 2019</title>
-  <meta name="description" content="Lali Gun House — Professional Arms License Consultancy in Barnala, Punjab. New license filing, renewal, documentation, police verification, transfer & expert consultation since 2019." />
-  <meta property="og:title" content="Lali Gun House — Arms License Consultancy, Barnala, Punjab" />
-  <meta property="og:description" content="Professional Arms License Consultancy — New license, renewal, documentation, police verification & transfer. Opposite Barnala Kacheri, Handiaya Road." />
+  <title>Lali Gun House — Arms, Ammunition &amp; Accessories | Barnala, Punjab</title>
+  <meta name="description" content="Lali Gun House — Arms, Ammunition & Accessories in Barnala, Punjab. Expert consultancy, new license filing, renewal, documentation, police verification, transfer since 2019." />
+  <meta property="og:title" content="Lali Gun House — Arms, Ammunition & Accessories, Barnala" />
+  <meta property="og:description" content="Premium arms & ammunition, shooting accessories, and licensed consultancy. Opposite Barnala Kacheri, Handiaya Road." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://laligunhouse.com" />
   <link rel="canonical" href="https://laligunhouse.com" />
@@ -19,7 +19,6 @@
        CSS CUSTOM PROPERTIES — DESIGN SYSTEM
        ============================================ */
     :root {
-      /* Colors */
       --cream: #EFE7D3;
       --cream-light: #F5F0E3;
       --cream-dark: #E5DCC7;
@@ -33,7 +32,6 @@
       --crimson-hover: #9A3A2A;
       --white-warm: #FFFAF0;
 
-      /* Glass System — ONE recipe, used everywhere */
       --glass-bg: rgba(255, 250, 240, 0.3);
       --glass-bg-hover: rgba(255, 250, 240, 0.45);
       --glass-border: rgba(255, 255, 240, 0.6);
@@ -43,12 +41,10 @@
       --glass-blur: blur(16px) saturate(160%);
       --glass-transition: all 0.25s cubic-bezier(0.22, 1.2, 0.36, 1);
 
-      /* Typography */
       --font-display: 'Fraunces', serif;
       --font-body: 'Inter', sans-serif;
       --font-mono: 'Space Mono', monospace;
 
-      /* Spacing */
       --section-pad: clamp(60px, 10vw, 120px);
       --container-max: 1200px;
       --radius-sm: 8px;
@@ -62,20 +58,16 @@
     /* ============================================
        RESET & BASE
        ============================================ */
-    *,
-    *::before,
-    *::after {
+    *, *::before, *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
     html {
       scroll-behavior: smooth;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
-
     body {
       font-family: var(--font-body);
       background: var(--cream);
@@ -84,8 +76,6 @@
       overflow-x: hidden;
       position: relative;
     }
-
-    /* Animated background grain + drifting gradients */
     body::before {
       content: '';
       position: fixed;
@@ -99,7 +89,6 @@
       background-size: 256px 256px;
       opacity: 0.5;
     }
-
     body::after {
       content: '';
       position: fixed;
@@ -114,22 +103,12 @@
         radial-gradient(ellipse 60% 80% at 80% 70%, rgba(124, 46, 33, 0.04), transparent);
       animation: driftGradients 30s ease-in-out infinite alternate;
     }
-
     @keyframes driftGradients {
-      0% {
-        transform: translate(0, 0) scale(1);
-      }
-      50% {
-        transform: translate(-20px, 15px) scale(1.05);
-      }
-      100% {
-        transform: translate(15px, -10px) scale(0.98);
-      }
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-20px, 15px) scale(1.05); }
+      100% { transform: translate(15px, -10px) scale(0.98); }
     }
 
-    /* ============================================
-       UTILITY: GLASS COMPONENT (THE recipe)
-       ============================================ */
     .glass {
       background: var(--glass-bg);
       backdrop-filter: var(--glass-blur);
@@ -140,8 +119,6 @@
       position: relative;
       overflow: hidden;
     }
-
-    /* Specular sheen overlay */
     .glass::before {
       content: '';
       position: absolute;
@@ -161,43 +138,27 @@
       pointer-events: none;
       z-index: 1;
     }
-
-    .glass:hover::before {
-      transform: translateX(40%);
-    }
-
+    .glass:hover::before { transform: translateX(40%); }
     .glass:hover {
       background: var(--glass-bg-hover);
       border-color: var(--glass-border-hover);
       box-shadow: var(--glass-shadow-hover);
       transform: scale(1.03) translateY(-2px);
     }
+    .glass:active { transform: scale(0.96); transition-duration: 0.1s; }
 
-    .glass:active {
-      transform: scale(0.96);
-      transition-duration: 0.1s;
-    }
-
-    /* ============================================
-       TYPOGRAPHY
-       ============================================ */
-    h1,
-    h2,
-    h3,
-    h4 {
+    h1, h2, h3, h4 {
       font-family: var(--font-display);
       font-weight: 700;
       line-height: 1.2;
       color: var(--ink);
     }
-
     .mono {
       font-family: var(--font-mono);
       font-size: 0.75rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
     }
-
     .section-eyebrow {
       font-family: var(--font-mono);
       font-size: 0.7rem;
@@ -209,14 +170,12 @@
       align-items: center;
       gap: 0.75rem;
     }
-
     .section-eyebrow::before {
       content: '';
       width: 2rem;
       height: 1px;
       background: var(--brass);
     }
-
     .container {
       max-width: var(--container-max);
       margin: 0 auto;
@@ -224,13 +183,8 @@
       position: relative;
       z-index: 1;
     }
+    a { color: inherit; text-decoration: none; }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    /* Section divider — brass line draw animation */
     .section-divider {
       width: 0;
       height: 1px;
@@ -238,14 +192,8 @@
       margin: 0 auto;
       transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
     }
+    .section-divider.visible { width: 80%; }
 
-    .section-divider.visible {
-      width: 80%;
-    }
-
-    /* ============================================
-       SCROLL REVEAL SYSTEM
-       ============================================ */
     .reveal {
       opacity: 0;
       transform: translateY(30px) rotateX(4deg);
@@ -254,49 +202,26 @@
         transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
         filter 0.8s cubic-bezier(0.22, 1, 0.36, 1);
     }
-
     .reveal.visible {
       opacity: 1;
       transform: translateY(0) rotateX(0deg);
       filter: blur(0);
     }
-
-    .reveal-delay-1 {
-      transition-delay: 0.1s;
-    }
-    .reveal-delay-2 {
-      transition-delay: 0.2s;
-    }
-    .reveal-delay-3 {
-      transition-delay: 0.3s;
-    }
-    .reveal-delay-4 {
-      transition-delay: 0.4s;
-    }
-    .reveal-delay-5 {
-      transition-delay: 0.5s;
-    }
-    .reveal-delay-6 {
-      transition-delay: 0.6s;
-    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+    .reveal-delay-6 { transition-delay: 0.6s; }
 
     @media (prefers-reduced-motion: reduce) {
-      .reveal {
-        opacity: 1;
-        transform: none;
-        filter: none;
-        transition: none;
-      }
-      .section-divider {
-        width: 80% !important;
-      }
-      body::after {
-        animation: none;
-      }
+      .reveal { opacity: 1; transform: none; filter: none; transition: none; }
+      .section-divider { width: 80% !important; }
+      body::after { animation: none; }
     }
 
     /* ============================================
-       NAVBAR (Fixed with proper mobile menu)
+       NAVBAR
        ============================================ */
     .navbar {
       position: fixed;
@@ -309,7 +234,6 @@
       display: flex;
       align-items: center;
     }
-
     .navbar::before {
       content: '';
       position: absolute;
@@ -317,28 +241,24 @@
       background: rgba(239, 231, 211, 0.6);
       backdrop-filter: blur(12px) saturate(140%);
       -webkit-backdrop-filter: blur(12px) saturate(140%);
-      border-bottom: 1px solid var(--glass-border-subtle);
+      border-bottom: 1px solid rgba(255,255,240,0.3);
       transition: all var(--glass-transition);
     }
-
     .navbar.scrolled {
       height: var(--nav-height-scrolled);
     }
-
     .navbar.scrolled::before {
       background: rgba(239, 231, 211, 0.85);
       backdrop-filter: blur(20px) saturate(180%);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
       box-shadow: 0 2px 20px var(--glass-shadow);
     }
-
     .navbar .container {
       display: flex;
       align-items: center;
       justify-content: space-between;
       width: 100%;
     }
-
     .nav-logo {
       display: flex;
       align-items: center;
@@ -346,22 +266,16 @@
       text-decoration: none;
       z-index: 1001;
     }
-
     .nav-logo svg {
       width: 44px;
       height: 44px;
       transition: transform 0.4s ease;
     }
-
-    .navbar.scrolled .nav-logo svg {
-      transform: scale(0.85);
-    }
-
+    .navbar.scrolled .nav-logo svg { transform: scale(0.85); }
     .nav-logo-text {
       display: flex;
       flex-direction: column;
     }
-
     .nav-logo-name {
       font-family: var(--font-display);
       font-weight: 800;
@@ -369,7 +283,6 @@
       color: var(--ink);
       line-height: 1.2;
     }
-
     .nav-logo-sub {
       font-family: var(--font-mono);
       font-size: 0.5rem;
@@ -377,7 +290,6 @@
       text-transform: uppercase;
       color: var(--brass);
     }
-
     .nav-links {
       display: flex;
       align-items: center;
@@ -386,7 +298,6 @@
       position: relative;
       z-index: 10;
     }
-
     .nav-links a {
       font-family: var(--font-body);
       font-size: 0.85rem;
@@ -397,7 +308,6 @@
       padding: 0.25rem 0;
       transition: color 0.3s ease;
     }
-
     .nav-links a::after {
       content: '';
       position: absolute;
@@ -408,15 +318,9 @@
       background: var(--brass);
       transition: width 0.3s ease;
     }
-
     .nav-links a:hover::after,
-    .nav-links a:focus::after {
-      width: 100%;
-    }
-
-    .nav-links a:hover {
-      color: var(--brass);
-    }
+    .nav-links a:focus::after { width: 100%; }
+    .nav-links a:hover { color: var(--brass); }
 
     .nav-cta {
       display: inline-flex;
@@ -436,7 +340,6 @@
       overflow: hidden;
       transition: var(--glass-transition);
     }
-
     .nav-cta::before {
       content: '';
       position: absolute;
@@ -455,22 +358,14 @@
       transition: transform 0.6s ease;
       pointer-events: none;
     }
-
     .nav-cta:hover {
       background: var(--crimson-hover);
       transform: scale(1.05) translateY(-1px);
       box-shadow: 0 4px 16px rgba(124, 46, 33, 0.3);
     }
+    .nav-cta:hover::before { transform: translateX(40%); }
+    .nav-cta:active { transform: scale(0.96); }
 
-    .nav-cta:hover::before {
-      transform: translateX(40%);
-    }
-
-    .nav-cta:active {
-      transform: scale(0.96);
-    }
-
-    /* Hamburger - from untitled 1.html */
     .nav-hamburger {
       display: none;
       flex-direction: column;
@@ -482,7 +377,6 @@
       background: none;
       border: none;
     }
-
     .nav-hamburger span {
       display: block;
       width: 24px;
@@ -492,21 +386,10 @@
       transition: all 0.3s ease;
       transform-origin: center;
     }
+    .nav-hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .nav-hamburger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
-    .nav-hamburger.active span:nth-child(1) {
-      transform: rotate(45deg) translate(5px, 5px);
-    }
-
-    .nav-hamburger.active span:nth-child(2) {
-      opacity: 0;
-      transform: scaleX(0);
-    }
-
-    .nav-hamburger.active span:nth-child(3) {
-      transform: rotate(-45deg) translate(5px, -5px);
-    }
-
-    /* Mobile nav - from untitled 1.html */
     .mobile-nav {
       position: fixed;
       top: 0;
@@ -524,11 +407,7 @@
       border-left: 1px solid var(--glass-border);
       box-shadow: -10px 0 40px rgba(0, 0, 0, 0.1);
     }
-
-    .mobile-nav.open {
-      right: 0;
-    }
-
+    .mobile-nav.open { right: 0; }
     .mobile-nav-overlay {
       position: fixed;
       inset: 0;
@@ -539,19 +418,16 @@
       pointer-events: none;
       transition: opacity var(--glass-transition);
     }
-
     .mobile-nav-overlay.open {
       opacity: 1;
       pointer-events: all;
     }
-
     .mobile-nav ul {
       list-style: none;
       display: flex;
       flex-direction: column;
       gap: 28px;
     }
-
     .mobile-nav ul a {
       font-family: var(--font-display);
       font-size: 1.8rem;
@@ -562,25 +438,14 @@
       opacity: 0;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
-
     .mobile-nav.open ul a {
       transform: translateX(0);
       opacity: 1;
     }
-
-    .mobile-nav.open ul li:nth-child(1) a {
-      transition-delay: 0.1s;
-    }
-    .mobile-nav.open ul li:nth-child(2) a {
-      transition-delay: 0.15s;
-    }
-    .mobile-nav.open ul li:nth-child(3) a {
-      transition-delay: 0.2s;
-    }
-    .mobile-nav.open ul li:nth-child(4) a {
-      transition-delay: 0.25s;
-    }
-
+    .mobile-nav.open ul li:nth-child(1) a { transition-delay: 0.1s; }
+    .mobile-nav.open ul li:nth-child(2) a { transition-delay: 0.15s; }
+    .mobile-nav.open ul li:nth-child(3) a { transition-delay: 0.2s; }
+    .mobile-nav.open ul li:nth-child(4) a { transition-delay: 0.25s; }
     .mobile-nav .mobile-cta {
       margin-top: 40px;
       display: flex;
@@ -590,12 +455,10 @@
       opacity: 0;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
     }
-
     .mobile-nav.open .mobile-cta {
       transform: translateY(0);
       opacity: 1;
     }
-
     .mobile-nav .mobile-cta .btn {
       display: inline-flex;
       align-items: center;
@@ -615,24 +478,20 @@
       text-decoration: none;
       width: 100%;
     }
-
     .mobile-nav .mobile-cta .btn:focus-visible {
       outline: 2px solid var(--brass);
       outline-offset: 3px;
     }
-
     .mobile-nav .mobile-cta .btn-primary {
       background: var(--crimson);
       color: var(--white-warm);
       box-shadow: 0 4px 16px rgba(124, 46, 33, 0.3);
     }
-
     .mobile-nav .mobile-cta .btn-primary:hover {
       background: var(--crimson-hover);
       box-shadow: 0 6px 24px rgba(124, 46, 33, 0.4);
       transform: translateY(-1px);
     }
-
     .mobile-nav .mobile-cta .btn-glass {
       background: rgba(239, 231, 211, 0.5);
       backdrop-filter: blur(12px) saturate(150%);
@@ -641,27 +500,19 @@
       border: 1px solid var(--glass-border);
       box-shadow: 0 2px 12px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.4);
     }
-
     .mobile-nav .mobile-cta .btn-glass:hover {
       background: rgba(239, 231, 211, 0.7);
       box-shadow: 0 4px 20px var(--glass-shadow-hover), inset 0 1px 0 rgba(255, 255, 255, 0.5);
       transform: translateY(-1px);
     }
-
     @media (max-width: 768px) {
-      .nav-links {
-        display: none;
-      }
-      .nav-cta {
-        display: none;
-      }
-      .nav-hamburger {
-        display: flex;
-      }
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .nav-hamburger { display: flex; }
     }
 
     /* ============================================
-       HERO SECTION
+       HERO
        ============================================ */
     .hero {
       min-height: 100vh;
@@ -672,18 +523,13 @@
       position: relative;
       z-index: 1;
     }
-
     .hero .container {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 4rem;
       align-items: center;
     }
-
-    .hero-content {
-      max-width: 560px;
-    }
-
+    .hero-content { max-width: 560px; }
     .hero-file-ref {
       font-family: var(--font-mono);
       font-size: 0.65rem;
@@ -694,7 +540,6 @@
       opacity: 0;
       animation: fadeSlideUp 0.8s 0.5s forwards;
     }
-
     .hero-heading {
       font-family: var(--font-display);
       font-size: clamp(2.2rem, 5vw, 3.6rem);
@@ -703,40 +548,24 @@
       margin-bottom: 1.5rem;
       color: var(--ink);
     }
-
     .hero-heading .line {
       display: block;
       overflow: hidden;
     }
-
     .hero-heading .line-inner {
       display: block;
       transform: translateY(110%);
       animation: lineReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
-
-    .hero-heading .line:nth-child(1) .line-inner {
-      animation-delay: 0.6s;
-    }
-    .hero-heading .line:nth-child(2) .line-inner {
-      animation-delay: 0.75s;
-    }
-    .hero-heading .line:nth-child(3) .line-inner {
-      animation-delay: 0.9s;
-    }
-
-    @keyframes lineReveal {
-      to {
-        transform: translateY(0);
-      }
-    }
-
+    .hero-heading .line:nth-child(1) .line-inner { animation-delay: 0.6s; }
+    .hero-heading .line:nth-child(2) .line-inner { animation-delay: 0.75s; }
+    .hero-heading .line:nth-child(3) .line-inner { animation-delay: 0.9s; }
+    @keyframes lineReveal { to { transform: translateY(0); } }
     .hero-heading .accent {
       color: var(--crimson);
       font-style: italic;
       position: relative;
     }
-
     .hero-heading .accent::after {
       content: '';
       position: absolute;
@@ -747,13 +576,7 @@
       background: var(--brass);
       animation: underlineDraw 0.6s 1.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
-
-    @keyframes underlineDraw {
-      to {
-        width: 100%;
-      }
-    }
-
+    @keyframes underlineDraw { to { width: 100%; } }
     .hero-sub {
       font-size: 1rem;
       color: var(--ink-muted);
@@ -762,18 +585,10 @@
       opacity: 0;
       animation: fadeSlideUp 0.8s 1s forwards;
     }
-
     @keyframes fadeSlideUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
+      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(20px); }
     }
-
     .hero-btns {
       display: flex;
       gap: 1rem;
@@ -781,7 +596,6 @@
       opacity: 0;
       animation: fadeSlideUp 0.8s 1.2s forwards;
     }
-
     .btn-primary {
       display: inline-flex;
       align-items: center;
@@ -800,7 +614,6 @@
       overflow: hidden;
       transition: var(--glass-transition);
     }
-
     .btn-primary::before {
       content: '';
       position: absolute;
@@ -814,19 +627,13 @@
       transition: transform 0.6s ease;
       pointer-events: none;
     }
-
     .btn-primary:hover {
       background: var(--crimson-hover);
       transform: scale(1.05) translateY(-2px);
       box-shadow: 0 6px 20px rgba(124, 46, 33, 0.35);
     }
-
-    .btn-primary:hover::before {
-      transform: translateX(40%);
-    }
-    .btn-primary:active {
-      transform: scale(0.96);
-    }
+    .btn-primary:hover::before { transform: translateX(40%); }
+    .btn-primary:active { transform: scale(0.96); }
 
     .btn-glass {
       display: inline-flex;
@@ -849,7 +656,6 @@
       overflow: hidden;
       transition: var(--glass-transition);
     }
-
     .btn-glass::before {
       content: '';
       position: absolute;
@@ -863,22 +669,15 @@
       transition: transform 0.6s ease;
       pointer-events: none;
     }
-
     .btn-glass:hover {
       background: var(--glass-bg-hover);
       border-color: var(--glass-border-hover);
       box-shadow: var(--glass-shadow-hover);
       transform: scale(1.05) translateY(-2px);
     }
+    .btn-glass:hover::before { transform: translateX(40%); }
+    .btn-glass:active { transform: scale(0.96); }
 
-    .btn-glass:hover::before {
-      transform: translateX(40%);
-    }
-    .btn-glass:active {
-      transform: scale(0.96);
-    }
-
-    /* Hero Seal Container */
     .hero-seal-wrap {
       display: flex;
       align-items: center;
@@ -887,7 +686,6 @@
       width: 100%;
       justify-self: center;
     }
-
     .seal-glass-shell {
       position: relative;
       width: clamp(280px, 32vw, 440px);
@@ -911,31 +709,16 @@
       cursor: grab;
       user-select: none;
       -webkit-user-select: none;
-      /* Stamp entrance */
       opacity: 0;
       transform: scale(0.5) rotate(-25deg);
       animation: stampEntrance 1s 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     }
-
     @keyframes stampEntrance {
-      0% {
-        opacity: 0;
-        transform: scale(0.5) rotate(-25deg);
-      }
-      60% {
-        opacity: 1;
-        transform: scale(1.08) rotate(3deg);
-      }
-      80% {
-        transform: scale(0.97) rotate(-1deg);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1) rotate(0deg);
-      }
+      0% { opacity: 0; transform: scale(0.5) rotate(-25deg); }
+      60% { opacity: 1; transform: scale(1.08) rotate(3deg); }
+      80% { transform: scale(0.97) rotate(-1deg); }
+      100% { opacity: 1; transform: scale(1) rotate(0deg); }
     }
-
-    /* Specular highlight arc rotating on glass shell */
     .seal-glass-shell::before {
       content: '';
       position: absolute;
@@ -956,14 +739,7 @@
       pointer-events: none;
       z-index: 2;
     }
-
-    @keyframes specularRotate {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    /* Chromatic glow on hover */
+    @keyframes specularRotate { to { transform: rotate(360deg); } }
     .seal-glass-shell::after {
       content: '';
       position: absolute;
@@ -983,16 +759,9 @@
       pointer-events: none;
       z-index: 1;
     }
+    .seal-glass-shell:hover::after { opacity: 1; }
+    .seal-glass-shell:active { cursor: grabbing; }
 
-    .seal-glass-shell:hover::after {
-      opacity: 1;
-    }
-
-    .seal-glass-shell:active {
-      cursor: grabbing;
-    }
-
-    /* The user's exact logo image — auto-rotating + draggable */
     .seal-svg-wrap {
       position: absolute;
       z-index: 3;
@@ -1011,7 +780,6 @@
       align-items: center;
       justify-content: center;
     }
-
     .seal-svg-wrap img {
       width: 100%;
       height: 100%;
@@ -1022,54 +790,37 @@
       user-select: none;
       -webkit-user-drag: none;
     }
-
-    .seal-svg-wrap:active {
-      cursor: grabbing;
-    }
-
-    /* Breathing core */
+    .seal-svg-wrap:active { cursor: grabbing; }
     .seal-core {
       animation: breathe 4s ease-in-out infinite;
       transform-origin: center center;
     }
-
     @keyframes breathe {
-      0%,
-      100% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.015);
-      }
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.015); }
     }
 
     /* ============================================
-       ABOUT SECTION (Premium from untitled 1)
+       ABOUT / SERVICES (Arms, Ammo, Accessories)
        ============================================ */
     .about {
       padding: var(--section-pad) 0;
       position: relative;
       z-index: 1;
     }
-
     .about-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 4rem;
       align-items: start;
     }
-
-    .about-content {
-      max-width: 540px;
-    }
-
+    .about-content { max-width: 540px; }
     .about-content p {
       font-size: 1.05rem;
       line-height: 1.9;
       color: var(--ink-muted);
       margin-bottom: 20px;
     }
-
     .about-quote {
       margin: 32px 0;
       padding: 28px 32px;
@@ -1087,13 +838,11 @@
       border-bottom: 1px solid var(--glass-border);
       box-shadow: var(--glass-shadow);
     }
-
     .about-badges {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
     }
-
     .badge-card {
       padding: 1.5rem;
       border-radius: var(--radius-md);
@@ -1107,7 +856,6 @@
       overflow: hidden;
       text-align: center;
     }
-
     .badge-card::before {
       content: '';
       position: absolute;
@@ -1122,22 +870,14 @@
       pointer-events: none;
       z-index: 1;
     }
-
-    .badge-card:hover::before {
-      transform: translateX(40%);
-    }
-
+    .badge-card:hover::before { transform: translateX(40%); }
     .badge-card:hover {
       background: var(--glass-bg-hover);
       border-color: var(--glass-border-hover);
       box-shadow: var(--glass-shadow-hover);
       transform: scale(1.03) translateY(-2px);
     }
-
-    .badge-card:active {
-      transform: scale(0.96);
-    }
-
+    .badge-card:active { transform: scale(0.96); }
     .badge-icon-svg {
       width: 48px;
       height: 48px;
@@ -1148,7 +888,6 @@
       align-items: center;
       justify-content: center;
     }
-
     .badge-icon-svg svg {
       width: 24px;
       height: 24px;
@@ -1156,7 +895,6 @@
       stroke: var(--brass);
       stroke-width: 1.5;
     }
-
     .badge-title {
       font-family: var(--font-display);
       font-weight: 700;
@@ -1164,28 +902,23 @@
       margin-bottom: 0.3rem;
       color: var(--ink);
     }
-
     .badge-desc {
       font-size: 0.85rem;
       color: var(--ink-muted);
       line-height: 1.5;
     }
 
-    /* ============================================
-       SERVICES SECTION
-       ============================================ */
+    /* SERVICES GRID (Arms, Ammo, Accessories) */
     .services {
       padding: var(--section-pad) 0;
       position: relative;
       z-index: 1;
     }
-
     .services-heading {
       font-size: clamp(1.8rem, 3.5vw, 2.6rem);
       text-align: center;
       margin-bottom: 0.75rem;
     }
-
     .services-sub {
       text-align: center;
       color: var(--ink-muted);
@@ -1193,13 +926,11 @@
       max-width: 520px;
       margin: 0 auto 3rem;
     }
-
     .services-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1.5rem;
     }
-
     .service-card {
       padding: 2rem 1.5rem;
       border-radius: var(--radius-md);
@@ -1213,7 +944,6 @@
       overflow: hidden;
       cursor: default;
     }
-
     .service-card::before {
       content: '';
       position: absolute;
@@ -1228,7 +958,6 @@
       pointer-events: none;
       z-index: 1;
     }
-
     .service-card::after {
       content: '';
       position: absolute;
@@ -1239,25 +968,15 @@
       background: linear-gradient(90deg, var(--brass), var(--brass-light));
       transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
     }
-
-    .service-card:hover::before {
-      transform: translateX(40%);
-    }
-    .service-card:hover::after {
-      width: 100%;
-    }
-
+    .service-card:hover::before { transform: translateX(40%); }
+    .service-card:hover::after { width: 100%; }
     .service-card:hover {
       background: var(--glass-bg-hover);
       border-color: var(--glass-border-hover);
       box-shadow: var(--glass-shadow-hover);
       transform: scale(1.03) translateY(-4px);
     }
-
-    .service-card:active {
-      transform: scale(0.96);
-    }
-
+    .service-card:active { transform: scale(0.96); }
     .service-file-ref {
       font-family: var(--font-mono);
       font-size: 0.65rem;
@@ -1266,8 +985,6 @@
       color: var(--brass);
       margin-bottom: 1rem;
     }
-
-    /* SVG icons for services */
     .service-icon-svg {
       width: 44px;
       height: 44px;
@@ -1278,7 +995,6 @@
       align-items: center;
       justify-content: center;
     }
-
     .service-icon-svg svg {
       width: 22px;
       height: 22px;
@@ -1286,7 +1002,6 @@
       fill: none;
       stroke-width: 1.5;
     }
-
     .service-title {
       font-family: var(--font-display);
       font-weight: 700;
@@ -1294,7 +1009,6 @@
       margin-bottom: 0.6rem;
       color: var(--ink);
     }
-
     .service-desc {
       font-size: 0.85rem;
       color: var(--ink-muted);
@@ -1302,20 +1016,79 @@
     }
 
     /* ============================================
-       PROCESS SECTION
+       CONSULTANCY (now a secondary section)
+       ============================================ */
+    .consultancy {
+      padding: var(--section-pad) 0;
+      position: relative;
+      z-index: 1;
+    }
+    .consultancy-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+    .consultancy-content h2 {
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      margin-bottom: 1rem;
+    }
+    .consultancy-content p {
+      font-size: 1rem;
+      color: var(--ink-muted);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+    .consultancy-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .consultancy-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--ink);
+    }
+    .consultancy-list li::before {
+      content: '▸';
+      color: var(--brass);
+      font-weight: 700;
+    }
+    .consultancy-stamp {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      border: 2px solid var(--brass);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--brass);
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      box-shadow: var(--glass-shadow);
+    }
+
+    /* ============================================
+       LOCATION / PROCESS / FOOTER (unchanged)
        ============================================ */
     .process {
       padding: var(--section-pad) 0;
       position: relative;
       z-index: 1;
     }
-
     .process-heading {
       font-size: clamp(1.8rem, 3.5vw, 2.6rem);
       text-align: center;
       margin-bottom: 0.75rem;
     }
-
     .process-sub {
       text-align: center;
       color: var(--ink-muted);
@@ -1323,7 +1096,6 @@
       max-width: 520px;
       margin: 0 auto 3rem;
     }
-
     .process-timeline {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -1331,8 +1103,6 @@
       position: relative;
       padding: 0 1rem;
     }
-
-    /* Connecting line */
     .process-timeline::before {
       content: '';
       position: absolute;
@@ -1343,7 +1113,6 @@
       background: var(--cream-dark);
       z-index: 0;
     }
-
     .process-line-fill {
       position: absolute;
       top: 28px;
@@ -1354,11 +1123,7 @@
       width: 0;
       transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
     }
-
-    .process-line-fill.visible {
-      width: calc(75% - 40px);
-    }
-
+    .process-line-fill.visible { width: calc(75% - 40px); }
     .process-step {
       display: flex;
       flex-direction: column;
@@ -1367,7 +1132,6 @@
       position: relative;
       z-index: 2;
     }
-
     .step-number {
       width: 56px;
       height: 56px;
@@ -1389,7 +1153,6 @@
       position: relative;
       overflow: hidden;
     }
-
     .step-number::before {
       content: '';
       position: absolute;
@@ -1403,18 +1166,13 @@
       transition: transform 0.6s ease;
       pointer-events: none;
     }
-
     .process-step:hover .step-number {
       background: var(--glass-bg-hover);
       border-color: var(--brass);
       box-shadow: var(--glass-shadow-hover), 0 0 0 3px var(--brass-glow);
       transform: scale(1.1);
     }
-
-    .process-step:hover .step-number::before {
-      transform: translateX(40%);
-    }
-
+    .process-step:hover .step-number::before { transform: translateX(40%); }
     .step-content {
       padding: 1.5rem 1rem;
       border-radius: var(--radius-md);
@@ -1428,7 +1186,6 @@
       overflow: hidden;
       width: 100%;
     }
-
     .step-content::before {
       content: '';
       position: absolute;
@@ -1443,18 +1200,13 @@
       pointer-events: none;
       z-index: 1;
     }
-
     .process-step:hover .step-content {
       background: var(--glass-bg-hover);
       border-color: var(--glass-border-hover);
       box-shadow: var(--glass-shadow-hover);
       transform: scale(1.03) translateY(-2px);
     }
-
-    .process-step:hover .step-content::before {
-      transform: translateX(40%);
-    }
-
+    .process-step:hover .step-content::before { transform: translateX(40%); }
     .step-title {
       font-family: var(--font-display);
       font-weight: 700;
@@ -1462,46 +1214,37 @@
       margin-bottom: 0.4rem;
       color: var(--ink);
     }
-
     .step-desc {
       font-size: 0.8rem;
       color: var(--ink-muted);
       line-height: 1.5;
     }
 
-    /* ============================================
-       LOCATION SECTION
-       ============================================ */
     .location {
       padding: var(--section-pad) 0;
       position: relative;
       z-index: 1;
     }
-
     .location-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 3rem;
       align-items: start;
     }
-
     .location-heading {
       font-size: clamp(1.8rem, 3.5vw, 2.6rem);
       margin-bottom: 1.5rem;
     }
-
     .location-info {
       display: flex;
       flex-direction: column;
       gap: 1.25rem;
     }
-
     .location-item {
       display: flex;
       align-items: flex-start;
       gap: 1rem;
     }
-
     .location-icon-svg {
       min-width: 40px;
       height: 40px;
@@ -1511,7 +1254,6 @@
       align-items: center;
       justify-content: center;
     }
-
     .location-icon-svg svg {
       width: 18px;
       height: 18px;
@@ -1519,7 +1261,6 @@
       fill: none;
       stroke-width: 1.5;
     }
-
     .location-label {
       font-family: var(--font-mono);
       font-size: 0.65rem;
@@ -1528,24 +1269,20 @@
       color: var(--brass);
       margin-bottom: 0.15rem;
     }
-
     .location-value {
       font-size: 0.9rem;
       color: var(--ink);
       line-height: 1.5;
     }
-
     .location-value a {
       color: var(--ink);
       border-bottom: 1px solid var(--brass-glow);
       transition: border-color 0.3s ease, color 0.3s ease;
     }
-
     .location-value a:hover {
       color: var(--brass);
       border-color: var(--brass);
     }
-
     .map-wrap {
       position: relative;
       border-radius: var(--radius-lg);
@@ -1557,7 +1294,6 @@
       box-shadow: var(--glass-shadow);
       transition: var(--glass-transition);
     }
-
     .map-wrap::before {
       content: '';
       position: absolute;
@@ -1572,16 +1308,11 @@
       pointer-events: none;
       z-index: 2;
     }
-
-    .map-wrap:hover::before {
-      transform: translateX(40%);
-    }
-
+    .map-wrap:hover::before { transform: translateX(40%); }
     .map-wrap:hover {
       box-shadow: var(--glass-shadow-hover);
       transform: scale(1.01) translateY(-2px);
     }
-
     .map-wrap iframe {
       width: 100%;
       height: 320px;
@@ -1589,12 +1320,8 @@
       display: block;
       filter: sepia(10%) saturate(90%) brightness(102%);
     }
+    .directions-btn { margin-top: 1rem; }
 
-    .directions-btn {
-      margin-top: 1rem;
-    }
-
-    /* Approval Stamp */
     .approval-stamp {
       display: inline-flex;
       align-items: center;
@@ -1616,29 +1343,15 @@
       transform: scale(0.5) rotate(-15deg);
       transition: none;
     }
-
     .approval-stamp.stamped {
       animation: stampPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     }
-
     @keyframes stampPop {
-      0% {
-        opacity: 0;
-        transform: scale(0.5) rotate(-15deg);
-      }
-      60% {
-        opacity: 1;
-        transform: scale(1.1) rotate(2deg);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1) rotate(0deg);
-      }
+      0% { opacity: 0; transform: scale(0.5) rotate(-15deg); }
+      60% { opacity: 1; transform: scale(1.1) rotate(2deg); }
+      100% { opacity: 1; transform: scale(1) rotate(0deg); }
     }
 
-    /* ============================================
-       FOOTER
-       ============================================ */
     .footer {
       background: var(--ink);
       color: var(--cream-light);
@@ -1646,26 +1359,22 @@
       position: relative;
       z-index: 1;
     }
-
     .footer-grid {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr 1fr;
       gap: 3rem;
       margin-bottom: 3rem;
     }
-
     .footer-brand .nav-logo-name {
       color: var(--cream-light);
       font-size: 1.3rem;
       margin-bottom: 0.3rem;
     }
-
     .footer-brand .nav-logo-sub {
       color: var(--brass-light);
       margin-bottom: 1rem;
       display: block;
     }
-
     .footer-brand p {
       font-size: 0.85rem;
       color: rgba(239, 231, 211, 0.6);
@@ -1673,7 +1382,6 @@
       max-width: 300px;
       margin-bottom: 1.5rem;
     }
-
     .footer-phone {
       display: inline-flex;
       align-items: center;
@@ -1690,7 +1398,6 @@
       position: relative;
       overflow: hidden;
     }
-
     .footer-phone::before {
       content: '';
       position: absolute;
@@ -1702,16 +1409,11 @@
       transition: transform 0.6s ease;
       pointer-events: none;
     }
-
     .footer-phone:hover {
       background: var(--crimson-hover);
       transform: scale(1.05) translateY(-2px);
     }
-
-    .footer-phone:hover::before {
-      transform: translateX(40%);
-    }
-
+    .footer-phone:hover::before { transform: translateX(40%); }
     .footer-col h4 {
       font-family: var(--font-mono);
       font-size: 0.7rem;
@@ -1720,31 +1422,26 @@
       color: var(--brass-light);
       margin-bottom: 1.2rem;
     }
-
     .footer-col ul {
       list-style: none;
       display: flex;
       flex-direction: column;
       gap: 0.6rem;
     }
-
     .footer-col a {
       font-size: 0.85rem;
       color: rgba(239, 231, 211, 0.6);
       transition: color 0.3s ease, padding-left 0.3s ease;
     }
-
     .footer-col a:hover {
       color: var(--brass-light);
       padding-left: 0.25rem;
     }
-
     .footer-social {
       display: flex;
       gap: 0.75rem;
       margin-top: 0.5rem;
     }
-
     .footer-social a {
       width: 40px;
       height: 40px;
@@ -1758,21 +1455,18 @@
       color: var(--cream-light);
       transition: var(--glass-transition);
     }
-
     .footer-social a:hover {
       background: rgba(255, 250, 240, 0.2);
       border-color: var(--brass-light);
       color: var(--brass-light);
       transform: scale(1.1) translateY(-2px);
     }
-
     .footer-social a svg {
       width: 18px;
       height: 18px;
       fill: var(--brass-light);
       stroke: none;
     }
-
     .footer-bottom {
       border-top: 1px solid rgba(198, 161, 91, 0.2);
       padding-top: 1.5rem;
@@ -1782,12 +1476,10 @@
       flex-wrap: wrap;
       gap: 1rem;
     }
-
     .footer-copyright {
       font-size: 0.75rem;
       color: rgba(239, 231, 211, 0.4);
     }
-
     .footer-estd {
       font-family: var(--font-mono);
       font-size: 0.65rem;
@@ -1796,9 +1488,7 @@
       opacity: 0.6;
     }
 
-    /* ============================================
-       FLOATING ACTION BUTTONS (5-icon cluster with float animation)
-       ============================================ */
+    /* FAB */
     .fab-cluster {
       position: fixed;
       bottom: 1.5rem;
@@ -1809,7 +1499,6 @@
       align-items: flex-end;
       z-index: 900;
     }
-
     .fab-btn {
       width: 52px;
       height: 52px;
@@ -1831,36 +1520,21 @@
       text-decoration: none;
       color: var(--ink);
     }
-
-    /* ============================================
-       FLOATING ANIMATION — each button bobs up & down
-       with staggered delays for a wave effect
-       ============================================ */
     .fab-btn.visible {
       opacity: 1;
       transform: translateY(0) scale(1);
       animation: floatButton 3s ease-in-out infinite;
     }
-
-    /* Staggered delays for wave effect */
     .fab-btn.visible:nth-child(1) { animation-delay: 0s; }
     .fab-btn.visible:nth-child(2) { animation-delay: 0.3s; }
     .fab-btn.visible:nth-child(3) { animation-delay: 0.6s; }
     .fab-btn.visible:nth-child(4) { animation-delay: 0.9s; }
     .fab-btn.visible:nth-child(5) { animation-delay: 1.2s; }
-
     @keyframes floatButton {
-      0% {
-        transform: translateY(0px);
-      }
-      50% {
-        transform: translateY(-8px);
-      }
-      100% {
-        transform: translateY(0px);
-      }
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0px); }
     }
-
     .fab-btn:hover {
       background: var(--glass-bg-hover);
       border-color: var(--brass-light);
@@ -1869,76 +1543,8 @@
       transform: translateY(-3px) scale(1.08) !important;
       animation-play-state: paused;
     }
-
-    .fab-btn:hover svg {
-      color: var(--brass);
-    }
-
-    .fab-btn svg {
-      width: 22px;
-      height: 22px;
-    }
-
-    .fab-btn.call,
-    .fab-btn.whatsapp,
-    .fab-btn.facebook,
-    .fab-btn.instagram,
-    .fab-btn.maps {
-      background: var(--glass-bg);
-      border-color: var(--glass-border);
-      color: var(--ink);
-    }
-
-    .fab-btn.call svg,
-    .fab-btn.whatsapp svg,
-    .fab-btn.facebook svg {
-      fill: var(--ink);
-      stroke: none;
-    }
-
-    .fab-btn.instagram svg {
-      fill: none;
-      stroke: var(--ink);
-    }
-
-    .fab-btn.maps svg {
-      stroke: var(--ink);
-      fill: none;
-      stroke-width: 1.5;
-    }
-
-    .fab-btn.call:hover,
-    .fab-btn.whatsapp:hover,
-    .fab-btn.facebook:hover,
-    .fab-btn.instagram:hover,
-    .fab-btn.maps:hover {
-      background: var(--glass-bg-hover) !important;
-      border-color: var(--brass-light) !important;
-      color: var(--brass) !important;
-      box-shadow: var(--glass-shadow-hover) !important;
-      transform: translateY(-3px) scale(1.08) !important;
-      animation-play-state: paused;
-    }
-
-    .fab-btn.call:hover svg,
-    .fab-btn.whatsapp:hover svg,
-    .fab-btn.facebook:hover svg {
-      fill: var(--brass);
-      stroke: none;
-    }
-
-    .fab-btn.instagram:hover svg {
-      fill: var(--brass);
-      stroke: var(--brass);
-      color: var(--brass);
-    }
-
-    .fab-btn.maps:hover svg {
-      stroke: var(--brass);
-      fill: none;
-    }
-
-    /* Tooltip */
+    .fab-btn:hover svg { color: var(--brass); }
+    .fab-btn svg { width: 22px; height: 22px; }
     .fab-tooltip {
       position: absolute;
       right: 62px;
@@ -1957,162 +1563,70 @@
       transition: opacity var(--glass-transition), transform var(--glass-transition);
       transform: translateY(-50%) translateX(8px);
     }
-
     .fab-btn:hover .fab-tooltip {
       opacity: 1;
       transform: translateY(-50%) translateX(0);
     }
-
     @media (max-width: 480px) {
-      .fab-cluster {
-        bottom: 16px;
-        right: 16px;
-        gap: 10px;
-      }
-      .fab-btn {
-        width: 46px;
-        height: 46px;
-      }
-      .fab-tooltip {
-        display: none;
-      }
+      .fab-cluster { bottom: 16px; right: 16px; gap: 10px; }
+      .fab-btn { width: 46px; height: 46px; }
+      .fab-tooltip { display: none; }
     }
-
     @media (prefers-reduced-motion: reduce) {
-      .fab-btn.visible {
-        animation: none !important;
-      }
+      .fab-btn.visible { animation: none !important; }
     }
 
-    /* ============================================
-       RESPONSIVE
-       ============================================ */
+    /* RESPONSIVE */
     @media (max-width: 1024px) {
-      .hero .container {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: 3rem;
-      }
-      .hero-content {
-        max-width: 100%;
-        margin: 0 auto;
-      }
-      .hero-sub {
-        margin: 0 auto 2rem;
-      }
-      .hero-btns {
-        justify-content: center;
-      }
-      .hero-seal-wrap {
-        order: -1;
-      }
-
-      .about-grid {
-        grid-template-columns: 1fr;
-        gap: 2.5rem;
-      }
-      .services-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .process-timeline {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
-      }
-      .process-timeline::before {
-        display: none;
-      }
-      .process-line-fill {
-        display: none;
-      }
-      .location-grid {
-        grid-template-columns: 1fr;
-      }
-      .footer-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 2rem;
-      }
+      .hero .container { grid-template-columns: 1fr; text-align: center; gap: 3rem; }
+      .hero-content { max-width: 100%; margin: 0 auto; }
+      .hero-sub { margin: 0 auto 2rem; }
+      .hero-btns { justify-content: center; }
+      .hero-seal-wrap { order: -1; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+      .process-timeline { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+      .process-timeline::before { display: none; }
+      .process-line-fill { display: none; }
+      .location-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+      .consultancy-grid { grid-template-columns: 1fr; gap: 2rem; }
     }
-
     @media (max-width: 640px) {
-      .services-grid {
-        grid-template-columns: 1fr;
-      }
-      .process-timeline {
-        grid-template-columns: 1fr;
-      }
-      .about-badges {
-        grid-template-columns: 1fr;
-      }
-      .footer-grid {
-        grid-template-columns: 1fr;
-      }
-      .footer-bottom {
-        flex-direction: column;
-        text-align: center;
-      }
-      .seal-glass-shell {
-        width: 260px;
-        height: 260px;
-      }
-      .hero-heading {
-        font-size: clamp(1.8rem, 7vw, 2.6rem);
-      }
+      .services-grid { grid-template-columns: 1fr; }
+      .process-timeline { grid-template-columns: 1fr; }
+      .about-badges { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .seal-glass-shell { width: 260px; height: 260px; }
+      .hero-heading { font-size: clamp(1.8rem, 7vw, 2.6rem); }
+      .consultancy-list { grid-template-columns: 1fr; }
     }
-
-    /* Focus visible for accessibility */
     *:focus-visible {
       outline: 2px solid var(--brass);
       outline-offset: 3px;
       border-radius: 4px;
     }
-
-    /* Reduced motion */
     @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
+      *, *::before, *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
       }
-      html {
-        scroll-behavior: auto;
-      }
-      .seal-svg-wrap {
-        animation: none;
-      }
-      .seal-core {
-        animation: none;
-      }
-      .seal-glass-shell {
-        opacity: 1;
-        transform: none;
-      }
-      .seal-glass-shell::before {
-        animation: none;
-      }
-      .hero-heading .line-inner {
-        transform: none;
-      }
-      .hero-file-ref,
-      .hero-sub,
-      .hero-btns {
-        opacity: 1;
-        transform: none;
-      }
-      .fab-btn {
-        opacity: 1;
-        transform: none;
-        animation: none !important;
-      }
+      html { scroll-behavior: auto; }
+      .seal-svg-wrap { animation: none; }
+      .seal-core { animation: none; }
+      .seal-glass-shell { opacity: 1; transform: none; }
+      .seal-glass-shell::before { animation: none; }
+      .hero-heading .line-inner { transform: none; }
+      .hero-file-ref, .hero-sub, .hero-btns { opacity: 1; transform: none; }
+      .fab-btn { opacity: 1; transform: none; animation: none !important; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ============================================
-       NAVBAR (with mobile menu)
-       ============================================ -->
+  <!-- NAVBAR -->
   <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
     <div class="container">
       <a href="#" class="nav-logo" aria-label="Lali Gun House — Home">
@@ -2123,38 +1637,30 @@
         </svg>
         <span class="nav-logo-text">
           <span class="nav-logo-name">Lali Gun House</span>
-          <span class="nav-logo-sub">Arms License Consultancy</span>
+          <span class="nav-logo-sub">Arms · Ammunition · Accessories</span>
         </span>
       </a>
-
       <ul class="nav-links">
         <li><a href="#about">About</a></li>
         <li><a href="#services">Services</a></li>
-        <li><a href="#process">Process</a></li>
+        <li><a href="#consultancy">Consultancy</a></li>
         <li><a href="#location">Location</a></li>
         <li><a href="tel:+919874900004" class="nav-cta">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             Call Now
           </a></li>
       </ul>
-
       <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span>
       </button>
     </div>
   </nav>
-
-  <!-- Mobile Nav Overlay -->
   <div class="mobile-nav-overlay" id="mobileOverlay" aria-hidden="true"></div>
-
-  <!-- Mobile Nav -->
   <div class="mobile-nav" id="mobileMenu" role="dialog" aria-label="Mobile navigation">
     <ul>
       <li><a href="#about">About</a></li>
       <li><a href="#services">Services</a></li>
-      <li><a href="#process">Process</a></li>
+      <li><a href="#consultancy">Consultancy</a></li>
       <li><a href="#location">Location</a></li>
     </ul>
     <div class="mobile-cta">
@@ -2169,20 +1675,18 @@
     </div>
   </div>
 
-  <!-- ============================================
-       HERO SECTION
-       ============================================ -->
+  <!-- HERO -->
   <section class="hero" id="hero">
     <div class="container">
       <div class="hero-content">
-        <p class="hero-file-ref">FILE REF LGH/BNL/148101 — BARNALA, PUNJAB</p>
+        <p class="hero-file-ref">LGH/BNL/001 — Barnala, Punjab</p>
         <h1 class="hero-heading">
-          <span class="line"><span class="line-inner">Your license,</span></span>
-          <span class="line"><span class="line-inner">filed <span class="accent">correctly</span></span></span>
-          <span class="line"><span class="line-inner">— the first time.</span></span>
+          <span class="line"><span class="line-inner">Arms,</span></span>
+          <span class="line"><span class="line-inner">Ammunition &amp;</span></span>
+          <span class="line"><span class="line-inner"><span class="accent">Accessories</span></span></span>
         </h1>
         <p class="hero-sub">
-          Lali Gun House sits directly across from the Barnala Kacheri, guiding applicants through every arms license form, verification step and follow-up — start to finish.
+          Lali Gun House — premium firearms, quality ammunition, and shooting accessories. Expert consultancy for licenses, renewals, and transfers. Opposite Barnala Kacheri.
         </p>
         <div class="hero-btns">
           <a href="tel:+919874900004" class="btn-primary">
@@ -2195,7 +1699,6 @@
           </a>
         </div>
       </div>
-
       <div class="hero-seal-wrap">
         <div class="seal-glass-shell" id="sealShell">
           <div class="seal-svg-wrap" id="sealSvgWrap">
@@ -2206,245 +1709,211 @@
     </div>
   </section>
 
-  <!-- Divider -->
-  <div class="container">
-    <div class="section-divider" data-reveal></div>
-  </div>
+  <div class="container"><div class="section-divider" data-reveal></div></div>
 
-  <!-- ============================================
-       ABOUT SECTION
-       ============================================ -->
+  <!-- ABOUT (Arms, Ammo, Accessories) -->
   <section class="about" id="about">
     <div class="container">
       <div class="about-grid">
         <div class="about-content">
-          <p class="section-eyebrow reveal">Who we are</p>
-          <h2 class="section-title reveal reveal-delay-1" style="font-size:clamp(1.8rem,3.5vw,2.6rem);">Trusted guidance, right at the Kacheri gate.</h2>
+          <p class="section-eyebrow reveal">About Lali Gun House</p>
+          <h2 class="reveal reveal-delay-1" style="font-size:clamp(1.8rem,3.5vw,2.6rem);">Premium arms, ammunition &amp; accessories.</h2>
           <p class="reveal reveal-delay-2">
-            Applying for an arms license? We handle new licenses, renewals, bore changes, additions, NOC &amp; permission for sale and transfer, weapon deletion, cartridge extension, and more. Small mistakes can mean long delays. Lali Gun House works alongside applicants at every stage, ensuring paperwork is complete, accurate, and filed the right way.
+            Lali Gun House is your trusted destination for quality firearms, ammunition, and shooting accessories in Barnala. We offer a curated selection of handguns, rifles, shotguns, and all related gear. Our expert team also provides full arms license consultancy — from new applications and renewals to transfers and verification support.
           </p>
           <blockquote class="about-quote reveal reveal-delay-3">
-            "We don't just fill forms — we walk with you until your file is closed."
+            "Quality arms and expert guidance — side by side, opposite the Kacheri."
             <br><cite style="font-family:var(--font-mono);font-size:0.7rem;font-style:normal;color:var(--ink-muted);letter-spacing:0.1em;text-transform:uppercase;">— Lali Gun House</cite>
           </blockquote>
         </div>
-
         <div class="about-badges">
           <div class="badge-card reveal reveal-delay-2">
-            <div class="badge-icon-svg">
-              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
-            </div>
-            <h4 class="badge-title">Located opposite the District Court Complex, Barnala</h4>
-            <p class="badge-desc">Directly across from the Kacheri for immediate filing access</p>
+            <div class="badge-icon-svg"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <h4 class="badge-title">Firearms</h4>
+            <p class="badge-desc">Handguns, rifles, shotguns from trusted manufacturers</p>
           </div>
           <div class="badge-card reveal reveal-delay-3">
-            <div class="badge-icon-svg">
-              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
-            </div>
-            <h4 class="badge-title">Complete documentation support</h4>
-            <p class="badge-desc">Every form, affidavit and supporting document prepared precisely</p>
+            <div class="badge-icon-svg"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+            <h4 class="badge-title">Ammunition</h4>
+            <p class="badge-desc">Reliable ammunition for sport, defense, and hunting</p>
           </div>
           <div class="badge-card reveal reveal-delay-4">
-            <div class="badge-icon-svg">
-              <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
-            </div>
-            <h4 class="badge-title">Personal, one-on-one guidance</h4>
-            <p class="badge-desc">Individual attention from start to final approval</p>
+            <div class="badge-icon-svg"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <h4 class="badge-title">Accessories</h4>
+            <p class="badge-desc">Holsters, optics, cleaning kits, and shooting gear</p>
           </div>
           <div class="badge-card reveal reveal-delay-5">
-            <div class="badge-icon-svg">
-              <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" /></svg>
-            </div>
-            <h4 class="badge-title">Renewal &amp; transfer assistance</h4>
-            <p class="badge-desc">Timely renewals and hassle-free ownership transfers</p>
+            <div class="badge-icon-svg"><svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg></div>
+            <h4 class="badge-title">License Consultancy</h4>
+            <p class="badge-desc">New, renewal, transfer, verification — all handled</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Divider -->
-  <div class="container">
-    <div class="section-divider" data-reveal></div>
-  </div>
+  <div class="container"><div class="section-divider" data-reveal></div></div>
 
-  <!-- ============================================
-       SERVICES SECTION
-       ============================================ -->
+  <!-- SERVICES (Arms, Ammo, Accessories) -->
   <section class="services" id="services">
     <div class="container">
-      <p class="section-eyebrow reveal" style="justify-content:center;">What we help with</p>
-      <h2 class="services-heading reveal reveal-delay-1">Every file, handled end to end.</h2>
-      <p class="services-sub reveal reveal-delay-2">From a first-time application to a routine renewal, each case is treated like its own file — checked, prepared and followed up until it's done.</p>
-
+      <p class="section-eyebrow reveal" style="justify-content:center;">What we offer</p>
+      <h2 class="services-heading reveal reveal-delay-1">Arms, ammunition &amp; accessories.</h2>
+      <p class="services-sub reveal reveal-delay-2">Quality products backed by expert guidance. From firearms and ammo to every accessory you need.</p>
       <div class="services-grid">
         <div class="service-card reveal reveal-delay-1">
-          <span class="service-file-ref">FILE — 01</span>
-          <div class="service-icon-svg">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="16" /><line x1="8" y1="12" x2="16" y2="12" /></svg>
-          </div>
-          <h3 class="service-title">New License</h3>
-          <p class="service-desc">Guidance and documentation support for filing a fresh arms license application correctly the first time.</p>
+          <span class="service-file-ref">01</span>
+          <div class="service-icon-svg"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+          <h3 class="service-title">Handguns</h3>
+          <p class="service-desc">Pistols and revolvers for personal defense, sport shooting, and collection.</p>
         </div>
-
         <div class="service-card reveal reveal-delay-2">
-          <span class="service-file-ref">FILE — 02</span>
-          <div class="service-icon-svg">
-            <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" /></svg>
-          </div>
-          <h3 class="service-title">Renewal</h3>
-          <p class="service-desc">Timely support to renew your existing license and avoid unnecessary lapses or delays.</p>
+          <span class="service-file-ref">02</span>
+          <div class="service-icon-svg"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <h3 class="service-title">Rifles &amp; Shotguns</h3>
+          <p class="service-desc">Hunting rifles, tactical shotguns, and precision long guns from leading brands.</p>
         </div>
-
         <div class="service-card reveal reveal-delay-3">
-          <span class="service-file-ref">FILE — 03</span>
-          <div class="service-icon-svg">
-            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
-          </div>
-          <h3 class="service-title">Documentation</h3>
-          <p class="service-desc">Careful, accurate preparation of every required form and supporting document for your file.</p>
+          <span class="service-file-ref">03</span>
+          <div class="service-icon-svg"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+          <h3 class="service-title">Ammunition</h3>
+          <p class="service-desc">Full range of calibers for practice, hunting, and defensive use.</p>
         </div>
-
         <div class="service-card reveal reveal-delay-4">
-          <span class="service-file-ref">FILE — 04</span>
-          <div class="service-icon-svg">
-            <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
-          </div>
-          <h3 class="service-title">Verification</h3>
-          <p class="service-desc">Guidance through the police verification and NOC process, so nothing gets missed along the way.</p>
+          <span class="service-file-ref">04</span>
+          <div class="service-icon-svg"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <h3 class="service-title">Accessories</h3>
+          <p class="service-desc">Holsters, scopes, cleaning kits, cases, and all shooting essentials.</p>
         </div>
-
         <div class="service-card reveal reveal-delay-5">
-          <span class="service-file-ref">FILE — 05</span>
-          <div class="service-icon-svg">
-            <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" /></svg>
-          </div>
-          <h3 class="service-title">Transfer</h3>
-          <p class="service-desc">Support with transfer of license between districts or ownership, handled with the right paperwork.</p>
+          <span class="service-file-ref">05</span>
+          <div class="service-icon-svg"><svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg></div>
+          <h3 class="service-title">License Consultancy</h3>
+          <p class="service-desc">New license, renewal, transfer, NOC, police verification — full support.</p>
         </div>
-
         <div class="service-card reveal reveal-delay-6">
-          <span class="service-file-ref">FILE — 06</span>
-          <div class="service-icon-svg">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
-          </div>
-          <h3 class="service-title">Consultation</h3>
-          <p class="service-desc">Straight answers about rules, procedure, and what your specific case actually needs.</p>
+          <span class="service-file-ref">06</span>
+          <div class="service-icon-svg"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+          <h3 class="service-title">Expert Advice</h3>
+          <p class="service-desc">Honest guidance on product selection, legal compliance, and safe handling.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Divider -->
-  <div class="container">
-    <div class="section-divider" data-reveal></div>
-  </div>
+  <div class="container"><div class="section-divider" data-reveal></div></div>
 
-  <!-- ============================================
-       PROCESS SECTION
-       ============================================ -->
+  <!-- CONSULTANCY (now a separate section, placed after services) -->
+  <section class="consultancy" id="consultancy">
+    <div class="container">
+      <div class="consultancy-grid">
+        <div class="consultancy-content">
+          <p class="section-eyebrow reveal">Arms License Consultancy</p>
+          <h2 class="reveal reveal-delay-1">Expert support for every license need.</h2>
+          <p class="reveal reveal-delay-2">
+            We provide complete arms license consultancy — from new applications and renewals to transfers, bore changes, NOC, and police verification. Our team ensures your paperwork is accurate and filed correctly, so you avoid delays and rejections.
+          </p>
+          <ul class="consultancy-list reveal reveal-delay-3">
+            <li>New License Application</li>
+            <li>Renewal &amp; Extension</li>
+            <li>Bore / Weapon Change</li>
+            <li>Addition of Weapon</li>
+            <li>NOC &amp; Permission</li>
+            <li>Sale &amp; Transfer</li>
+            <li>Weapon Deletion</li>
+            <li>Cartridge Extension</li>
+          </ul>
+          <div class="consultancy-stamp reveal reveal-delay-4">
+            ✓ Over 5 years of trusted service · Barnala
+          </div>
+        </div>
+        <div class="reveal reveal-delay-3">
+          <div class="glass" style="padding: 2rem; border-radius: var(--radius-lg);">
+            <h3 style="font-family:var(--font-display); margin-bottom: 0.5rem;">Why choose us?</h3>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
+              <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+                <span style="color: var(--brass); font-size: 1.2rem;">✓</span>
+                <span><strong>Located opposite Kacheri</strong> — immediate filing access.</span>
+              </li>
+              <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+                <span style="color: var(--brass); font-size: 1.2rem;">✓</span>
+                <span><strong>End-to-end support</strong> — from consultation to approval.</span>
+              </li>
+              <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+                <span style="color: var(--brass); font-size: 1.2rem;">✓</span>
+                <span><strong>Verified documentation</strong> — accurate and complete.</span>
+              </li>
+              <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+                <span style="color: var(--brass); font-size: 1.2rem;">✓</span>
+                <span><strong>Personal guidance</strong> — one-on-one attention.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container"><div class="section-divider" data-reveal></div></div>
+
+  <!-- PROCESS (unchanged) -->
   <section class="process" id="process">
     <div class="container">
       <p class="section-eyebrow reveal" style="justify-content:center;">How it works</p>
-      <h2 class="process-heading reveal reveal-delay-1">A simple, four-step process.</h2>
-      <p class="process-sub reveal reveal-delay-2">Every case moves through the same careful sequence — nothing skipped, nothing rushed.</p>
-
+      <h2 class="process-heading reveal reveal-delay-1">Simple, four-step process.</h2>
+      <p class="process-sub reveal reveal-delay-2">From consultation to filing and follow-up — every case handled carefully.</p>
       <div class="process-timeline reveal reveal-delay-3" id="processTimeline">
         <div class="process-line-fill" id="processLineFill"></div>
-
         <div class="process-step">
           <div class="step-number">01</div>
-          <div class="step-content">
-            <h3 class="step-title">Consultation</h3>
-            <p class="step-desc">Call or visit our office for a free initial assessment. We review your eligibility, explain the process, and outline exactly what's needed.</p>
-          </div>
+          <div class="step-content"><h3 class="step-title">Consultation</h3><p class="step-desc">Call or visit for a free initial assessment. We review your eligibility and outline what's needed.</p></div>
         </div>
-
         <div class="process-step">
           <div class="step-number">02</div>
-          <div class="step-content">
-            <h3 class="step-title">Services</h3>
-            <p class="step-desc">We prepare every required document — forms, affidavits, proofs, photographs — compiled and verified for accuracy before filing.</p>
-          </div>
+          <div class="step-content"><h3 class="step-title">Services</h3><p class="step-desc">We prepare every form, affidavit, and supporting document accurately.</p></div>
         </div>
-
         <div class="process-step">
           <div class="step-number">03</div>
-          <div class="step-content">
-            <h3 class="step-title">Filing</h3>
-            <p class="step-desc">Your complete application is filed with the District Magistrate office. We ensure all procedural requirements are met for smooth processing.</p>
-          </div>
+          <div class="step-content"><h3 class="step-title">Filing</h3><p class="step-desc">Your complete application is filed with the District Magistrate office.</p></div>
         </div>
-
         <div class="process-step">
           <div class="step-number">04</div>
-          <div class="step-content">
-            <h3 class="step-title">Follow-Up</h3>
-            <p class="step-desc">We track your application status, coordinate with authorities for verification, and keep you informed at every stage until approval.</p>
-          </div>
+          <div class="step-content"><h3 class="step-title">Follow-Up</h3><p class="step-desc">We track your application, coordinate with authorities, and keep you informed.</p></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Divider -->
-  <div class="container">
-    <div class="section-divider" data-reveal></div>
-  </div>
+  <div class="container"><div class="section-divider" data-reveal></div></div>
 
-  <!-- ============================================
-       LOCATION SECTION
-       ============================================ -->
+  <!-- LOCATION (unchanged) -->
   <section class="location" id="location">
     <div class="container">
       <div class="location-grid">
         <div>
           <p class="section-eyebrow reveal">Visit us</p>
-          <h2 class="location-heading reveal reveal-delay-1">Opposite District Court &amp; District Administration Complex, Barnala.</h2>
-          <p class="reveal reveal-delay-2" style="color:var(--ink-muted);margin-bottom:1.5rem;">Easy to find — if you're standing at the Barnala District between Gate No. 1 or Gate No. 2 on Handiaya Road, Barnala, we're directly across from you.</p>
-
+          <h2 class="location-heading reveal reveal-delay-1">Opposite District Court &amp; Administration Complex, Barnala.</h2>
+          <p class="reveal reveal-delay-2" style="color:var(--ink-muted);margin-bottom:1.5rem;">Directly across from the Barnala Kacheri on Handiaya Road — easy to find.</p>
           <div class="location-info">
             <div class="location-item reveal reveal-delay-3">
-              <div class="location-icon-svg">
-                <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
-              </div>
-              <div>
-                <p class="location-label">Address</p>
-                <p class="location-value"><strong>Lali Gun House</strong><br />Opposite Kacheri (District Court Complex)<br />Barnala, Punjab, India</p>
-              </div>
+              <div class="location-icon-svg"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+              <div><p class="location-label">Address</p><p class="location-value"><strong>Lali Gun House</strong><br />Opposite Kacheri (District Court Complex)<br />Barnala, Punjab, India</p></div>
             </div>
-
             <div class="location-item reveal reveal-delay-4">
-              <div class="location-icon-svg">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
-              </div>
-              <div>
-                <p class="location-label">Working Hours</p>
-                <p class="location-value">Open Monday – Saturday<br />Timings around regular Kacheri working hours</p>
-              </div>
+              <div class="location-icon-svg"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+              <div><p class="location-label">Working Hours</p><p class="location-value">Open Monday – Saturday<br />Timings around regular Kacheri working hours</p></div>
             </div>
-
             <div class="location-item reveal reveal-delay-5">
-              <div class="location-icon-svg">
-                <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
-              </div>
-              <div>
-                <p class="location-label">Phone / WhatsApp</p>
-                <p class="location-value"><a href="tel:+919874900004"><strong>98749 00004</strong></a><br />Call or WhatsApp anytime</p>
-              </div>
+              <div class="location-icon-svg"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+              <div><p class="location-label">Phone / WhatsApp</p><p class="location-value"><a href="tel:+919874900004"><strong>98749 00004</strong></a><br />Call or WhatsApp anytime</p></div>
             </div>
           </div>
-
           <a href="https://maps.app.goo.gl/b8v5rFwfEey4pL9Y8" class="btn-primary directions-btn reveal reveal-delay-5" target="_blank" rel="noopener" style="display:inline-flex;width:100%;justify-content:center;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             Get Directions on Google Maps
           </a>
-
-          <div class="approval-stamp reveal reveal-delay-6" id="approvalStamp">
-            ✓ Visit Us · Opposite Kacheri · Barnala
-          </div>
+          <div class="approval-stamp reveal reveal-delay-6" id="approvalStamp">✓ Visit Us · Opposite Kacheri · Barnala</div>
         </div>
-
         <div class="reveal reveal-delay-3">
           <div class="map-wrap">
             <iframe src="https://www.google.com/maps?cid=13680523154509714122&output=embed" width="100%" height="320" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Lali Gun House location opposite Kacheri, Barnala"></iframe>
@@ -2454,16 +1923,14 @@
     </div>
   </section>
 
-  <!-- ============================================
-       FOOTER
-       ============================================ -->
+  <!-- FOOTER -->
   <footer class="footer" id="footer">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
           <span class="nav-logo-name" style="font-family:var(--font-display);">Lali Gun House</span>
-          <span class="nav-logo-sub">Arms License Consultancy · Barnala, Punjab</span>
-          <p>Arms license consultancy, opposite the Barnala Kacheri. Documentation, renewals and verification support, handled with care.</p>
+          <span class="nav-logo-sub">Arms · Ammunition · Accessories</span>
+          <p>Premium firearms, ammunition, and shooting accessories. Expert arms license consultancy — opposite Barnala Kacheri.</p>
           <a href="tel:+919874900004" class="footer-phone">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             98749 00004
@@ -2474,119 +1941,45 @@
             Message on WhatsApp
           </a>
           <div class="footer-social">
-            <a href="https://www.facebook.com/share/19hZLBk3Z2/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook">
-              <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-            </a>
-            <a href="https://www.instagram.com/laligunhouse" target="_blank" rel="noopener" aria-label="Instagram">
-              <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="var(--brass-light)" stroke-width="1.5"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="var(--brass-light)" stroke-width="1.5"/><circle cx="17.5" cy="6.5" r="1.25" fill="var(--brass-light)"/></svg>
-            </a>
-            <a href="https://maps.app.goo.gl/b8v5rFwfEey4pL9Y8" target="_blank" rel="noopener" aria-label="Google Maps">
-              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3" fill="none" stroke="var(--brass-light)" stroke-width="1.5"/></svg>
-            </a>
+            <a href="https://www.facebook.com/share/19hZLBk3Z2/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+            <a href="https://www.instagram.com/laligunhouse" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="var(--brass-light)" stroke-width="1.5"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="var(--brass-light)" stroke-width="1.5"/><circle cx="17.5" cy="6.5" r="1.25" fill="var(--brass-light)"/></svg></a>
+            <a href="https://maps.app.goo.gl/b8v5rFwfEey4pL9Y8" target="_blank" rel="noopener" aria-label="Google Maps"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3" fill="none" stroke="var(--brass-light)" stroke-width="1.5"/></svg></a>
           </div>
         </div>
-
-        <div class="footer-col">
-          <h4>Explore</h4>
-          <ul>
-            <li><a href="#about">About</a></li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#process">How it works</a></li>
-            <li><a href="#location">Location</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h4>Services</h4>
-          <ul>
-            <li><a href="#services">New License</a></li>
-            <li><a href="#services">Renewal</a></li>
-            <li><a href="#services">Documentation</a></li>
-            <li><a href="#services">Verification</a></li>
-            <li><a href="#services">Transfer</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h4>Find us</h4>
-          <p style="font-size:0.85rem;color:rgba(239,231,211,0.6);">Opposite Kacheri (District Court Complex)<br />Barnala, Punjab, India</p>
-        </div>
+        <div class="footer-col"><h4>Explore</h4><ul><li><a href="#about">About</a></li><li><a href="#services">Services</a></li><li><a href="#consultancy">Consultancy</a></li><li><a href="#location">Location</a></li></ul></div>
+        <div class="footer-col"><h4>Products</h4><ul><li><a href="#services">Handguns</a></li><li><a href="#services">Rifles</a></li><li><a href="#services">Ammunition</a></li><li><a href="#services">Accessories</a></li></ul></div>
+        <div class="footer-col"><h4>Find us</h4><p style="font-size:0.85rem;color:rgba(239,231,211,0.6);">Opposite Kacheri (District Court Complex)<br />Barnala, Punjab, India</p></div>
       </div>
-
       <div class="footer-bottom">
         <p class="footer-copyright">© 2025 Lali Gun House, Barnala</p>
-        <span class="footer-estd">Arms License Consultancy</span>
+        <span class="footer-estd">Arms · Ammunition · Accessories</span>
       </div>
     </div>
   </footer>
 
-  <!-- ============================================
-       FLOATING ACTION BUTTONS (5-icon cluster with float animation)
-       ============================================ -->
+  <!-- FAB -->
   <div class="fab-cluster" id="fabCluster">
-    <!-- Call -->
-    <a href="tel:+919874900004" class="fab-btn call" aria-label="Call us">
-      <span class="fab-tooltip">Call Now</span>
-      <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-    </a>
-
-    <!-- WhatsApp -->
-    <a href="https://wa.me/919874900004" target="_blank" rel="noopener" class="fab-btn whatsapp" aria-label="WhatsApp">
-      <span class="fab-tooltip">WhatsApp</span>
-      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
-    </a>
-
-    <!-- Facebook -->
-    <a href="https://www.facebook.com/share/19hZLBk3Z2/?mibextid=wwXIfr" target="_blank" rel="noopener" class="fab-btn facebook" aria-label="Facebook">
-      <span class="fab-tooltip">Facebook</span>
-      <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-    </a>
-
-    <!-- Instagram -->
-    <a href="https://www.instagram.com/laligunhouse" target="_blank" rel="noopener" class="fab-btn instagram" aria-label="Instagram">
-      <span class="fab-tooltip">Instagram</span>
-      <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="var(--ink)" stroke-width="1.5"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="var(--ink)" stroke-width="1.5"/><circle cx="17.5" cy="6.5" r="1.25" fill="var(--ink)"/></svg>
-    </a>
-
-    <!-- Google Maps -->
-    <a href="https://maps.app.goo.gl/b8v5rFwfEey4pL9Y8" target="_blank" rel="noopener" class="fab-btn maps" aria-label="Google Maps">
-      <span class="fab-tooltip">Directions</span>
-      <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-    </a>
+    <a href="tel:+919874900004" class="fab-btn call" aria-label="Call us"><span class="fab-tooltip">Call Now</span><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
+    <a href="https://wa.me/919874900004" target="_blank" rel="noopener" class="fab-btn whatsapp" aria-label="WhatsApp"><span class="fab-tooltip">WhatsApp</span><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg></a>
+    <a href="https://www.facebook.com/share/19hZLBk3Z2/?mibextid=wwXIfr" target="_blank" rel="noopener" class="fab-btn facebook" aria-label="Facebook"><span class="fab-tooltip">Facebook</span><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+    <a href="https://www.instagram.com/laligunhouse" target="_blank" rel="noopener" class="fab-btn instagram" aria-label="Instagram"><span class="fab-tooltip">Instagram</span><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="var(--ink)" stroke-width="1.5"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="var(--ink)" stroke-width="1.5"/><circle cx="17.5" cy="6.5" r="1.25" fill="var(--ink)"/></svg></a>
+    <a href="https://maps.app.goo.gl/b8v5rFwfEey4pL9Y8" target="_blank" rel="noopener" class="fab-btn maps" aria-label="Directions"><span class="fab-tooltip">Directions</span><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></a>
   </div>
 
-  <!-- ============================================
-       JAVASCRIPT
-       ============================================ -->
   <script>
     (function() {
       'use strict';
 
-      // =====================
-      // NAVBAR scroll behavior
-      // =====================
+      // Navbar scroll
       const navbar = document.getElementById('navbar');
-      let lastScroll = 0;
+      window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 60);
+      }, { passive: true });
 
-      function handleNavScroll() {
-        const scrollY = window.scrollY;
-        if (scrollY > 60) {
-          navbar.classList.add('scrolled');
-        } else {
-          navbar.classList.remove('scrolled');
-        }
-        lastScroll = scrollY;
-      }
-
-      window.addEventListener('scroll', handleNavScroll, { passive: true });
-
-      // =====================
-      // MOBILE MENU
-      // =====================
+      // Mobile menu
       const hamburger = document.getElementById('navHamburger');
       const mobileNav = document.getElementById('mobileMenu');
       const mobileOverlay = document.getElementById('mobileOverlay');
-
       function toggleMobileNav() {
         const isOpen = mobileNav.classList.contains('open');
         hamburger.classList.toggle('active');
@@ -2595,90 +1988,47 @@
         mobileOverlay.classList.toggle('open');
         document.body.style.overflow = isOpen ? '' : 'hidden';
       }
-
       hamburger.addEventListener('click', toggleMobileNav);
       mobileOverlay.addEventListener('click', toggleMobileNav);
+      mobileNav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+        if (mobileNav.classList.contains('open')) toggleMobileNav();
+      }));
 
-      mobileNav.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-          if (mobileNav.classList.contains('open')) toggleMobileNav();
-        });
-      });
-
-      // =====================
-      // SCROLL REVEAL
-      // =====================
+      // Scroll reveal
       const revealElements = document.querySelectorAll('.reveal, [data-reveal]');
       const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      }, {
-        threshold: 0.15,
-        rootMargin: '0px 0px -40px 0px'
-      });
-
+        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
       revealElements.forEach(el => revealObserver.observe(el));
 
-      // =====================
-      // SECTION DIVIDERS
-      // =====================
-      const dividers = document.querySelectorAll('.section-divider');
-      const dividerObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      }, { threshold: 0.3 });
+      // Dividers
+      document.querySelectorAll('.section-divider').forEach(d => {
+        new IntersectionObserver((entries) => {
+          entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, { threshold: 0.3 }).observe(d);
+      });
 
-      dividers.forEach(d => dividerObserver.observe(d));
-
-      // =====================
-      // PROCESS TIMELINE LINE FILL
-      // =====================
+      // Process line
       const processLineFill = document.getElementById('processLineFill');
       if (processLineFill) {
-        const processObserver = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              processLineFill.classList.add('visible');
-            }
-          });
-        }, { threshold: 0.3 });
-        processObserver.observe(document.getElementById('processTimeline'));
+        new IntersectionObserver((entries) => {
+          entries.forEach(entry => { if (entry.isIntersecting) processLineFill.classList.add('visible'); });
+        }, { threshold: 0.3 }).observe(document.getElementById('processTimeline'));
       }
 
-      // =====================
-      // APPROVAL STAMP animation
-      // =====================
+      // Stamp
       const stamp = document.getElementById('approvalStamp');
       if (stamp) {
-        const stampObserver = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              stamp.classList.add('stamped');
-            }
-          });
-        }, { threshold: 0.5 });
-        stampObserver.observe(stamp);
+        new IntersectionObserver((entries) => {
+          entries.forEach(entry => { if (entry.isIntersecting) stamp.classList.add('stamped'); });
+        }, { threshold: 0.5 }).observe(stamp);
       }
 
-      // =====================
-      // FAB BUTTONS — staggered entrance with float animation
-      // =====================
+      // FAB
       const fabs = document.querySelectorAll('.fab-btn');
       setTimeout(() => {
-        fabs.forEach((fab, i) => {
-          setTimeout(() => {
-            fab.classList.add('visible');
-          }, 200 * i);
-        });
+        fabs.forEach((fab, i) => setTimeout(() => fab.classList.add('visible'), 200 * i));
       }, 1500);
-
-      // FAB magnetic cursor pull
       fabs.forEach(fab => {
         fab.addEventListener('mousemove', (e) => {
           const rect = fab.getBoundingClientRect();
@@ -2693,38 +2043,22 @@
         });
       });
 
-      // =====================
-      // SEAL — exact uploaded logo + clockwise idle spin + drag rotation
-      // =====================
+      // Seal rotation
       const sealShell = document.getElementById('sealShell');
       const sealSvgWrap = document.getElementById('sealSvgWrap');
-      let sealAngle = 0;
-      let sealVelocity = 0.12;
-      const sealIdleSpeed = 0.12;
-      let isDragging = false;
-      let lastPointerAngle = 0;
-      let lastMoveTime = 0;
-      let animFrameId;
-
+      let sealAngle = 0, sealVelocity = 0.12, isDragging = false, lastPointerAngle = 0, lastMoveTime = 0, animFrameId;
       if (sealShell && sealSvgWrap) {
         function pointerAngle(e) {
           const rect = sealShell.getBoundingClientRect();
-          const cx = rect.left + rect.width / 2;
-          const cy = rect.top + rect.height / 2;
-          return Math.atan2(e.clientY - cy, e.clientX - cx) * 180 / Math.PI;
+          return Math.atan2(e.clientY - (rect.top + rect.height/2), e.clientX - (rect.left + rect.width/2)) * 180 / Math.PI;
         }
-
         function animateSeal() {
-          if (!isDragging) {
-            sealVelocity *= 0.985;
-            if (sealVelocity < sealIdleSpeed) sealVelocity = sealIdleSpeed;
-          }
+          if (!isDragging) { sealVelocity *= 0.985; if (sealVelocity < 0.12) sealVelocity = 0.12; }
           sealAngle += sealVelocity;
           sealSvgWrap.style.transform = `rotate(${sealAngle}deg)`;
           animFrameId = requestAnimationFrame(animateSeal);
         }
-
-        function onPointerDown(e) {
+        sealShell.addEventListener('pointerdown', (e) => {
           isDragging = true;
           sealVelocity = 0;
           lastPointerAngle = pointerAngle(e);
@@ -2732,132 +2066,77 @@
           sealShell.style.cursor = 'grabbing';
           sealShell.setPointerCapture?.(e.pointerId);
           e.preventDefault();
-        }
-
-        function onPointerMove(e) {
+        });
+        sealShell.addEventListener('pointermove', (e) => {
           if (!isDragging) return;
-          const currentAngle = pointerAngle(e);
-          let delta = currentAngle - lastPointerAngle;
+          let delta = pointerAngle(e) - lastPointerAngle;
           if (delta > 180) delta -= 360;
           if (delta < -180) delta += 360;
-          const now = performance.now();
-          const dt = Math.max(now - lastMoveTime, 8);
-          const instantVelocity = delta / (dt / 16.67);
+          const dt = Math.max(performance.now() - lastMoveTime, 8);
           sealAngle += delta;
-          sealVelocity = instantVelocity * 0.65;
-          lastPointerAngle = currentAngle;
-          lastMoveTime = now;
+          sealVelocity = (delta / (dt / 16.67)) * 0.65;
+          lastPointerAngle = pointerAngle(e);
+          lastMoveTime = performance.now();
           sealSvgWrap.style.transform = `rotate(${sealAngle}deg)`;
           e.preventDefault();
-        }
-
-        function onPointerUp(e) {
+        });
+        sealShell.addEventListener('pointerup', (e) => {
           if (!isDragging) return;
           isDragging = false;
           sealShell.style.cursor = 'grab';
           sealShell.releasePointerCapture?.(e.pointerId);
-          sealVelocity = Math.max(sealVelocity, sealIdleSpeed);
-        }
-
-        sealShell.addEventListener('pointerdown', onPointerDown);
-        sealShell.addEventListener('pointermove', onPointerMove);
-        sealShell.addEventListener('pointerup', onPointerUp);
-        sealShell.addEventListener('pointercancel', onPointerUp);
-
+          sealVelocity = Math.max(sealVelocity, 0.12);
+        });
+        sealShell.addEventListener('pointercancel', () => {
+          isDragging = false;
+          sealShell.style.cursor = 'grab';
+          sealVelocity = Math.max(sealVelocity, 0.12);
+        });
         animateSeal();
       }
 
-      // =====================
-      // SERVICE CARDS — 3D tilt on hover
-      // =====================
-      document.querySelectorAll('.service-card').forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-          const rect = card.getBoundingClientRect();
-          const x = (e.clientX - rect.left) / rect.width - 0.5;
-          const y = (e.clientY - rect.top) / rect.height - 0.5;
-          card.style.transform =
-            `perspective(600px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg) scale(1.03) translateY(-4px)`;
-        });
-
-        card.addEventListener('mouseleave', () => {
-          card.style.transform = '';
-        });
-      });
-
-      // =====================
-      // BUTTON RIPPLE EFFECT
-      // =====================
-      function createRipple(e) {
-        const btn = e.currentTarget;
-        const existingRipple = btn.querySelector('.ripple');
-        if (existingRipple) existingRipple.remove();
-
-        const ripple = document.createElement('span');
-        ripple.className = 'ripple';
-        const rect = btn.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height) * 2;
-        ripple.style.cssText = `
-          position: absolute;
-          width: ${size}px;
-          height: ${size}px;
-          border-radius: 50%;
-          background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
-          left: ${e.clientX - rect.left - size/2}px;
-          top: ${e.clientY - rect.top - size/2}px;
-          transform: scale(0);
-          animation: rippleExpand 0.5s ease-out forwards;
-          pointer-events: none;
-          z-index: 10;
-        `;
-        btn.appendChild(ripple);
-        setTimeout(() => ripple.remove(), 600);
-      }
-
-      const style = document.createElement('style');
-      style.textContent = `
-        @keyframes rippleExpand {
-          to { transform: scale(1); opacity: 0; }
-        }
-      `;
-      document.head.appendChild(style);
-
-      document.querySelectorAll('.btn-primary, .btn-glass, .nav-cta, .fab-btn').forEach(btn => {
-        btn.style.position = 'relative';
-        btn.style.overflow = 'hidden';
-        btn.addEventListener('click', createRipple);
-      });
-
-      // =====================
-      // SMOOTH SCROLL for anchor links
-      // =====================
+      // Smooth scroll
       document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
           const target = document.querySelector(this.getAttribute('href'));
           if (target) {
             e.preventDefault();
             const navHeight = navbar.offsetHeight;
-            const targetPos = target.getBoundingClientRect().top + window.scrollY - navHeight - 20;
-            window.scrollTo({ top: targetPos, behavior: 'smooth' });
+            window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - navHeight - 20, behavior: 'smooth' });
           }
         });
       });
 
-      // Reduced motion check
+      // Reduced motion
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         if (animFrameId) cancelAnimationFrame(animFrameId);
         if (sealSvgWrap) sealSvgWrap.style.transform = 'none';
         revealElements.forEach(el => el.classList.add('visible'));
-        dividers.forEach(d => d.classList.add('visible'));
-        fabs.forEach(f => {
-          f.classList.add('visible');
-          f.style.animation = 'none';
-        });
+        document.querySelectorAll('.section-divider').forEach(d => d.classList.add('visible'));
+        fabs.forEach(f => { f.classList.add('visible'); f.style.animation = 'none'; });
         if (stamp) stamp.classList.add('stamped');
         if (processLineFill) processLineFill.classList.add('visible');
       }
 
+      // Ripple effect
+      const style = document.createElement('style');
+      style.textContent = `@keyframes rippleExpand { to { transform: scale(1); opacity: 0; } }`;
+      document.head.appendChild(style);
+      document.querySelectorAll('.btn-primary, .btn-glass, .nav-cta, .fab-btn').forEach(btn => {
+        btn.style.position = 'relative';
+        btn.style.overflow = 'hidden';
+        btn.addEventListener('click', function(e) {
+          const ripple = document.createElement('span');
+          ripple.className = 'ripple';
+          const rect = this.getBoundingClientRect();
+          const size = Math.max(rect.width, rect.height) * 2;
+          ripple.style.cssText = `position:absolute;width:${size}px;height:${size}px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.3) 0%,transparent 70%);left:${e.clientX - rect.left - size/2}px;top:${e.clientY - rect.top - size/2}px;transform:scale(0);animation:rippleExpand 0.5s ease-out forwards;pointer-events:none;z-index:10;`;
+          this.appendChild(ripple);
+          setTimeout(() => ripple.remove(), 600);
+        });
+      });
+
     })();
   </script>
-
 </body>
 </html>
