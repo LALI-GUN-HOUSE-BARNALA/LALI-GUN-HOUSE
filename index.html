@@ -1016,6 +1016,120 @@
     }
 
     /* ============================================
+       PRODUCT GALLERY
+       ============================================ */
+    .gallery {
+      padding: var(--section-pad) 0;
+      position: relative;
+      z-index: 1;
+    }
+    .gallery-heading {
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      text-align: center;
+      margin-bottom: 0.75rem;
+    }
+    .gallery-sub {
+      text-align: center;
+      color: var(--ink-muted);
+      font-size: 0.95rem;
+      max-width: 520px;
+      margin: 0 auto 3rem;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .gallery-item {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      position: relative;
+      aspect-ratio: 4 / 3;
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      transition: var(--glass-transition);
+      cursor: pointer;
+    }
+    .gallery-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      right: 0;
+      bottom: 0;
+      width: 300%;
+      height: 100%;
+      background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.1) 48%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 52%, transparent 70%);
+      transition: transform 0.6s ease;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .gallery-item:hover::before { transform: translateX(40%); }
+    .gallery-item:hover {
+      transform: scale(1.03) translateY(-4px);
+      box-shadow: var(--glass-shadow-hover);
+      border-color: var(--brass-light);
+    }
+    .gallery-item:active { transform: scale(0.98); }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      filter: sepia(10%) saturate(90%) brightness(98%);
+    }
+    .gallery-item:hover img { transform: scale(1.08); filter: sepia(5%) saturate(100%) brightness(102%); }
+    .gallery-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.5rem 1.25rem 1.25rem;
+      background: linear-gradient(transparent, rgba(27, 42, 32, 0.85));
+      color: var(--white-warm);
+      z-index: 3;
+      transform: translateY(0);
+      transition: transform 0.3s ease;
+    }
+    .gallery-item:hover .gallery-overlay { transform: translateY(-2px); }
+    .gallery-overlay h4 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--white-warm);
+      margin-bottom: 0.15rem;
+    }
+    .gallery-overlay p {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brass-light);
+      opacity: 0.9;
+    }
+    .gallery-tag {
+      position: absolute;
+      top: 0.75rem;
+      left: 0.75rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: var(--radius-pill);
+      background: rgba(239, 231, 211, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+      border: 1px solid rgba(255,255,240,0.5);
+      z-index: 3;
+    }
+
+    /* ============================================
        CONSULTANCY (now a secondary section)
        ============================================ */
     .consultancy {
@@ -1576,6 +1690,125 @@
       .fab-btn.visible { animation: none !important; }
     }
 
+    /* ============================================
+       DUSSEHRA / FESTIVAL ANIMATION
+       ============================================ */
+    .festive-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9000;
+      overflow: hidden;
+      display: none;
+    }
+    .festive-banner.active { display: block; }
+    .flower-petal {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      opacity: 0;
+      animation: petalFall linear forwards;
+      will-change: transform, opacity;
+    }
+    .flower-petal svg { width: 100%; height: 100%; }
+    @keyframes petalFall {
+      0% { opacity: 0; transform: translateY(-30px) rotate(0deg) scale(0.6); }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(105vh) rotate(720deg) scale(1); }
+    }
+    .dussehra-greeting {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      z-index: 9500;
+      pointer-events: none;
+      text-align: center;
+      opacity: 0;
+    }
+    .dussehra-greeting.show {
+      animation: greetingPop 3.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    @keyframes greetingPop {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3) rotate(-10deg); }
+      20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1) rotate(2deg); }
+      40% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+      75% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.05) rotate(0deg); }
+    }
+    .dussehra-greeting h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 800;
+      color: var(--crimson);
+      text-shadow: 0 4px 24px rgba(198, 161, 91, 0.5), 0 2px 8px rgba(0,0,0,0.1);
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #7C2E21, #C6A15B, #93753A);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .dussehra-greeting h2 span {
+      display: block;
+      font-size: 0.45em;
+      font-weight: 600;
+      font-style: italic;
+      color: var(--brass);
+      -webkit-text-fill-color: var(--brass);
+      margin-top: 0.3rem;
+      letter-spacing: 0.05em;
+    }
+    .dussehra-greeting .diya-row {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+      font-size: 1.8rem;
+    }
+    .festive-toggle {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 1.5rem;
+      z-index: 9100;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 1px solid var(--glass-border);
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      box-shadow: var(--glass-shadow);
+      font-size: 1.4rem;
+      transition: var(--glass-transition);
+      user-select: none;
+    }
+    .festive-toggle:hover {
+      transform: scale(1.1) rotate(15deg);
+      box-shadow: var(--glass-shadow-hover);
+      border-color: var(--brass-light);
+    }
+    .festive-toggle.active {
+      background: var(--brass);
+      border-color: var(--brass-light);
+      box-shadow: 0 0 20px var(--brass-glow);
+    }
+    @media (max-width: 480px) {
+      .festive-toggle { width: 42px; height: 42px; font-size: 1.2rem; bottom: 16px; left: 16px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .flower-petal { display: none; }
+      .dussehra-greeting.show { animation: none; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
     /* RESPONSIVE */
     @media (max-width: 1024px) {
       .hero .container { grid-template-columns: 1fr; text-align: center; gap: 3rem; }
@@ -1585,6 +1818,7 @@
       .hero-seal-wrap { order: -1; }
       .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
       .services-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
       .process-timeline { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
       .process-timeline::before { display: none; }
       .process-line-fill { display: none; }
@@ -1594,6 +1828,7 @@
     }
     @media (max-width: 640px) {
       .services-grid { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: 1fr; }
       .process-timeline { grid-template-columns: 1fr; }
       .about-badges { grid-template-columns: 1fr; }
       .footer-grid { grid-template-columns: 1fr; }
@@ -1626,6 +1861,16 @@
 </head>
 <body>
 
+  <!-- FESTIVE FLOATING TOGGLE -->
+  <button class="festive-toggle" id="festiveToggle" aria-label="Toggle festival celebration" title="Celebrate Dussehra!">🪔</button>
+
+  <!-- FESTIVE BANNER (flowers + greeting) -->
+  <div class="festive-banner" id="festiveBanner"></div>
+  <div class="dussehra-greeting" id="dussehraGreeting">
+    <h2>Happy Dussehra<span>Victory of Good over Evil</span></h2>
+    <div class="diya-row">🪔 🏹 🪔</div>
+  </div>
+
   <!-- NAVBAR -->
   <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
     <div class="container">
@@ -1643,6 +1888,7 @@
       <ul class="nav-links">
         <li><a href="#about">About</a></li>
         <li><a href="#services">Services</a></li>
+        <li><a href="#gallery">Gallery</a></li>
         <li><a href="#consultancy">Consultancy</a></li>
         <li><a href="#location">Location</a></li>
         <li><a href="tel:+919874900004" class="nav-cta">
@@ -1660,6 +1906,7 @@
     <ul>
       <li><a href="#about">About</a></li>
       <li><a href="#services">Services</a></li>
+      <li><a href="#gallery">Gallery</a></li>
       <li><a href="#consultancy">Consultancy</a></li>
       <li><a href="#location">Location</a></li>
     </ul>
@@ -1803,7 +2050,68 @@
 
   <div class="container"><div class="section-divider" data-reveal></div></div>
 
-  <!-- CONSULTANCY (now a separate section, placed after services) -->
+  <!-- PRODUCT GALLERY -->
+  <section class="gallery" id="gallery">
+    <div class="container">
+      <p class="section-eyebrow reveal" style="justify-content:center;">Product Gallery</p>
+      <h2 class="gallery-heading reveal reveal-delay-1">Our Collection.</h2>
+      <p class="gallery-sub reveal reveal-delay-2">A glimpse of the firearms, ammunition, and accessories we carry.</p>
+      <div class="gallery-grid">
+        <div class="gallery-item reveal reveal-delay-1">
+          <span class="gallery-tag">Handgun</span>
+          <img src="https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=600&q=80" alt="Premium handgun" loading="lazy" />
+          <div class="gallery-overlay">
+            <h4>Precision Pistol</h4>
+            <p>9mm · Defense &amp; Sport</p>
+          </div>
+        </div>
+        <div class="gallery-item reveal reveal-delay-2">
+          <span class="gallery-tag">Rifle</span>
+          <img src="https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=600&q=80" alt="Hunting rifle" loading="lazy" />
+          <div class="gallery-overlay">
+            <h4>Hunting Rifle</h4>
+            <p>.308 · Bolt Action</p>
+          </div>
+        </div>
+        <div class="gallery-item reveal reveal-delay-3">
+          <span class="gallery-tag">Shotgun</span>
+          <img src="https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=600&q=80" alt="Tactical shotgun" loading="lazy" />
+          <div class="gallery-overlay">
+            <h4>Tactical Shotgun</h4>
+            <p>12 Gauge · Pump Action</p>
+          </div>
+        </div>
+        <div class="gallery-item reveal reveal-delay-4">
+          <span class="gallery-tag">Ammo</span>
+          <img src="https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=600&q=80" alt="Ammunition" loading="lazy" />
+          <div class="gallery-overlay">
+            <h4>Ammunition</h4>
+            <p>9mm · .45 · 12G</p>
+          </div>
+        </div>
+        <div class="gallery-item reveal reveal-delay-5">
+          <span class="gallery-tag">Accessory</span>
+          <img src="https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=600&q=80" alt="Shooting accessories" loading="lazy" />
+          <div class="gallery-overlay">
+            <h4>Shooting Gear</h4>
+            <p>Holsters · Optics · Cases</p>
+          </div>
+        </div>
+        <div class="gallery-item reveal reveal-delay-6">
+          <span class="gallery-tag">Collection</span>
+          <img src="https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=600&q=80" alt="Gun collection" loading="lazy" />
+          <div class="gallery-overlay">
+            <h4>Collector's Piece</h4>
+            <p>Vintage &amp; Modern</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container"><div class="section-divider" data-reveal></div></div>
+
+  <!-- CONSULTANCY -->
   <section class="consultancy" id="consultancy">
     <div class="container">
       <div class="consultancy-grid">
@@ -1856,7 +2164,7 @@
 
   <div class="container"><div class="section-divider" data-reveal></div></div>
 
-  <!-- PROCESS (unchanged) -->
+  <!-- PROCESS -->
   <section class="process" id="process">
     <div class="container">
       <p class="section-eyebrow reveal" style="justify-content:center;">How it works</p>
@@ -1886,7 +2194,7 @@
 
   <div class="container"><div class="section-divider" data-reveal></div></div>
 
-  <!-- LOCATION (unchanged) -->
+  <!-- LOCATION -->
   <section class="location" id="location">
     <div class="container">
       <div class="location-grid">
@@ -1946,7 +2254,7 @@
             <a href="https://maps.app.goo.gl/b8v5rFwfEey4pL9Y8" target="_blank" rel="noopener" aria-label="Google Maps"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3" fill="none" stroke="var(--brass-light)" stroke-width="1.5"/></svg></a>
           </div>
         </div>
-        <div class="footer-col"><h4>Explore</h4><ul><li><a href="#about">About</a></li><li><a href="#services">Services</a></li><li><a href="#consultancy">Consultancy</a></li><li><a href="#location">Location</a></li></ul></div>
+        <div class="footer-col"><h4>Explore</h4><ul><li><a href="#about">About</a></li><li><a href="#services">Services</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#consultancy">Consultancy</a></li><li><a href="#location">Location</a></li></ul></div>
         <div class="footer-col"><h4>Products</h4><ul><li><a href="#services">Handguns</a></li><li><a href="#services">Rifles</a></li><li><a href="#services">Ammunition</a></li><li><a href="#services">Accessories</a></li></ul></div>
         <div class="footer-col"><h4>Find us</h4><p style="font-size:0.85rem;color:rgba(239,231,211,0.6);">Opposite Kacheri (District Court Complex)<br />Barnala, Punjab, India</p></div>
       </div>
@@ -2135,6 +2443,98 @@
           setTimeout(() => ripple.remove(), 600);
         });
       });
+
+      /* ============================================
+         DUSSEHRA / FESTIVAL ANIMATION
+         ============================================ */
+      const festiveToggle = document.getElementById('festiveToggle');
+      const festiveBanner = document.getElementById('festiveBanner');
+      const dussehraGreeting = document.getElementById('dussehraGreeting');
+      let festiveActive = false;
+
+      // SVG flower petal definitions (marigold-like)
+      const flowerSVGs = [
+        // Orange marigold petal
+        `<svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 6 4 10 4 14a8 8 0 0016 0c0-4-4-8-8-12z" fill="#E8A317" opacity="0.9"/><path d="M12 6C9 9 7 12 7 14a5 5 0 0010 0c0-2-2-5-5-8z" fill="#D4691E" opacity="0.8"/></svg>`,
+        // Deep red petal
+        `<svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 6 4 10 4 14a8 8 0 0016 0c0-4-4-8-8-12z" fill="#C0392B" opacity="0.9"/><path d="M12 6C9 9 7 12 7 14a5 5 0 0010 0c0-2-2-5-5-8z" fill="#E74C3C" opacity="0.8"/></svg>`,
+        // Golden yellow
+        `<svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 6 4 10 4 14a8 8 0 0016 0c0-4-4-8-8-12z" fill="#F1C40F" opacity="0.9"/><path d="M12 6C9 9 7 12 7 14a5 5 0 0010 0c0-2-2-5-5-8z" fill="#F39C12" opacity="0.8"/></svg>`,
+        // Saffron
+        `<svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 6 4 10 4 14a8 8 0 0016 0c0-4-4-8-8-12z" fill="#FF9933" opacity="0.9"/><path d="M12 6C9 9 7 12 7 14a5 5 0 0010 0c0-2-2-5-5-8z" fill="#E67E22" opacity="0.8"/></svg>`,
+        // Maroon
+        `<svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 6 4 10 4 14a8 8 0 0016 0c0-4-4-8-8-12z" fill="#8E1B0F" opacity="0.85"/><path d="M12 6C9 9 7 12 7 14a5 5 0 0010 0c0-2-2-5-5-8z" fill="#A93226" opacity="0.75"/></svg>`,
+        // Brass/gold
+        `<svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 6 4 10 4 14a8 8 0 0016 0c0-4-4-8-8-12z" fill="#C6A15B" opacity="0.9"/><path d="M12 6C9 9 7 12 7 14a5 5 0 0010 0c0-2-2-5-5-8z" fill="#93753A" opacity="0.8"/></svg>`
+      ];
+
+      function createPetal() {
+        const petal = document.createElement('div');
+        petal.className = 'flower-petal';
+        const svg = flowerSVGs[Math.floor(Math.random() * flowerSVGs.length)];
+        petal.innerHTML = svg;
+        petal.style.left = Math.random() * 100 + '%';
+        petal.style.animationDuration = (6 + Math.random() * 6) + 's';
+        petal.style.animationDelay = Math.random() * 2 + 's';
+        petal.style.width = (12 + Math.random() * 14) + 'px';
+        petal.style.height = petal.style.width;
+        festiveBanner.appendChild(petal);
+        // Remove after animation completes
+        setTimeout(() => petal.remove(), 14000);
+      }
+
+      function startFestive() {
+        festiveActive = true;
+        festiveBanner.classList.add('active');
+        festiveToggle.classList.add('active');
+        dussehraGreeting.classList.add('show');
+        // Clear existing petals
+        festiveBanner.innerHTML = '';
+        // Create petals in waves
+        let count = 0;
+        const maxPetals = 60;
+        const petalInterval = setInterval(() => {
+          if (count >= maxPetals) { clearInterval(petalInterval); return; }
+          createPetal();
+          count++;
+        }, 200);
+        // Additional wave after 2 seconds
+        setTimeout(() => {
+          let count2 = 0;
+          const interval2 = setInterval(() => {
+            if (count2 >= 40) { clearInterval(interval2); return; }
+            createPetal();
+            count2++;
+          }, 150);
+        }, 2000);
+        // Remove greeting after animation
+        setTimeout(() => {
+          dussehraGreeting.classList.remove('show');
+        }, 4000);
+      }
+
+      function stopFestive() {
+        festiveActive = false;
+        festiveBanner.classList.remove('active');
+        festiveToggle.classList.remove('active');
+        dussehraGreeting.classList.remove('show');
+        festiveBanner.innerHTML = '';
+      }
+
+      festiveToggle.addEventListener('click', () => {
+        if (festiveActive) {
+          stopFestive();
+        } else {
+          startFestive();
+        }
+      });
+
+      // Auto-trigger once on page load (after 2 seconds) for celebration
+      setTimeout(() => {
+        if (!festiveActive) {
+          startFestive();
+        }
+      }, 2500);
 
     })();
   </script>
