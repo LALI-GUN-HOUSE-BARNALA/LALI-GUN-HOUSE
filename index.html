@@ -446,6 +446,7 @@
     .mobile-nav.open ul li:nth-child(2) a { transition-delay: 0.15s; }
     .mobile-nav.open ul li:nth-child(3) a { transition-delay: 0.2s; }
     .mobile-nav.open ul li:nth-child(4) a { transition-delay: 0.25s; }
+    .mobile-nav.open ul li:nth-child(5) a { transition-delay: 0.3s; }
     .mobile-nav .mobile-cta {
       margin-top: 40px;
       display: flex;
@@ -1690,125 +1691,6 @@
       .fab-btn.visible { animation: none !important; }
     }
 
-    /* ============================================
-       DUSSEHRA / FESTIVAL ANIMATION
-       ============================================ */
-    .festive-banner {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 9000;
-      overflow: hidden;
-      display: none;
-    }
-    .festive-banner.active { display: block; }
-    .flower-petal {
-      position: absolute;
-      width: 18px;
-      height: 18px;
-      opacity: 0;
-      animation: petalFall linear forwards;
-      will-change: transform, opacity;
-    }
-    .flower-petal svg { width: 100%; height: 100%; }
-    @keyframes petalFall {
-      0% { opacity: 0; transform: translateY(-30px) rotate(0deg) scale(0.6); }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { opacity: 0; transform: translateY(105vh) rotate(720deg) scale(1); }
-    }
-    .dussehra-greeting {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      z-index: 9500;
-      pointer-events: none;
-      text-align: center;
-      opacity: 0;
-    }
-    .dussehra-greeting.show {
-      animation: greetingPop 3.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-    }
-    @keyframes greetingPop {
-      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3) rotate(-10deg); }
-      20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1) rotate(2deg); }
-      40% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
-      75% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
-      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.05) rotate(0deg); }
-    }
-    .dussehra-greeting h2 {
-      font-family: var(--font-display);
-      font-size: clamp(2.2rem, 6vw, 4rem);
-      font-weight: 800;
-      color: var(--crimson);
-      text-shadow: 0 4px 24px rgba(198, 161, 91, 0.5), 0 2px 8px rgba(0,0,0,0.1);
-      letter-spacing: 0.02em;
-      line-height: 1.2;
-      background: linear-gradient(135deg, #7C2E21, #C6A15B, #93753A);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .dussehra-greeting h2 span {
-      display: block;
-      font-size: 0.45em;
-      font-weight: 600;
-      font-style: italic;
-      color: var(--brass);
-      -webkit-text-fill-color: var(--brass);
-      margin-top: 0.3rem;
-      letter-spacing: 0.05em;
-    }
-    .dussehra-greeting .diya-row {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      margin-top: 1rem;
-      font-size: 1.8rem;
-    }
-    .festive-toggle {
-      position: fixed;
-      bottom: 1.5rem;
-      left: 1.5rem;
-      z-index: 9100;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      border: 1px solid var(--glass-border);
-      background: var(--glass-bg);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      box-shadow: var(--glass-shadow);
-      font-size: 1.4rem;
-      transition: var(--glass-transition);
-      user-select: none;
-    }
-    .festive-toggle:hover {
-      transform: scale(1.1) rotate(15deg);
-      box-shadow: var(--glass-shadow-hover);
-      border-color: var(--brass-light);
-    }
-    .festive-toggle.active {
-      background: var(--brass);
-      border-color: var(--brass-light);
-      box-shadow: 0 0 20px var(--brass-glow);
-    }
-    @media (max-width: 480px) {
-      .festive-toggle { width: 42px; height: 42px; font-size: 1.2rem; bottom: 16px; left: 16px; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .flower-petal { display: none; }
-      .dussehra-greeting.show { animation: none; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    }
-
     /* RESPONSIVE */
     @media (max-width: 1024px) {
       .hero .container { grid-template-columns: 1fr; text-align: center; gap: 3rem; }
@@ -1860,16 +1742,6 @@
   </style>
 </head>
 <body>
-
-  <!-- FESTIVE FLOATING TOGGLE -->
-  <button class="festive-toggle" id="festiveToggle" aria-label="Toggle festival celebration" title="Celebrate Dussehra!">🪔</button>
-
-  <!-- FESTIVE BANNER (flowers + greeting) -->
-  <div class="festive-banner" id="festiveBanner"></div>
-  <div class="dussehra-greeting" id="dussehraGreeting">
-    <h2>Happy Dussehra<span>Victory of Good over Evil</span></h2>
-    <div class="diya-row">🪔 🏹 🪔</div>
-  </div>
 
   <!-- NAVBAR -->
   <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
@@ -2443,98 +2315,6 @@
           setTimeout(() => ripple.remove(), 600);
         });
       });
-
-      /* ============================================
-         DUSSEHRA / FESTIVAL ANIMATION
-         ============================================ */
-      const festiveToggle = document.getElementById('festiveToggle');
-      const festiveBanner = document.getElementById('festiveBanner');
-      const dussehraGreeting = document.getElementById('dussehraGreeting');
-      let festiveActive = false;
-
-      // SVG flower petal definitions (marigold-like)
-      const flowerSVGs = [
-        // Orange marigold petal
-        `<svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 6 4 10 4 14a8 8 0 0016 0c0-4-4-8-8-12z" fill="#E8A317" opacity="0.9"/><path d="M12 6C9 9 7 12 7 14a5 5 0 0010 0c0-2-2-5-5-8z" fill="#D4691E" opacity="0.8"/></svg>`,
-        // Deep red petal
-        `<svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 6 4 10 4 14a8 8 0 0016 0c0-4-4-8-8-12z" fill="#C0392B" opacity="0.9"/><path d="M12 6C9 9 7 12 7 14a5 5 0 0010 0c0-2-2-5-5-8z" fill="#E74C3C" opacity="0.8"/></svg>`,
-        // Golden yellow
-        `<svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 6 4 10 4 14a8 8 0 0016 0c0-4-4-8-8-12z" fill="#F1C40F" opacity="0.9"/><path d="M12 6C9 9 7 12 7 14a5 5 0 0010 0c0-2-2-5-5-8z" fill="#F39C12" opacity="0.8"/></svg>`,
-        // Saffron
-        `<svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 6 4 10 4 14a8 8 0 0016 0c0-4-4-8-8-12z" fill="#FF9933" opacity="0.9"/><path d="M12 6C9 9 7 12 7 14a5 5 0 0010 0c0-2-2-5-5-8z" fill="#E67E22" opacity="0.8"/></svg>`,
-        // Maroon
-        `<svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 6 4 10 4 14a8 8 0 0016 0c0-4-4-8-8-12z" fill="#8E1B0F" opacity="0.85"/><path d="M12 6C9 9 7 12 7 14a5 5 0 0010 0c0-2-2-5-5-8z" fill="#A93226" opacity="0.75"/></svg>`,
-        // Brass/gold
-        `<svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 6 4 10 4 14a8 8 0 0016 0c0-4-4-8-8-12z" fill="#C6A15B" opacity="0.9"/><path d="M12 6C9 9 7 12 7 14a5 5 0 0010 0c0-2-2-5-5-8z" fill="#93753A" opacity="0.8"/></svg>`
-      ];
-
-      function createPetal() {
-        const petal = document.createElement('div');
-        petal.className = 'flower-petal';
-        const svg = flowerSVGs[Math.floor(Math.random() * flowerSVGs.length)];
-        petal.innerHTML = svg;
-        petal.style.left = Math.random() * 100 + '%';
-        petal.style.animationDuration = (6 + Math.random() * 6) + 's';
-        petal.style.animationDelay = Math.random() * 2 + 's';
-        petal.style.width = (12 + Math.random() * 14) + 'px';
-        petal.style.height = petal.style.width;
-        festiveBanner.appendChild(petal);
-        // Remove after animation completes
-        setTimeout(() => petal.remove(), 14000);
-      }
-
-      function startFestive() {
-        festiveActive = true;
-        festiveBanner.classList.add('active');
-        festiveToggle.classList.add('active');
-        dussehraGreeting.classList.add('show');
-        // Clear existing petals
-        festiveBanner.innerHTML = '';
-        // Create petals in waves
-        let count = 0;
-        const maxPetals = 60;
-        const petalInterval = setInterval(() => {
-          if (count >= maxPetals) { clearInterval(petalInterval); return; }
-          createPetal();
-          count++;
-        }, 200);
-        // Additional wave after 2 seconds
-        setTimeout(() => {
-          let count2 = 0;
-          const interval2 = setInterval(() => {
-            if (count2 >= 40) { clearInterval(interval2); return; }
-            createPetal();
-            count2++;
-          }, 150);
-        }, 2000);
-        // Remove greeting after animation
-        setTimeout(() => {
-          dussehraGreeting.classList.remove('show');
-        }, 4000);
-      }
-
-      function stopFestive() {
-        festiveActive = false;
-        festiveBanner.classList.remove('active');
-        festiveToggle.classList.remove('active');
-        dussehraGreeting.classList.remove('show');
-        festiveBanner.innerHTML = '';
-      }
-
-      festiveToggle.addEventListener('click', () => {
-        if (festiveActive) {
-          stopFestive();
-        } else {
-          startFestive();
-        }
-      });
-
-      // Auto-trigger once on page load (after 2 seconds) for celebration
-      setTimeout(() => {
-        if (!festiveActive) {
-          startFestive();
-        }
-      }, 2500);
 
     })();
   </script>
