@@ -161,7 +161,7 @@
     .gallery-sub { text-align:center; color:var(--ink-muted); font-size:0.95rem; max-width:620px; margin:0 auto 2rem; }
     .license-notice { display:flex; align-items:center; justify-content:center; gap:0.5rem; padding:0.8rem 1.5rem; border-radius:var(--radius-md); background:var(--green-safe-bg); border:1px solid rgba(46,125,50,0.3); color:var(--green-safe); font-weight:600; font-size:0.9rem; max-width:620px; margin:0 auto 3rem; text-align:center; }
     .license-notice svg { flex-shrink:0; width:20px; height:20px; }
-    .gallery-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+    .gallery-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1.75rem; max-width:900px; margin:0 auto; }
     .product-card { border-radius:var(--radius-lg); overflow:hidden; background:rgba(255,250,240,0.4); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:var(--glass-shadow); transition:var(--glass-transition); display:flex; flex-direction:column; }
     .product-card:hover { transform:translateY(-4px); box-shadow:var(--glass-shadow-hover); border-color:var(--brass-light); }
     .product-img { aspect-ratio:4/3; position:relative; overflow:hidden; background:linear-gradient(135deg,rgba(27,42,32,0.06),rgba(147,117,58,0.08)); }
@@ -171,13 +171,13 @@
     .product-badge.safe { background:var(--green-safe); color:white; border-color:var(--green-safe); }
     .product-info { padding:1.3rem 1.4rem 1.5rem; display:flex; flex-direction:column; flex:1; }
     .product-spec { font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--brass); margin-bottom:0.4rem; }
-    .product-info h3 { font-size:1.15rem; margin-bottom:0.5rem; }
+    .product-info h3 { font-size:1.2rem; margin-bottom:0.5rem; }
     .product-desc { font-size:0.85rem; color:var(--ink-muted); line-height:1.55; margin-bottom:1rem; flex:1; }
-    .product-price { font-family:var(--font-display); font-weight:700; font-size:1.3rem; color:var(--crimson); margin-bottom:0.9rem; }
+    .product-price { font-family:var(--font-display); font-weight:700; font-size:1.35rem; color:var(--crimson); margin-bottom:0.9rem; }
     .product-actions { display:flex; gap:0.6rem; }
-    .btn-add { flex:1; padding:0.7rem; border-radius:var(--radius-pill); font-family:var(--font-body); font-size:0.8rem; font-weight:600; cursor:pointer; border:none; background:var(--crimson); color:var(--white-warm); transition:var(--glass-transition); }
+    .btn-add { flex:1; padding:0.75rem; border-radius:var(--radius-pill); font-family:var(--font-body); font-size:0.82rem; font-weight:600; cursor:pointer; border:none; background:var(--crimson); color:var(--white-warm); transition:var(--glass-transition); }
     .btn-add:hover { background:var(--crimson-hover); transform:translateY(-1px); }
-    .btn-preview { flex:1; padding:0.7rem; border-radius:var(--radius-pill); font-family:var(--font-body); font-size:0.8rem; font-weight:600; cursor:pointer; border:1px solid var(--glass-border); background:var(--glass-bg); color:var(--ink); transition:var(--glass-transition); text-align:center; display:flex; align-items:center; justify-content:center; }
+    .btn-preview { flex:1; padding:0.75rem; border-radius:var(--radius-pill); font-family:var(--font-body); font-size:0.82rem; font-weight:600; cursor:pointer; border:1px solid var(--glass-border); background:var(--glass-bg); color:var(--ink); transition:var(--glass-transition); text-align:center; display:flex; align-items:center; justify-content:center; gap:0.35rem; }
     .btn-preview:hover { border-color:var(--brass-light); background:rgba(255,250,240,0.6); }
 
     /* CONSULTANCY */
@@ -499,7 +499,10 @@
             <div class="product-price">₹ 84,000</div>
             <div class="product-actions">
               <button class="btn-add" onclick="addToCart('ASG Barra 1866', 84000)">Add to Cart</button>
-              <a href="asgbarra1866.html" class="btn-preview">3D Preview</a>
+              <a href="asgbarra1866.html" class="btn-preview">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                3D Preview
+              </a>
             </div>
           </div>
         </div>
@@ -517,24 +520,10 @@
             <div class="product-price">₹ 42,000</div>
             <div class="product-actions">
               <button class="btn-add" onclick="addToCart('ASG ISSC M22', 42000)">Add to Cart</button>
-              <a href="isscm22.html" class="btn-preview">3D Preview</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Placeholder: Coming soon -->
-        <div class="product-card reveal reveal-delay-3" style="opacity:0.7;">
-          <div class="product-img" style="display:flex;align-items:center;justify-content:center;background:rgba(27,42,32,0.05);">
-            <span class="product-badge">Coming Soon</span>
-            <span style="font-family:var(--font-mono);font-size:0.8rem;color:var(--ink-muted);letter-spacing:0.1em;">MORE AIRGUNS</span>
-          </div>
-          <div class="product-info">
-            <span class="product-spec">New arrivals</span>
-            <h3>More Coming Soon</h3>
-            <p class="product-desc">New airguns are being added regularly. Check back soon or contact us on WhatsApp for the latest stock.</p>
-            <div class="product-price" style="color:var(--ink-muted);font-size:0.95rem;">Stay tuned</div>
-            <div class="product-actions">
-              <a href="https://wa.me/919874900004" target="_blank" rel="noopener" class="btn-add" style="text-align:center;line-height:1.6;">Ask on WhatsApp</a>
+              <a href="isscm22.html" class="btn-preview">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                3D Preview
+              </a>
             </div>
           </div>
         </div>
@@ -816,7 +805,7 @@
     /* ============================================
        CONFIG — change these two values
        ============================================ */
-    const GOOGLE_SHEET_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE'; // see instructions below
+    const GOOGLE_SHEET_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE'; // see instructions
     const UPI_ID = 'laligunhouse@upi'; // <-- replace with your actual UPI ID
     const MERCHANT_NAME = 'Lali Gun House';
 
@@ -876,7 +865,6 @@
         closeAuthModal();
         updateAuthButton();
         document.getElementById('otpNote').classList.remove('show');
-        // clear inputs
         ['regName','regEmail','regPhone','regPassword'].forEach(id => document.getElementById(id).value = '');
       }, 1400);
     }
@@ -903,11 +891,7 @@
     }
     function updateAuthButton() {
       const btn = document.getElementById('authBtn');
-      if (currentUser) {
-        btn.textContent = currentUser.name.split(' ')[0];
-      } else {
-        btn.textContent = 'Sign In';
-      }
+      btn.textContent = currentUser ? currentUser.name.split(' ')[0] : 'Sign In';
     }
 
     /* ============================================
@@ -1012,7 +996,6 @@
           body: JSON.stringify(orderData)
         }).catch(() => {});
       }
-      // Success screen
       document.querySelector('#checkoutModal .modal').innerHTML = `
         <div style="text-align:center;padding:1rem;">
           <div style="font-size:3rem;margin-bottom:1rem;">✅</div>
@@ -1021,14 +1004,13 @@
           <p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:0.5rem;">Order Total: ₹${total.toLocaleString('en-IN')}</p>
           <p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:1.5rem;">Your order will be delivered within <strong>7 days</strong>.</p>
           <p style="font-size:0.75rem;color:var(--ink-muted);margin-bottom:1.5rem;">We will verify your UTR and confirm on WhatsApp.</p>
-          <button class="btn-full" onclick="closeCheckoutAndReset()">Done</button>
+          <button class="btn-full" onclick="location.reload()">Done</button>
         </div>
       `;
       cart = [];
       localStorage.setItem('lgh_cart', JSON.stringify(cart));
       updateCartCount();
     }
-    function closeCheckoutAndReset() { location.reload(); }
 
     /* ============================================
        NAVBAR / MOBILE / SCROLL / SEAL
