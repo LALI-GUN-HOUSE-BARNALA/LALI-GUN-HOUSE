@@ -3,17 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Manual Model Adjuster</title>
+<title>Real 3D Model Fixer</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { width: 100%; height: 100%; overflow: hidden; background: #1a1a1a; font-family: sans-serif; }
-  #canvas-container { width: 100vw; height: 100vh; display: block; touch-action: none; }
+  #canvas-container { width: 100vw; height: 100vh; display: block; touch-action: none; cursor: grab; }
+  #canvas-container:active { cursor: grabbing; }
   
   .ui-overlay {
     position: absolute; top: 10px; left: 10px; right: 10px;
     background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(10px);
     padding: 15px; border-radius: 10px; color: #fff; border-left: 4px solid #ffaa00;
-    pointer-events: auto;
+    pointer-events: none;
   }
   .ui-overlay h1 { font-size: 1rem; color: #ffaa00; margin-bottom: 5px; }
   .ui-overlay p { font-size: 0.8rem; color: #ccc; line-height: 1.5; }
@@ -21,13 +22,16 @@
   .panel {
     position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
     background: rgba(0,0,0,0.8); padding: 10px 20px; border-radius: 8px;
-    display: flex; gap: 10px; pointer-events: auto;
+    display: flex; gap: 10px; pointer-events: auto; z-index: 10;
   }
   button {
     background: #333; color: #fff; border: 1px solid #555; padding: 10px 15px;
-    border-radius: 5px; font-size: 0.9rem; cursor: pointer; pointer-events: auto;
+    border-radius: 5px; font-size: 0.9rem; cursor: pointer;
   }
   button:hover { background: #ffaa00; color: #000; border-color: #ffaa00; }
+  
+  /* Hidden textarea to show code */
+  #output { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; z-index: 100; background: #000; color: #0f0; padding: 20px; font-family: monospace; border: none; resize: none; }
 </style>
 </head>
 <body>
@@ -35,17 +39,20 @@
   <div id="canvas-container"></div>
 
   <div class="ui-overlay">
-    <h1>🛠️ Model Fixer (Manual Adjust)</h1>
-    <p>Drag karke parts nu sahi jagah te lao (Gun left, Bullets right etc).<br>Jadon set ho jaye, taan niche wale button te click karo taaki tusi tuhadi <b>Position Code</b> copy kar sako.</p>
+    <h1>🛠️ REAL 3D Fixer (Drag Objects)</h1>
+    <p><b>Object te click karo te ohnu drag karo</b> (jo bhi part select hoga, oh move hoga).<br>Jadon sahi jagah te rakh lo, taan "Get Code" dabo.</p>
   </div>
 
   <div class="panel">
     <button id="btn-print">Get Fixed Code</button>
   </div>
 
+  <textarea id="output" readonly></textarea>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/DragControls.js"></script>
 
   <script>
     const scene = new THREE.Scene();
@@ -66,15 +73,17 @@
     dirLight.position.set(5, 10, 7);
     scene.add(dirLight);
 
-    // Controls (Enable Pan to move objects)
+    // Controls for Camera
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
-    controls.enablePan = true; 
-    controls.autoRotate = true;
+    controls.enablePan = false; // Keep pan false so objects can be dragged easily
+
+    // Drag Controls (The Magic)
+    let dragControls;
+    let allMeshes = [];
 
     // Load Model
     const loader = new THREE.GLTFLoader();
-    let allMeshes = []; // Store meshes for printing later
 
     loader.load('Pistol_Makarov_PM.glb', function (gltf) {
       const gunModel = gltf.scene;
@@ -87,13 +96,24 @@
         }
       });
 
-      // Center whole model
+      // Center whole model initially
       const box = new THREE.Box3().setFromObject(gunModel);
       const center = box.getCenter(new THREE.Vector3());
       gunModel.position.sub(center);
 
       scene.add(gunModel);
       
+      // Setup DragControls AFTER model is loaded
+      dragControls = new THREE.DragControls(allMeshes, camera, renderer.domElement);
+      
+      // Pause auto-rotate when dragging
+      dragControls.addEventListener('dragstart', function () {
+        controls.enabled = false;
+      });
+      dragControls.addEventListener('dragend', function () {
+        controls.enabled = true;
+      });
+
       // Fit camera
       const size = box.getSize(new THREE.Vector3());
       const maxDim = Math.max(size.x, size.y, size.z);
@@ -103,16 +123,32 @@
 
     // PRINT CODE LOGIC
     document.getElementById('btn-print').addEventListener('click', () => {
-      let codeOutput = "// Eh code copy karo te apne main file vich load function de andar pao:\n\n";
+      let codeOutput = `// Eh code copy karo te apne main file vich loader.load de andar pao:\n\n`;
       
       allMeshes.forEach((mesh) => {
-        // Get local position relative to parent
         const p = mesh.position;
-        codeOutput += `gunModel.getObjectByName("${mesh.name}").position.set(${p.x.toFixed(3)}, ${p.y.toFixed(3)}, ${p.z.toFixed(3)});\n`;
+        // Use userData to store original name if it exists
+        const meshName = mesh.name || "unnamed";
+        codeOutput += `gunModel.getObjectByName("${meshName}").position.set(${p.x.toFixed(3)}, ${p.y.toFixed(3)}, ${p.z.toFixed(3)});\n`;
       });
 
       console.log(codeOutput);
-      alert("Code Console vich print ho geya hai! F12 dabo te Console tab kholo, othe code copy kar lo. (Je names khali ne, taan matlab model vich names nahi ne).");
+      
+      // Show in textarea
+      const out = document.getElementById('output');
+      out.value = codeOutput;
+      out.style.display = 'block';
+      
+      // Add a close button dynamically
+      const closeBtn = document.createElement('button');
+      closeBtn.innerText = "Close";
+      closeBtn.style.position = "absolute";
+      closeBtn.style.top = "20px";
+      closeBtn.style.right = "20px";
+      closeBtn.style.zIndex = "101";
+      closeBtn.style.background = "red";
+      closeBtn.onclick = () => { out.style.display = 'none'; closeBtn.remove(); };
+      document.body.appendChild(closeBtn);
     });
 
     function animate() {
