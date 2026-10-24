@@ -851,6 +851,10 @@
       <div class="delivery-note">🚚 Delivery within 7 days across India</div>
       <div class="form-group"><label>Full Name</label><input type="text" id="shipName" placeholder="Your name"></div>
       <div class="form-group"><label>Phone</label><input type="tel" id="shipPhone" placeholder="10-digit mobile"></div>
+      
+      <!-- YAHAN EMAIL KA BOX ADD KIYA HAI -->
+      <div class="form-group"><label>Email</label><input type="email" id="shipEmail" placeholder="your@email.com"></div>
+      
       <div class="form-group"><label>Full Address</label><textarea id="shipAddress" rows="2" placeholder="House no, street, city, pincode"></textarea></div>
       <div class="payment-options">
         <div class="payment-option selected" onclick="selectPayment('upi')">
@@ -876,7 +880,7 @@
 
   <script>
     /* ============================================
-       CONFIG — change these two values
+       CONFIG
        ============================================ */
     const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwOQcG1eeKs8ngJ0RQgC2XA3qa840PbR9NSQWAfxopkN3RYHDbwmBaHTxRrDiyA3hzy/exec';
     const UPI_ID = 'laligunhouse@upi'; // <-- replace with your actual UPI ID
@@ -1011,6 +1015,7 @@
       if (currentUser) {
         document.getElementById('shipName').value = currentUser.name || '';
         document.getElementById('shipPhone').value = currentUser.phone || '';
+        document.getElementById('shipEmail').value = currentUser.email || ''; // Auto fill email
       }
       generateQR();
     }
@@ -1030,18 +1035,30 @@
     function placeOrder() {
       const name = document.getElementById('shipName').value.trim();
       const phone = document.getElementById('shipPhone').value.trim();
+      const email = document.getElementById('shipEmail').value.trim(); // Get email
       const address = document.getElementById('shipAddress').value.trim();
       const utr = document.getElementById('utrInput').value.trim();
-      if (!name || !phone || !address || !utr) { showToast('Please fill all details and UTR number.'); return; }
+      
+      if (!name || !phone || !email || !address || !utr) { 
+        showToast('Please fill all details including Email and UTR.'); 
+        return; 
+      }
+      
       const total = cart.reduce((s, i) => s + i.price, 0);
       const itemsList = cart.map(i => i.name).join(', ');
+      
       const orderData = {
         timestamp: new Date().toISOString(),
-        customer_name: name, customer_phone: phone,
-        customer_email: currentUser?.email || '',
-        delivery_address: address, items: itemsList,
-        total_amount: total, utr: utr, status: 'Pending Verification'
+        customer_name: name, 
+        customer_phone: phone,
+        customer_email: email, // Send email to sheet
+        delivery_address: address, 
+        items: itemsList,
+        total_amount: total, 
+        utr: utr, 
+        status: 'Pending Verification'
       };
+      
       if (GOOGLE_SHEET_URL && GOOGLE_SHEET_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
         fetch(GOOGLE_SHEET_URL, {
           method: 'POST', mode: 'no-cors',
@@ -1049,6 +1066,7 @@
           body: JSON.stringify(orderData)
         }).catch(() => {});
       }
+      
       document.querySelector('#checkoutModal .modal').innerHTML = `
         <div style="text-align:center;padding:1rem;">
           <div style="font-size:3rem;margin-bottom:1rem;">✅</div>
@@ -1056,7 +1074,7 @@
           <p style="margin-bottom:1rem;">Thank you, ${name}!</p>
           <p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:0.5rem;">Order Total: ₹${total.toLocaleString('en-IN')}</p>
           <p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:1.5rem;">Your order will be delivered within <strong>7 days</strong>.</p>
-          <p style="font-size:0.75rem;color:var(--ink-muted);margin-bottom:1.5rem;">We will verify your UTR and confirm on WhatsApp.</p>
+          <p style="font-size:0.75rem;color:var(--ink-muted);margin-bottom:1.5rem;">Confirmation email bhej diya gaya hai. We will verify your UTR shortly.</p>
           <button class="btn-full" onclick="location.reload()">Done</button>
         </div>
       `;
