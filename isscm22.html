@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#050505">
-<title>ISSC M22 Austria .22LR — Tactical Black</title>
+<title>ISSC M22 Austria CO2 — Tactical Black</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
@@ -80,7 +80,7 @@
 
   <div class="ui-overlay" id="ui">
     <h1>ISSC M22 Austria</h1>
-    <div class="sub">.22 LR — Tactical Black</div>
+    <div class="sub">CO₂ Airgun — Tactical Black</div>
     <p>👆 Drag to Rotate &nbsp;|&nbsp; 🤏 Pinch to Zoom</p>
   </div>
 
@@ -145,7 +145,7 @@
     renderer.domElement.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
 
     /* ============================================================
-       2. ENVIRONMENT MAP — dark tactical with cool streaks
+       2. ENVIRONMENT MAP — dark tactical
     ============================================================ */
     let envMap = null;
     function buildEnvironment() {
@@ -217,169 +217,107 @@
     scene.environment = envMap;
 
     /* ============================================================
-       3. PROCEDURAL TEXTURES — stippling, serrations, grip, frame
+       3. PROCEDURAL TEXTURES
     ============================================================ */
     const textureSize = quality.envWidth >= 1024 ? 512 : 256;
 
-    // --- GRIP STIPPLING (rough bumpy texture, like checkering) ---
     function makeGripTexture() {
       const c = document.createElement('canvas');
       c.width = c.height = textureSize;
       const ctx = c.getContext('2d');
-
-      // Dark base
       ctx.fillStyle = '#1a1a1a';
       ctx.fillRect(0, 0, c.width, c.height);
-
-      // Diamond stippling pattern
       const step = textureSize / 32;
       for (let y = 0; y < textureSize; y += step) {
         for (let x = 0; x < textureSize; x += step) {
           const offset = (Math.floor(y / step) % 2) * (step / 2);
-          const px = x + offset;
-          const py = y;
-
-          // Raised bump
-          const r = step * 0.35;
+          const px = x + offset, py = y, r = step * 0.35;
           const grad = ctx.createRadialGradient(px, py, 0, px, py, r);
-          grad.addColorStop(0, '#4a4a4a');
-          grad.addColorStop(0.5, '#2a2a2a');
-          grad.addColorStop(1, '#0a0a0a');
-          ctx.fillStyle = grad;
-          ctx.beginPath();
-          ctx.arc(px, py, r, 0, Math.PI * 2);
-          ctx.fill();
+          grad.addColorStop(0, '#4a4a4a'); grad.addColorStop(0.5, '#2a2a2a'); grad.addColorStop(1, '#0a0a0a');
+          ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(px, py, r, 0, Math.PI * 2); ctx.fill();
         }
       }
-
       const tex = new THREE.CanvasTexture(c);
-      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-      tex.repeat.set(6, 6);
-      tex.encoding = THREE.sRGBEncoding;
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(6, 6); tex.encoding = THREE.sRGBEncoding;
       return tex;
     }
 
-    // --- GRIP BUMP MAP (height map for stippling) ---
     function makeGripBumpMap() {
       const c = document.createElement('canvas');
       c.width = c.height = textureSize;
       const ctx = c.getContext('2d');
-
-      ctx.fillStyle = '#000000';
-      ctx.fillRect(0, 0, c.width, c.height);
-
+      ctx.fillStyle = '#000000'; ctx.fillRect(0, 0, c.width, c.height);
       const step = textureSize / 32;
       for (let y = 0; y < textureSize; y += step) {
         for (let x = 0; x < textureSize; x += step) {
           const offset = (Math.floor(y / step) % 2) * (step / 2);
-          const px = x + offset;
-          const py = y;
-          const r = step * 0.35;
+          const px = x + offset, py = y, r = step * 0.35;
           const grad = ctx.createRadialGradient(px, py, 0, px, py, r);
-          grad.addColorStop(0, '#ffffff');
-          grad.addColorStop(0.5, '#888888');
-          grad.addColorStop(1, '#000000');
-          ctx.fillStyle = grad;
-          ctx.beginPath();
-          ctx.arc(px, py, r, 0, Math.PI * 2);
-          ctx.fill();
+          grad.addColorStop(0, '#ffffff'); grad.addColorStop(0.5, '#888888'); grad.addColorStop(1, '#000000');
+          ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(px, py, r, 0, Math.PI * 2); ctx.fill();
         }
       }
-
       const tex = new THREE.CanvasTexture(c);
-      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-      tex.repeat.set(6, 6);
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(6, 6);
       return tex;
     }
 
-    // --- SLIDE SERRATIONS (vertical lines for gripping) ---
     function makeSlideTexture() {
       const c = document.createElement('canvas');
-      c.width = textureSize;
-      c.height = textureSize;
+      c.width = textureSize; c.height = textureSize;
       const ctx = c.getContext('2d');
-
-      ctx.fillStyle = '#1a1a1a';
-      ctx.fillRect(0, 0, c.width, c.height);
-
-      // Vertical serration lines
-      const lineCount = 20;
-      const lineWidth = textureSize / lineCount;
+      ctx.fillStyle = '#1a1a1a'; ctx.fillRect(0, 0, c.width, c.height);
+      const lineCount = 20, lineWidth = textureSize / lineCount;
       for (let i = 0; i < lineCount; i++) {
         const x = i * lineWidth;
-        // Groove
-        ctx.fillStyle = '#050505';
-        ctx.fillRect(x, 0, lineWidth * 0.4, c.height);
-        // Highlight edge
-        ctx.fillStyle = '#3a3a3a';
-        ctx.fillRect(x + lineWidth * 0.4, 0, lineWidth * 0.1, c.height);
+        ctx.fillStyle = '#050505'; ctx.fillRect(x, 0, lineWidth * 0.4, c.height);
+        ctx.fillStyle = '#3a3a3a'; ctx.fillRect(x + lineWidth * 0.4, 0, lineWidth * 0.1, c.height);
       }
-
       const tex = new THREE.CanvasTexture(c);
-      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-      tex.repeat.set(1, 1);
-      tex.encoding = THREE.sRGBEncoding;
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(1, 1); tex.encoding = THREE.sRGBEncoding;
       return tex;
     }
 
-    // --- SLIDE BUMP MAP (serrations height) ---
     function makeSlideBumpMap() {
       const c = document.createElement('canvas');
       c.width = c.height = textureSize;
       const ctx = c.getContext('2d');
-
-      ctx.fillStyle = '#000000';
-      ctx.fillRect(0, 0, c.width, c.height);
-
-      const lineCount = 20;
-      const lineWidth = textureSize / lineCount;
+      ctx.fillStyle = '#000000'; ctx.fillRect(0, 0, c.width, c.height);
+      const lineCount = 20, lineWidth = textureSize / lineCount;
       for (let i = 0; i < lineCount; i++) {
         const x = i * lineWidth;
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(x + lineWidth * 0.4, 0, lineWidth * 0.1, c.height);
+        ctx.fillStyle = '#ffffff'; ctx.fillRect(x + lineWidth * 0.4, 0, lineWidth * 0.1, c.height);
       }
-
       const tex = new THREE.CanvasTexture(c);
-      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-      tex.repeat.set(1, 1);
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(1, 1);
       return tex;
     }
 
-    // --- FRAME TEXTURE (fine rough finish) ---
     function makeFrameTexture() {
       const c = document.createElement('canvas');
       c.width = c.height = textureSize;
       const ctx = c.getContext('2d');
-
-      ctx.fillStyle = '#1a1a1a';
-      ctx.fillRect(0, 0, c.width, c.height);
-
-      // Fine noise speckles
+      ctx.fillStyle = '#1a1a1a'; ctx.fillRect(0, 0, c.width, c.height);
       const imgData = ctx.getImageData(0, 0, c.width, c.height);
       const data = imgData.data;
       for (let i = 0; i < data.length; i += 4) {
         const v = 20 + Math.random() * 30;
-        data[i] = v;
-        data[i + 1] = v;
-        data[i + 2] = v;
+        data[i] = v; data[i + 1] = v; data[i + 2] = v;
       }
       ctx.putImageData(imgData, 0, 0);
-
       const tex = new THREE.CanvasTexture(c);
-      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-      tex.repeat.set(3, 3);
-      tex.encoding = THREE.sRGBEncoding;
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(3, 3); tex.encoding = THREE.sRGBEncoding;
       return tex;
     }
 
-    const gripTex       = makeGripTexture();
-    const gripBump      = makeGripBumpMap();
-    const slideTex      = makeSlideTexture();
-    const slideBump     = makeSlideBumpMap();
-    const frameTex      = makeFrameTexture();
+    const gripTex = makeGripTexture();
+    const gripBump = makeGripBumpMap();
+    const slideTex = makeSlideTexture();
+    const slideBump = makeSlideBumpMap();
+    const frameTex = makeFrameTexture();
 
     /* ============================================================
-       4. LIGHTING — studio tactical
+       4. LIGHTING
     ============================================================ */
     scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
@@ -426,7 +364,7 @@
     });
 
     /* ============================================================
-       6. LOAD MODEL — ISSC M22 Austria .22LR
+       6. LOAD MODEL — ISSC M22 Austria CO2
     ============================================================ */
     const loaderEl   = document.getElementById('loader');
     const progressEl = document.getElementById('progress');
@@ -446,14 +384,13 @@
         const rawBox  = new THREE.Box3().setFromObject(gunModel);
         const rawSize = rawBox.getSize(new THREE.Vector3());
 
-        // Pistol: barrel usually points forward (Z or X)
         if (rawSize.y > rawSize.x && rawSize.y > rawSize.z) {
           gunModel.rotation.z = -Math.PI / 2;
         } else if (rawSize.z > rawSize.x && rawSize.z > rawSize.y) {
           gunModel.rotation.y = Math.PI / 2;
         }
 
-        // Fire position — barrel toward camera
+        // Fire position
         gunModel.rotation.y += Math.PI / 2;
 
         // Re-center
@@ -463,7 +400,7 @@
         const size   = box.getSize(new THREE.Vector3());
         gunModel.position.sub(center);
 
-        // ---- SMART MATERIAL with procedural textures ----
+        // ---- BULLET HIDE LOGIC + SMART MATERIALS ----
         gunModel.traverse((node) => {
           if (!node.isMesh) return;
           node.castShadow = false;
@@ -472,52 +409,38 @@
 
           const name = (node.name + ' ' + (node.material?.name || '')).toLowerCase();
 
+          // 🔥 1. BULLET HIDE LOGIC (JS Level Fix)
+          if (/bullet|ammo|projectile|cartridge|bb|pellet|round/.test(name)) {
+            node.visible = false;
+            return; // Skip material assignment for hidden bullet
+          }
+
+          // 🔥 2. SMART MATERIALS
           const isGrip  = /grip|handle|stock|butt/.test(name);
           const isSlide = /slide|barrel|upper|chamber/.test(name);
           const isFrame = /frame|lower|trigger|guard/.test(name);
 
           if (isGrip) {
-            // Grip: stippled texture — rough rubbery feel
             node.material = new THREE.MeshStandardMaterial({
-              color: 0x0a0a0a,
-              metalness: 0.15,
-              roughness: 0.85,
-              map: gripTex,
-              bumpMap: gripBump,
-              bumpScale: 0.15,
-              envMap,
-              envMapIntensity: 1.0
+              color: 0x0a0a0a, metalness: 0.15, roughness: 0.85,
+              map: gripTex, bumpMap: gripBump, bumpScale: 0.15,
+              envMap, envMapIntensity: 1.0
             });
           } else if (isSlide) {
-            // Slide: black metal + vertical serrations
             node.material = new THREE.MeshStandardMaterial({
-              color: 0x080808,
-              metalness: 1.0,
-              roughness: 0.15,
-              map: slideTex,
-              bumpMap: slideBump,
-              bumpScale: 0.08,
-              envMap,
-              envMapIntensity: 2.5
+              color: 0x080808, metalness: 1.0, roughness: 0.15,
+              map: slideTex, bumpMap: slideBump, bumpScale: 0.08,
+              envMap, envMapIntensity: 2.5
             });
           } else if (isFrame) {
-            // Frame: fine rough polymer finish
             node.material = new THREE.MeshStandardMaterial({
-              color: 0x0c0c0c,
-              metalness: 0.35,
-              roughness: 0.55,
-              map: frameTex,
-              envMap,
-              envMapIntensity: 1.5
+              color: 0x0c0c0c, metalness: 0.35, roughness: 0.55,
+              map: frameTex, envMap, envMapIntensity: 1.5
             });
           } else {
-            // Default: glossy black metal
             node.material = new THREE.MeshStandardMaterial({
-              color: 0x0a0a0a,
-              metalness: 1.0,
-              roughness: 0.05,
-              envMap,
-              envMapIntensity: 3.0
+              color: 0x0a0a0a, metalness: 1.0, roughness: 0.05,
+              envMap, envMapIntensity: 3.0
             });
           }
         });
@@ -568,7 +491,6 @@
     let fpsCheckTime = 0;
     let lowFpsFrames = 0;
     let qualityDropped = false;
-
     const animThrottle = quality === QUALITY.low ? 2 : 1;
     let frameIdx = 0;
 
@@ -625,10 +547,7 @@
     }
 
     window.addEventListener('resize', onResize);
-    window.addEventListener('orientationchange', () => {
-      setTimeout(onResize, 200);
-    });
-
+    window.addEventListener('orientationchange', () => setTimeout(onResize, 200));
     document.addEventListener('contextmenu', e => e.preventDefault());
 
     let lastTouch = 0;
@@ -642,11 +561,8 @@
        9. PAGE VISIBILITY
     ============================================================ */
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        clock.stop();
-      } else {
-        clock.start();
-      }
+      if (document.hidden) clock.stop();
+      else clock.start();
     });
   </script>
 </body>
