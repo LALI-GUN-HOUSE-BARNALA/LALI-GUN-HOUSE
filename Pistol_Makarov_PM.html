@@ -3,15 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>PM Makarov - Real Textures</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1a1a1a">
+<title>PM Makarov .177 Cal 4.5mm — Air Gun</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
     width: 100%; height: 100%; overflow: hidden;
-    background: #111111; /* Dark background like Sketchfab */
+    background: #1a1a1a;
     font-family: -apple-system, 'Segoe UI', sans-serif;
     overscroll-behavior: none;
     -webkit-user-select: none; user-select: none;
+    -webkit-touch-callout: none;
   }
 
   #canvas-container { width: 100vw; height: 100vh; display: block; touch-action: none; }
@@ -22,31 +25,52 @@
     top: max(16px, env(safe-area-inset-top));
     left: max(16px, env(safe-area-inset-left));
     pointer-events: none;
-    background: rgba(20, 20, 20, 0.7);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    padding: 12px 16px;
-    border-radius: 8px;
+    background: rgba(20, 20, 20, 0.75);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    padding: 14px 18px;
+    border-radius: 10px;
     color: #fff;
-    border-left: 3px solid #8b3a3a;
+    border-left: 4px solid #8b3a3a; /* Brown/Red accent */
+    box-shadow: 0 8px 30px rgba(0,0,0,0.8);
+    max-width: 280px;
   }
-  .ui-overlay h1 { font-size: 1rem; color: #eee; font-weight: 600; margin-bottom: 4px; }
-  .ui-overlay p { font-size: 0.75rem; color: #aaa; }
+  .ui-overlay h1 {
+    font-size: 1.1rem; margin-bottom: 3px;
+    color: #e0e0e0; letter-spacing: 0.5px; font-weight: 700;
+  }
+  .ui-overlay .sub {
+    font-size: 0.68rem; color: #aaa; margin-bottom: 8px;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .ui-overlay p { font-size: 0.75rem; color: #ccc; line-height: 1.5; }
 
   .loading {
     position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     color: #ccc; font-size: 1rem;
-    text-align: center; letter-spacing: 2px;
+    text-align: center; letter-spacing: 3px;
     pointer-events: none;
   }
-  .hidden { opacity: 0; transition: opacity 0.5s; }
-  .error-msg { color: #ff5c5c !important; font-weight: bold; }
+  .loading .bar {
+    width: 200px; height: 3px;
+    background: rgba(255,255,255,0.08);
+    margin: 12px auto 0; border-radius: 2px;
+    overflow: hidden;
+  }
+  .loading .bar div {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, #8b3a3a, #ccc);
+    transition: width 0.2s;
+  }
+  .hidden { opacity: 0; pointer-events: none; transition: opacity 0.5s; }
+  .error-msg { color: #ff5c5c !important; font-weight: 600; }
 
   @media (max-width: 600px) {
-    .ui-overlay { padding: 8px 12px; }
-    .ui-overlay h1 { font-size: 0.9rem; }
-    .ui-overlay p { font-size: 0.65rem; }
+    .ui-overlay { padding: 10px 14px; max-width: 220px; }
+    .ui-overlay h1 { font-size: 0.95rem; }
+    .ui-overlay .sub { font-size: 0.62rem; }
+    .ui-overlay p { font-size: 0.68rem; }
   }
 </style>
 </head>
@@ -56,153 +80,470 @@
 
   <div class="ui-overlay" id="ui">
     <h1>PM Makarov</h1>
-    <p>👆 Drag to Rotate | 🤏 Pinch to Zoom</p>
+    <div class="sub">.177 CAL 4.5mm — Air Gun</div>
+    <p>👆 Drag to Rotate &nbsp;|&nbsp; 🤏 Pinch to Zoom</p>
   </div>
 
-  <div class="loading" id="loader">LOADING...</div>
+  <div class="loading" id="loader">
+    LOADING
+    <div class="bar"><div id="progress"></div></div>
+  </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 
   <script>
-    // 1. SCENE SETUP
+    /* ============================================================
+       0. DEVICE DETECTION
+    ============================================================ */
+    const ua = navigator.userAgent;
+    const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua);
+    const isIOS    = /iPhone|iPad|iPod/i.test(ua);
+    const isHighEnd = (
+      isIOS ||
+      /Snapdragon 8|SD8|Tensor G[23]|Exynos 2[2-9]|Dimensity 9/i.test(ua) ||
+      (window.devicePixelRatio >= 3 && window.innerWidth >= 390)
+    );
+
+    const QUALITY = {
+      high:   { pixelRatio: Math.min(window.devicePixelRatio, 2),    antialias: true,  envWidth: 2048, envHeight: 1024 },
+      medium: { pixelRatio: Math.min(window.devicePixelRatio, 1.75), antialias: true,  envWidth: 1024, envHeight: 512  },
+      low:    { pixelRatio: 1.5,                                     antialias: false, envWidth: 512,  envHeight: 256  }
+    };
+
+    let quality = isHighEnd ? QUALITY.high : (isMobile ? QUALITY.medium : QUALITY.high);
+
+    /* ============================================================
+       1. SCENE
+    ============================================================ */
     const container = document.getElementById('canvas-container');
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x111111); // Sketchfab dark grey
+    scene.background = new THREE.Color(0x1a1a1a);
 
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 1.5, 6);
+    const camera = new THREE.PerspectiveCamera(
+      42, window.innerWidth / window.innerHeight, 0.1, 1000
+    );
+    camera.position.set(0, 1.0, 5);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: quality.antialias,
+      alpha: false,
+      powerPreference: 'high-performance',
+      stencil: false
+    });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    
-    // Enable proper color rendering for textures
+    renderer.setPixelRatio(quality.pixelRatio);
+    renderer.shadowMap.enabled = false;
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.2;
-    
     container.appendChild(renderer.domElement);
 
     renderer.domElement.style.touchAction = 'none';
     renderer.domElement.addEventListener('touchstart', e => e.preventDefault(), { passive: false });
     renderer.domElement.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
 
-    // 2. LIGHTING (Studio Setup)
-    scene.add(new THREE.AmbientLight(0xffffff, 0.4)); // Soft ambient
-    
-    const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
-    keyLight.position.set(5, 10, 7);
+    /* ============================================================
+       2. ENVIRONMENT MAP
+    ============================================================ */
+    let envMap = null;
+    function buildEnvironment() {
+      if (envMap) return envMap;
+
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      pmrem.compileEquirectangularShader();
+
+      const c = document.createElement('canvas');
+      c.width = quality.envWidth;
+      c.height = quality.envHeight;
+      const ctx = c.getContext('2d');
+
+      const grad = ctx.createLinearGradient(0, 0, 0, c.height);
+      grad.addColorStop(0.00, '#111111');
+      grad.addColorStop(0.42, '#222222');
+      grad.addColorStop(0.50, '#dddddd');
+      grad.addColorStop(0.58, '#333333');
+      grad.addColorStop(0.75, '#111111');
+      grad.addColorStop(1.00, '#050505');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, c.width, c.height);
+
+      const sx = c.width / 2048;
+      const sy = c.height / 1024;
+
+      const drawStreak = (x, y, w, h, color, blur) => {
+        ctx.save();
+        ctx.shadowBlur = blur * sx;
+        ctx.shadowColor = color;
+        ctx.fillStyle = color;
+        ctx.fillRect(x * sx, y * sy, w * sx, h * sy);
+        ctx.restore();
+      };
+
+      const streakCount = quality.envWidth >= 1024 ? 6 : 3;
+      const positions = [
+        [150, 320, 60, 380, '#ffffff', 90],
+        [420, 280, 50, 460, '#e0e0e0', 100],
+        [720, 340, 70, 340, '#ffffff', 90],
+        [1050, 300, 55, 420, '#cccccc', 100],
+        [1380, 330, 65, 360, '#ffffff', 90],
+        [1700, 310, 50, 400, '#e0e0e0', 100]
+      ];
+      for (let i = 0; i < streakCount; i++) drawStreak(...positions[i]);
+
+      const tex = new THREE.CanvasTexture(c);
+      tex.mapping = THREE.EquirectangularReflectionMapping;
+      tex.encoding = THREE.sRGBEncoding;
+
+      envMap = pmrem.fromEquirectangular(tex).texture;
+      tex.dispose();
+      pmrem.dispose();
+      return envMap;
+    }
+
+    envMap = buildEnvironment();
+    scene.environment = envMap;
+
+    /* ============================================================
+       3. PROCEDURAL TEXTURES (Grip & Slide)
+    ============================================================ */
+    const textureSize = quality.envWidth >= 1024 ? 512 : 256;
+
+    // Brown Bakelite Grip with Diamond Checkering
+    function makeGripTexture() {
+      const c = document.createElement('canvas');
+      c.width = c.height = textureSize;
+      const ctx = c.getContext('2d');
+      
+      // Base Brown Color (Bakelite)
+      ctx.fillStyle = '#4a2215';
+      ctx.fillRect(0, 0, c.width, c.height);
+
+      // Diamond checkering lines
+      ctx.strokeStyle = '#2b1108';
+      ctx.lineWidth = textureSize / 64;
+      const step = textureSize / 16;
+      
+      for (let i = -textureSize; i < textureSize * 2; i += step) {
+        ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i + textureSize, textureSize); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i - textureSize, textureSize); ctx.stroke();
+      }
+
+      // Highlight lines for 3D effect
+      ctx.strokeStyle = '#6b3624';
+      ctx.lineWidth = textureSize / 128;
+      for (let i = -textureSize; i < textureSize * 2; i += step) {
+        ctx.beginPath(); ctx.moveTo(i+2, 0); ctx.lineTo(i + textureSize+2, textureSize); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(i-2, 0); ctx.lineTo(i - textureSize-2, textureSize); ctx.stroke();
+      }
+
+      const tex = new THREE.CanvasTexture(c);
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping; 
+      tex.repeat.set(2, 2); 
+      tex.encoding = THREE.sRGBEncoding;
+      return tex;
+    }
+
+    // Grip Bump Map for Checkering
+    function makeGripBumpMap() {
+      const c = document.createElement('canvas');
+      c.width = c.height = textureSize;
+      const ctx = c.getContext('2d');
+      
+      ctx.fillStyle = '#000000'; 
+      ctx.fillRect(0, 0, c.width, c.height);
+      
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = textureSize / 64;
+      const step = textureSize / 16;
+      
+      for (let i = -textureSize; i < textureSize * 2; i += step) {
+        ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i + textureSize, textureSize); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i - textureSize, textureSize); ctx.stroke();
+      }
+
+      const tex = new THREE.CanvasTexture(c);
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping; 
+      tex.repeat.set(2, 2);
+      return tex;
+    }
+
+    // Slide Serrations
+    function makeSlideTexture() {
+      const c = document.createElement('canvas');
+      c.width = textureSize; c.height = textureSize;
+      const ctx = c.getContext('2d');
+      
+      ctx.fillStyle = '#0a0a0a'; 
+      ctx.fillRect(0, 0, c.width, c.height);
+      
+      const lineCount = 24, lineWidth = textureSize / lineCount;
+      for (let i = 0; i < lineCount; i++) {
+        const x = i * lineWidth;
+        ctx.fillStyle = '#000000'; ctx.fillRect(x, 0, lineWidth * 0.5, c.height);
+        ctx.fillStyle = '#333333'; ctx.fillRect(x + lineWidth * 0.5, 0, lineWidth * 0.1, c.height);
+      }
+      
+      const tex = new THREE.CanvasTexture(c);
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping; 
+      tex.encoding = THREE.sRGBEncoding;
+      return tex;
+    }
+
+    const gripTex = makeGripTexture();
+    const gripBump = makeGripBumpMap();
+    const slideTex = makeSlideTexture();
+
+    /* ============================================================
+       4. LIGHTING
+    ============================================================ */
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
+    keyLight.position.set(5, 8, 6);
     scene.add(keyLight);
-    
-    const fillLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    fillLight.position.set(-5, 5, 5);
-    scene.add(fillLight);
-    
-    const rimLight = new THREE.DirectionalLight(0xffffff, 0.5);
-    rimLight.position.set(0, -5, -5);
+
+    const rimLight = new THREE.DirectionalLight(0xffffff, 2.0);
+    rimLight.position.set(-6, 5, -5);
     scene.add(rimLight);
 
-    // 3. CONTROLS
+    const fillLight = new THREE.PointLight(0xffffff, 1.2, 30, 2);
+    fillLight.position.set(-4, 3, 6);
+    scene.add(fillLight);
+
+    /* ============================================================
+       5. CONTROLS
+    ============================================================ */
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
+    controls.dampingFactor = isMobile ? 0.1 : 0.06;
     controls.autoRotate = true;
-    controls.autoRotateSpeed = 1.0;
+    controls.autoRotateSpeed = isMobile ? 1.0 : 1.4;
     controls.enablePan = false;
-    controls.minDistance = 2;
+    controls.minDistance = 1.5;
     controls.maxDistance = 15;
+    controls.maxPolarAngle = Math.PI * 0.85;
+    controls.minPolarAngle = Math.PI * 0.15;
 
-    // Pause auto-rotate on drag
-    controls.addEventListener('start', () => controls.autoRotate = false);
+    let autoRotateTimer;
+    controls.addEventListener('start', () => {
+      controls.autoRotate = false;
+      clearTimeout(autoRotateTimer);
+    });
     controls.addEventListener('end', () => {
-      setTimeout(() => controls.autoRotate = true, 2000);
+      clearTimeout(autoRotateTimer);
+      autoRotateTimer = setTimeout(() => controls.autoRotate = true, 3000);
     });
 
-    // 4. LOAD MODEL (Keep Original Textures)
-    const loaderEl = document.getElementById('loader');
+    /* ============================================================
+       6. LOAD MODEL
+    ============================================================ */
+    const loaderEl   = document.getElementById('loader');
+    const progressEl = document.getElementById('progress');
+    const uiEl       = document.getElementById('ui');
+
     const loader = new THREE.GLTFLoader();
-    
-    loader.load('Pistol_Makarov_PM.glb', function (gltf) {
-      const gunModel = gltf.scene;
+    let gunGroup = null;
+    let baseY = 0;
 
-      // 🔥 IMPORTANT: We are NOT changing materials here.
-      // We are keeping the original Sketchfab textures (Brown grip, metal, etc.)
-      
-      gunModel.traverse((node) => {
-        if (node.isMesh) {
-          // Just ensure textures are rendered in correct color space
-          if (node.material.map) {
-            node.material.map.encoding = THREE.sRGBEncoding;
-          }
+    loader.load(
+      'pmmakarov.glb',
+
+      function (gltf) {
+        const gunModel = gltf.scene;
+
+        // ---- Detect longest axis ----
+        const rawBox  = new THREE.Box3().setFromObject(gunModel);
+        const rawSize = rawBox.getSize(new THREE.Vector3());
+
+        if (rawSize.y > rawSize.x && rawSize.y > rawSize.z) {
+          gunModel.rotation.z = -Math.PI / 2;
+        } else if (rawSize.z > rawSize.x && rawSize.z > rawSize.y) {
+          gunModel.rotation.y = Math.PI / 2;
         }
-      });
 
-      // Center and rotate the model perfectly
-      const box = new THREE.Box3().setFromObject(gunModel);
-      const center = box.getCenter(new THREE.Vector3());
-      gunModel.position.sub(center);
+        // Fire position
+        gunModel.rotation.y += Math.PI / 2;
 
-      const size = box.getSize(new THREE.Vector3());
-      
-      // If model is vertical, lay it down horizontally
-      if (size.y > size.x && size.y > size.z) {
-        gunModel.rotation.z = -Math.PI / 2; 
+        // Re-center
+        gunModel.updateMatrixWorld(true);
+        const box    = new THREE.Box3().setFromObject(gunModel);
+        const center = box.getCenter(new THREE.Vector3());
+        const size   = box.getSize(new THREE.Vector3());
+        gunModel.position.sub(center);
+
+        // ---- BULLET HIDE + SMART MATERIALS ----
+        gunModel.traverse((node) => {
+          if (!node.isMesh) return;
+          node.castShadow = false;
+          node.receiveShadow = false;
+          node.frustumCulled = true;
+
+          const name = (node.name + ' ' + (node.material?.name || '')).toLowerCase();
+
+          // 🔥 1. BULLET/BBS HIDE LOGIC
+          if (/bullet|ammo|projectile|cartridge|bb|pellet|round/.test(name)) {
+            node.visible = false;
+            return;
+          }
+
+          // 🔥 2. SMART MATERIALS
+          const isGrip  = /grip|handle|stock|butt/.test(name);
+          const isSlide = /slide|barrel|upper|chamber/.test(name);
+
+          if (isGrip) {
+            // Brown Bakelite with Diamond Checkering
+            node.material = new THREE.MeshStandardMaterial({
+              color: 0x5c2e1a, 
+              metalness: 0.1, 
+              roughness: 0.6,
+              map: gripTex, 
+              bumpMap: gripBump, 
+              bumpScale: 0.05,
+              envMap, 
+              envMapIntensity: 1.0
+            });
+          } else if (isSlide) {
+            // Black Steel Slide with Serrations
+            node.material = new THREE.MeshStandardMaterial({
+              color: 0x050505, 
+              metalness: 1.0, 
+              roughness: 0.2,
+              map: slideTex, 
+              envMap, 
+              envMapIntensity: 2.5
+            });
+          } else {
+            // Default Black Metal
+            node.material = new THREE.MeshStandardMaterial({
+              color: 0x080808, 
+              metalness: 1.0, 
+              roughness: 0.1,
+              envMap, 
+              envMapIntensity: 3.0
+            });
+          }
+        });
+
+        // Wrap in group for floating bob
+        gunGroup = new THREE.Group();
+        gunGroup.add(gunModel);
+        scene.add(gunGroup);
+
+        // Auto-frame camera
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const dist   = maxDim * 1.9;
+        camera.position.set(0, maxDim * 0.3, dist);
+        camera.near = maxDim * 0.01;
+        camera.far  = maxDim * 200;
+        camera.updateProjectionMatrix();
+
+        controls.target.set(0, 0, 0);
+        controls.minDistance = maxDim * 0.6;
+        controls.maxDistance = maxDim * 5;
+        controls.update();
+
+        baseY = 0;
+        gunGroup.position.y = baseY;
+
+        loaderEl.classList.add('hidden');
+        setTimeout(() => { if (loaderEl.parentNode) loaderEl.remove(); }, 500);
+      },
+
+      function (xhr) {
+        if (xhr.total) {
+          progressEl.style.width = Math.round((xhr.loaded / xhr.total) * 100) + '%';
+        }
+      },
+
+      function (error) {
+        console.error('GLB load failed:', error);
+        loaderEl.innerHTML = '<p class="error-msg">⚠️ Failed to load pmmakarov.glb<br><span style="font-size:0.8rem;color:#888;">File should be in same folder as this HTML</span></p>';
+        uiEl.querySelector('p').textContent = 'Model missing — check console.';
       }
-      
-      // Face the barrel towards the camera
-      gunModel.rotation.y = Math.PI / 2; 
+    );
 
-      const wrapper = new THREE.Group();
-      wrapper.add(gunModel);
-      scene.add(wrapper);
+    /* ============================================================
+       7. RENDER LOOP
+    ============================================================ */
+    const clock = new THREE.Clock();
+    let frameCount = 0;
+    let fpsCheckTime = 0;
+    let lowFpsFrames = 0;
+    let qualityDropped = false;
+    const animThrottle = quality === QUALITY.low ? 2 : 1;
+    let frameIdx = 0;
 
-      // Auto-fit camera
-      const maxDim = Math.max(size.x, size.y, size.z);
-      const dist = maxDim * 1.8;
-      
-      camera.position.set(0, maxDim * 0.3, dist);
-      camera.near = maxDim * 0.01;
-      camera.far = maxDim * 200;
-      camera.updateProjectionMatrix();
-
-      controls.target.set(0, 0, 0);
-      controls.minDistance = maxDim * 0.5;
-      controls.maxDistance = maxDim * 5;
-      controls.update();
-
-      // Hide loading screen
-      loaderEl.classList.add('hidden');
-      setTimeout(() => loaderEl.style.display = 'none', 500);
-
-    }, 
-    function (xhr) {
-      if (xhr.total) {
-        loaderEl.innerText = `LOADING ${Math.round((xhr.loaded / xhr.total) * 100)}%`;
-      }
-    }, 
-    function (error) {
-      console.error('GLB load failed:', error);
-      loaderEl.innerHTML = '<span class="error-msg">⚠️ Failed to load Pistol_Makarov_PM.glb</span>';
-    });
-
-    // 5. ANIMATION LOOP
     function animate() {
       requestAnimationFrame(animate);
+
+      frameIdx++;
+      const doAnim = frameIdx % animThrottle === 0;
+      const t = clock.getElapsedTime();
+
+      if (doAnim && gunGroup) {
+        gunGroup.position.y = baseY + Math.sin(t * 1.1) * 0.05;
+        gunGroup.rotation.z = Math.sin(t * 0.7) * 0.012;
+      }
+
+      if (doAnim) {
+        rimLight.intensity = 2.0 + Math.sin(t * 1.3) * 0.3;
+      }
+
       controls.update();
       renderer.render(scene, camera);
+
+      frameCount++;
+      const now = performance.now();
+      if (now - fpsCheckTime >= 2000) {
+        const fps = (frameCount * 1000) / (now - fpsCheckTime);
+        if (fps < 30 && !qualityDropped) {
+          lowFpsFrames++;
+          if (lowFpsFrames >= 2) {
+            qualityDropped = true;
+            renderer.setPixelRatio(Math.min(quality.pixelRatio, 1.25));
+            console.log('⚡ Quality auto-reduced for smoothness');
+          }
+        } else {
+          lowFpsFrames = 0;
+        }
+        frameCount = 0;
+        fpsCheckTime = now;
+      }
     }
     animate();
 
-    // 6. RESIZE
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
+    /* ============================================================
+       8. RESIZE + ORIENTATION
+    ============================================================ */
+    function onResize() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      camera.aspect = w / h;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+      renderer.setSize(w, h);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, quality.pixelRatio));
+    }
 
+    window.addEventListener('resize', onResize);
+    window.addEventListener('orientationchange', () => setTimeout(onResize, 200));
     document.addEventListener('contextmenu', e => e.preventDefault());
+
+    let lastTouch = 0;
+    document.addEventListener('touchend', e => {
+      const now = Date.now();
+      if (now - lastTouch <= 300) e.preventDefault();
+      lastTouch = now;
+    }, { passive: false });
+
+    /* ============================================================
+       9. PAGE VISIBILITY
+    ============================================================ */
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) clock.stop();
+      else clock.start();
+    });
   </script>
 </body>
 </html>
