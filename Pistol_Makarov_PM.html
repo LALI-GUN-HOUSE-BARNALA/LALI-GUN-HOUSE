@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>PM Makarov - Real Textures</title>
+<title>PM Makarov - Studio Setup</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
     width: 100%; height: 100%; overflow: hidden;
-    background: #111111; /* Dark background like Sketchfab */
+    background: #111111; 
     font-family: -apple-system, 'Segoe UI', sans-serif;
     overscroll-behavior: none;
     -webkit-user-select: none; user-select: none;
@@ -29,6 +29,7 @@
     border-radius: 8px;
     color: #fff;
     border-left: 3px solid #8b3a3a;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
   }
   .ui-overlay h1 { font-size: 1rem; color: #eee; font-weight: 600; margin-bottom: 4px; }
   .ui-overlay p { font-size: 0.75rem; color: #aaa; }
@@ -42,12 +43,6 @@
   }
   .hidden { opacity: 0; transition: opacity 0.5s; }
   .error-msg { color: #ff5c5c !important; font-weight: bold; }
-
-  @media (max-width: 600px) {
-    .ui-overlay { padding: 8px 12px; }
-    .ui-overlay h1 { font-size: 0.9rem; }
-    .ui-overlay p { font-size: 0.65rem; }
-  }
 </style>
 </head>
 <body>
@@ -66,113 +61,165 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 
   <script>
-    // 1. SCENE SETUP
+    // 1. SCENE & RENDERER SETUP
     const container = document.getElementById('canvas-container');
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x111111); // Sketchfab dark grey
+    scene.background = new THREE.Color(0x111111);
+    
+    // Fog for depth (halki jehi)
+    scene.fog = new THREE.Fog(0x111111, 10, 25);
 
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 1.5, 6);
+    camera.position.set(0, 2, 7);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Mobile GPU safe
     
-    // Enable proper color rendering for textures
+    // Shadows ON (Optimized)
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Soft shadows
+    
+    // Colors & Lighting
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.1;
     
     container.appendChild(renderer.domElement);
-
     renderer.domElement.style.touchAction = 'none';
+
+    // Touch fixes
     renderer.domElement.addEventListener('touchstart', e => e.preventDefault(), { passive: false });
     renderer.domElement.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
 
-    // 2. LIGHTING (Studio Setup)
-    scene.add(new THREE.AmbientLight(0xffffff, 0.4)); // Soft ambient
+    // 2. LIGHTING (Studio Setup with Shadows)
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
     
-    const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
-    keyLight.position.set(5, 10, 7);
+    // Key Light (Main light jihde naal shadow pende)
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.0);
+    keyLight.position.set(5, 10, 5);
+    keyLight.castShadow = true;
+    keyLight.shadow.mapSize.width = 1024; // 1024 mobile layi perfect hai
+    keyLight.shadow.mapSize.height = 1024;
+    keyLight.shadow.camera.near = 0.5;
+    keyLight.shadow.camera.far = 20;
+    keyLight.shadow.camera.left = -5;
+    keyLight.shadow.camera.right = 5;
+    keyLight.shadow.camera.top = 5;
+    keyLight.shadow.camera.bottom = -5;
+    keyLight.shadow.bias = -0.001; // Fixes shadow glitches
     scene.add(keyLight);
     
-    const fillLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    // Fill Light (Thodi hor roshni)
+    const fillLight = new THREE.DirectionalLight(0xffffff, 1.0);
     fillLight.position.set(-5, 5, 5);
     scene.add(fillLight);
     
-    const rimLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    // Rim Light (Pichhe ton roshni)
+    const rimLight = new THREE.DirectionalLight(0xffffff, 0.8);
     rimLight.position.set(0, -5, -5);
     scene.add(rimLight);
 
-    // 3. CONTROLS
+    // 3. ENVIRONMENT MAP (For Metal Reflection)
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const envCanvas = document.createElement('canvas');
+    envCanvas.width = 512; envCanvas.height = 256;
+    const ctx = envCanvas.getContext('2d');
+    const grad = ctx.createLinearGradient(0, 0, 0, 256);
+    grad.addColorStop(0, '#222'); 
+    grad.addColorStop(0.5, '#fff'); 
+    grad.addColorStop(1, '#111');
+    ctx.fillStyle = grad; ctx.fillRect(0, 0, 512, 256);
+    
+    const envTex = new THREE.CanvasTexture(envCanvas);
+    envTex.mapping = THREE.EquirectangularReflectionMapping;
+    const envMap = pmrem.fromEquirectangular(envTex).texture;
+    scene.environment = envMap;
+    pmrem.dispose();
+
+    // 4. WHITE CIRCLE FLOOR (Bada Circle)
+    // Eh oh circle hai jis te gun di shadow pavegi
+    const floorGeo = new THREE.CircleGeometry(8, 64); // 8 = size, 64 = smoothness
+    const floorMat = new THREE.MeshStandardMaterial({
+      color: 0xffffff,       // White color
+      roughness: 0.2,        // Halki jehi shiny
+      metalness: 0.1,        // Thoda reflective
+      envMap: envMap         // Environment reflection
+    });
+    const floor = new THREE.Mesh(floorGeo, floorMat);
+    floor.rotation.x = -Math.PI / 2; // Lita hoya (flat)
+    floor.position.y = -1.5;         // Thoda niche
+    floor.receiveShadow = true;      // 🔥 Shadow receive karega
+    scene.add(floor);
+
+    // 5. CONTROLS
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.autoRotate = true;
     controls.autoRotateSpeed = 1.0;
     controls.enablePan = false;
+    
+    // Upar ton circle dekh sako te niche ton na jao
+    controls.maxPolarAngle = Math.PI / 2 + 0.1; 
     controls.minDistance = 2;
     controls.maxDistance = 15;
 
-    // Pause auto-rotate on drag
     controls.addEventListener('start', () => controls.autoRotate = false);
     controls.addEventListener('end', () => {
       setTimeout(() => controls.autoRotate = true, 2000);
     });
 
-    // 4. LOAD MODEL (Keep Original Textures)
+    // 6. LOAD MODEL (Keep Original Textures)
     const loaderEl = document.getElementById('loader');
     const loader = new THREE.GLTFLoader();
     
     loader.load('Pistol_Makarov_PM.glb', function (gltf) {
       const gunModel = gltf.scene;
 
-      // 🔥 IMPORTANT: We are NOT changing materials here.
-      // We are keeping the original Sketchfab textures (Brown grip, metal, etc.)
-      
+      // Original textures rakhiya gayia ne, sirf shadow enable kita hai
       gunModel.traverse((node) => {
         if (node.isMesh) {
-          // Just ensure textures are rendered in correct color space
-          if (node.material.map) {
-            node.material.map.encoding = THREE.sRGBEncoding;
-          }
+          node.castShadow = true;    // 🔥 Gun di shadow pavegi
+          node.receiveShadow = true; // Gun te vi shadow pavegi
+          
+          // Texture colors fix
+          if (node.material.map) node.material.map.encoding = THREE.sRGBEncoding;
         }
       });
 
-      // Center and rotate the model perfectly
+      // Center & Rotate
       const box = new THREE.Box3().setFromObject(gunModel);
       const center = box.getCenter(new THREE.Vector3());
       gunModel.position.sub(center);
 
       const size = box.getSize(new THREE.Vector3());
       
-      // If model is vertical, lay it down horizontally
       if (size.y > size.x && size.y > size.z) {
         gunModel.rotation.z = -Math.PI / 2; 
       }
-      
-      // Face the barrel towards the camera
       gunModel.rotation.y = Math.PI / 2; 
 
       const wrapper = new THREE.Group();
       wrapper.add(gunModel);
+      
+      // Gun nu floor ton thoda upar set karo taaki shadow saaf dikhe
+      wrapper.position.y = -0.5;
+      
       scene.add(wrapper);
 
       // Auto-fit camera
       const maxDim = Math.max(size.x, size.y, size.z);
       const dist = maxDim * 1.8;
       
-      camera.position.set(0, maxDim * 0.3, dist);
+      camera.position.set(0, maxDim * 0.5, dist);
       camera.near = maxDim * 0.01;
       camera.far = maxDim * 200;
       camera.updateProjectionMatrix();
 
-      controls.target.set(0, 0, 0);
-      controls.minDistance = maxDim * 0.5;
-      controls.maxDistance = maxDim * 5;
+      controls.target.set(0, -0.5, 0); // Focus gun te
       controls.update();
 
-      // Hide loading screen
       loaderEl.classList.add('hidden');
       setTimeout(() => loaderEl.style.display = 'none', 500);
 
@@ -187,7 +234,7 @@
       loaderEl.innerHTML = '<span class="error-msg">⚠️ Failed to load Pistol_Makarov_PM.glb</span>';
     });
 
-    // 5. ANIMATION LOOP
+    // 7. ANIMATION LOOP
     function animate() {
       requestAnimationFrame(animate);
       controls.update();
@@ -195,7 +242,7 @@
     }
     animate();
 
-    // 6. RESIZE
+    // 8. RESIZE
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
