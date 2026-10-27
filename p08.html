@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Luger P08 - CO2 Airgun (Brown Edition)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    background: #0a0a0a;
+    font-family: -apple-system, 'Segoe UI', sans-serif;
+    overscroll-behavior: none;
+  }
+
+  #canvas-container { width: 100vw; height: 100vh; display: block; touch-action: none; }
+  #canvas-container canvas { display: block; touch-action: none; }
+
+  .ui-overlay {
+    position: absolute;
+    top: max(16px, env(safe-area-inset-top));
+    left: max(16px, env(safe-area-inset-left));
+    pointer-events: none;
+    background: rgba(20, 10, 5, 0.7);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    padding: 14px 20px;
+    border-radius: 8px;
+    color: #fff;
+    border-left: 4px solid #c08840;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+  }
+  .ui-overlay h1 { font-size: 1.2rem; color: #d4a860; font-weight: 700; margin-bottom: 4px; letter-spacing: 0.5px; }
+  .ui-overlay p { font-size: 0.8rem; color: #ccc; text-transform: uppercase; letter-spacing: 1px; }
+
+  .loading {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    color: #d4a860; font-size: 1rem;
+    text-align: center; letter-spacing: 2px;
+    pointer-events: none;
+  }
+  .hidden { opacity: 0; transition: opacity 0.5s; }
+</style>
+</head>
+<body>
+
+  <div id="canvas-container"></div>
+
+  <div class="ui-overlay" id="ui">
+    <h1>Luger P08</h1>
+    <p>CO₂ Airgun — Brown Edition</p>
+  </div>
+
+  <div class="loading" id="loader">LOADING...</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+
+  <script>
+    // 1. SCENE SETUP
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0a0a0a);
+
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 1.5, 6);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
+    container.appendChild(renderer.domElement);
+
+    renderer.domElement.style.touchAction = 'none';
+    renderer.domElement.addEventListener('touchstart', e => e.preventDefault(), { passive: false });
+    renderer.domElement.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+
+    // 2. LIGHTING (Cinematic Setup for Animation)
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+    
+    // Main Key Light (Ghumda rahega animation vich)
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
+    keyLight.position.set(5, 8, 5);
+    scene.add(keyLight);
+    
+    // Fill Light (Brown color dekhawan layi thoda warm)
+    const fillLight = new THREE.DirectionalLight(0xffccaa, 1.5);
+    fillLight.position.set(-5, 5, 5);
+    scene.add(fillLight);
+    
+    // Rim Light (Pichhe ton pulse karegi)
+    const rimLight = new THREE.PointLight(0xd4a860, 2.0, 20, 2);
+    rimLight.position.set(0, 5, -5);
+    scene.add(rimLight);
+
+    // 3. ENVIRONMENT MAP (For Brown Metal Shine)
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const envCanvas = document.createElement('canvas');
+    envCanvas.width = 1024; envCanvas.height = 512;
+    const ctx = envCanvas.getContext('2d');
+    
+    // Brownish Premium Gradient
+    const grad = ctx.createLinearGradient(0, 0, 0, 512);
+    grad.addColorStop(0, '#1a1005'); 
+    grad.addColorStop(0.45, '#3a2010'); 
+    grad.addColorStop(0.5, '#ffeedd'); // Bright horizon
+    grad.addColorStop(0.55, '#3a2010'); 
+    grad.addColorStop(1, '#0a0500');
+    ctx.fillStyle = grad; 
+    ctx.fillRect(0, 0, 1024, 512);
+
+    const envTex = new THREE.CanvasTexture(envCanvas);
+    envTex.mapping = THREE.EquirectangularReflectionMapping;
+    const envMap = pmrem.fromEquirectangular(envTex).texture;
+    scene.environment = envMap;
+    pmrem.dispose();
+
+    // 4. CONTROLS
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 1.5;
+    controls.enablePan = false;
+    controls.minDistance = 2;
+    controls.maxDistance = 15;
+
+    controls.addEventListener('start', () => controls.autoRotate = false);
+    controls.addEventListener('end', () => {
+      setTimeout(() => controls.autoRotate = true, 2000);
+    });
+
+    // 5. LOAD MODEL (CO2 P08)
+    const loaderEl = document.getElementById('loader');
+    const loader = new THREE.GLTFLoader();
+    
+    // 🔥 File da naam P08.glb rakh lavo
+    loader.load('P08.glb', function (gltf) {
+      const gunModel = gltf.scene;
+
+      // 🔥 PREMIUM BROWN METAL COLOR LOGIC
+      gunModel.traverse((node) => {
+        if (node.isMesh) {
+          node.material = new THREE.MeshStandardMaterial({
+            color: 0x4a2511,       // Rich Dark Brown
+            metalness: 0.85,       // Metal chamak
+            roughness: 0.2,        // Glossy finish
+            envMap: envMap,
+            envMapIntensity: 2.5   // Reflection boost
+          });
+        }
+      });
+
+      // Center & Rotate
+      const box = new THREE.Box3().setFromObject(gunModel);
+      const center = box.getCenter(new THREE.Vector3());
+      gunModel.position.sub(center);
+
+      const size = box.getSize(new THREE.Vector3());
+      
+      // Horizontal align (Jivein fire karan wali position)
+      if (size.y > size.x && size.y > size.z) {
+        gunModel.rotation.z = -Math.PI / 2; 
+      }
+      gunModel.rotation.y = Math.PI / 2; 
+
+      // Model nu group vich paaya animation layi
+      const gunGroup = new THREE.Group();
+      gunGroup.add(gunModel);
+      scene.add(gunGroup);
+
+      // Auto-fit camera
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const dist = maxDim * 1.8;
+      
+      camera.position.set(0, maxDim * 0.3, dist);
+      camera.near = maxDim * 0.01;
+      camera.far = maxDim * 200;
+      camera.updateProjectionMatrix();
+
+      controls.target.set(0, 0, 0);
+      controls.update();
+
+      loaderEl.classList.add('hidden');
+      setTimeout(() => loaderEl.style.display = 'none', 500);
+
+      // 🔥 TOP LEVEL ANIMATION LOOP (Light Movement + Floating)
+      const clock = new THREE.Clock();
+      
+      function animate() {
+        requestAnimationFrame(animate);
+        const t = clock.getElapsedTime();
+
+        // 1. Gun da halka jeha float karna (Hawa vich)
+        gunGroup.position.y = Math.sin(t * 1.5) * 0.06;
+        gunGroup.rotation.z = Math.sin(t * 0.8) * 0.02;
+
+        // 2. Dynamic Lighting Animation (Roshni ghumdi rahegi jihde naal reflection live lagega)
+        keyLight.position.x = Math.sin(t * 1.2) * 8;
+        keyLight.position.z = Math.cos(t * 1.2) * 8;
+        keyLight.position.y = 5 + Math.sin(t * 2.0) * 2;
+
+        // Rim light da pulse (Gold/Brown glow)
+        rimLight.intensity = 1.5 + Math.sin(t * 2.5) * 0.6;
+
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      animate();
+
+    }, 
+    function (xhr) {
+      if (xhr.total) {
+        loaderEl.innerText = `LOADING ${Math.round((xhr.loaded / xhr.total) * 100)}%`;
+      }
+    }, 
+    function (error) {
+      console.error('GLB load failed:', error);
+      loaderEl.innerHTML = '<span style="color:red">⚠️ Failed to load P08.glb</span>';
+    });
+
+    // 6. RESIZE
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    document.addEventListener('contextmenu', e => e.preventDefault());
+  </script>
+</body>
+</html>
