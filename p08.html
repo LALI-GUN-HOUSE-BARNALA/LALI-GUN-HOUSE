@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Luger P08 - CO2 Airgun (Brown Edition)</title>
+<title>Luger P08 - Metallic Black</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
     width: 100%; height: 100%; overflow: hidden;
-    background: #0a0a0a;
+    background: #050505; /* Darker background for better reflection */
     font-family: -apple-system, 'Segoe UI', sans-serif;
     overscroll-behavior: none;
   }
@@ -21,22 +21,22 @@
     top: max(16px, env(safe-area-inset-top));
     left: max(16px, env(safe-area-inset-left));
     pointer-events: none;
-    background: rgba(20, 10, 5, 0.7);
+    background: rgba(15, 15, 15, 0.7);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     padding: 14px 20px;
     border-radius: 8px;
     color: #fff;
-    border-left: 4px solid #c08840;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+    border-left: 4px solid #888;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.8);
   }
-  .ui-overlay h1 { font-size: 1.2rem; color: #d4a860; font-weight: 700; margin-bottom: 4px; letter-spacing: 0.5px; }
-  .ui-overlay p { font-size: 0.8rem; color: #ccc; text-transform: uppercase; letter-spacing: 1px; }
+  .ui-overlay h1 { font-size: 1.2rem; color: #e0e0e0; font-weight: 700; margin-bottom: 4px; letter-spacing: 0.5px; }
+  .ui-overlay p { font-size: 0.8rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
 
   .loading {
     position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    color: #d4a860; font-size: 1rem;
+    color: #ccc; font-size: 1rem;
     text-align: center; letter-spacing: 2px;
     pointer-events: none;
   }
@@ -49,7 +49,7 @@
 
   <div class="ui-overlay" id="ui">
     <h1>Luger P08</h1>
-    <p>CO₂ Airgun — Brown Edition</p>
+    <p>CO₂ Airgun — Metallic Black</p>
   </div>
 
   <div class="loading" id="loader">LOADING...</div>
@@ -62,7 +62,7 @@
     // 1. SCENE SETUP
     const container = document.getElementById('canvas-container');
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0a0a0a);
+    scene.background = new THREE.Color(0x050505); // Dark background
 
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(0, 1.5, 6);
@@ -72,46 +72,53 @@
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.4; // Exposure thoda vadhaya taaki black vich reflection clear dikhe
     container.appendChild(renderer.domElement);
 
     renderer.domElement.style.touchAction = 'none';
     renderer.domElement.addEventListener('touchstart', e => e.preventDefault(), { passive: false });
     renderer.domElement.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
 
-    // 2. LIGHTING (Cinematic Setup for Animation)
-    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+    // 2. LIGHTING (Cinematic Setup for Black Metal)
+    scene.add(new THREE.AmbientLight(0xffffff, 0.4));
     
     // Main Key Light (Ghumda rahega animation vich)
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 3.0);
     keyLight.position.set(5, 8, 5);
     scene.add(keyLight);
     
-    // Fill Light (Brown color dekhawan layi thoda warm)
-    const fillLight = new THREE.DirectionalLight(0xffccaa, 1.5);
+    // Fill Light (Thodi cool light taaki metal vadia lage)
+    const fillLight = new THREE.DirectionalLight(0xccddff, 1.5);
     fillLight.position.set(-5, 5, 5);
     scene.add(fillLight);
     
-    // Rim Light (Pichhe ton pulse karegi)
-    const rimLight = new THREE.PointLight(0xd4a860, 2.0, 20, 2);
+    // Rim Light (Pichhe ton sharp white pulse)
+    const rimLight = new THREE.PointLight(0xffffff, 2.5, 20, 2);
     rimLight.position.set(0, 5, -5);
     scene.add(rimLight);
 
-    // 3. ENVIRONMENT MAP (For Brown Metal Shine)
+    // 3. ENVIRONMENT MAP (For Maximum Black Metal Shine)
     const pmrem = new THREE.PMREMGenerator(renderer);
     const envCanvas = document.createElement('canvas');
     envCanvas.width = 1024; envCanvas.height = 512;
     const ctx = envCanvas.getContext('2d');
     
-    // Brownish Premium Gradient
+    // Black & White Premium Gradient for high contrast reflection
     const grad = ctx.createLinearGradient(0, 0, 0, 512);
-    grad.addColorStop(0, '#1a1005'); 
-    grad.addColorStop(0.45, '#3a2010'); 
-    grad.addColorStop(0.5, '#ffeedd'); // Bright horizon
-    grad.addColorStop(0.55, '#3a2010'); 
-    grad.addColorStop(1, '#0a0500');
+    grad.addColorStop(0, '#000000'); 
+    grad.addColorStop(0.45, '#222222'); 
+    grad.addColorStop(0.5, '#ffffff'); // Bright horizon (for sharp reflection)
+    grad.addColorStop(0.55, '#222222'); 
+    grad.addColorStop(1, '#000000');
     ctx.fillStyle = grad; 
     ctx.fillRect(0, 0, 1024, 512);
+
+    // Add some bright white streaks for studio look
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowBlur = 30;
+    ctx.shadowColor = '#ffffff';
+    ctx.fillRect(300, 150, 30, 200);
+    ctx.fillRect(700, 150, 30, 200);
 
     const envTex = new THREE.CanvasTexture(envCanvas);
     envTex.mapping = THREE.EquirectangularReflectionMapping;
@@ -134,7 +141,7 @@
       setTimeout(() => controls.autoRotate = true, 2000);
     });
 
-    // 5. LOAD MODEL (CO2 P08)
+    // 5. LOAD MODEL (P08 Black Edition)
     const loaderEl = document.getElementById('loader');
     const loader = new THREE.GLTFLoader();
     
@@ -142,15 +149,15 @@
     loader.load('P08.glb', function (gltf) {
       const gunModel = gltf.scene;
 
-      // 🔥 PREMIUM BROWN METAL COLOR LOGIC
+      // 🔥 METALLIC BLACK COLOR LOGIC
       gunModel.traverse((node) => {
         if (node.isMesh) {
           node.material = new THREE.MeshStandardMaterial({
-            color: 0x4a2511,       // Rich Dark Brown
-            metalness: 0.85,       // Metal chamak
-            roughness: 0.2,        // Glossy finish
+            color: 0x080808,       // Deep Black
+            metalness: 1.0,        // 100% Metal
+            roughness: 0.05,       // Mirror Finish (Bohot zyada chamak)
             envMap: envMap,
-            envMapIntensity: 2.5   // Reflection boost
+            envMapIntensity: 3.0   // Reflection nu max kitta
           });
         }
       });
@@ -162,13 +169,12 @@
 
       const size = box.getSize(new THREE.Vector3());
       
-      // Horizontal align (Jivein fire karan wali position)
+      // Horizontal align
       if (size.y > size.x && size.y > size.z) {
         gunModel.rotation.z = -Math.PI / 2; 
       }
       gunModel.rotation.y = Math.PI / 2; 
 
-      // Model nu group vich paaya animation layi
       const gunGroup = new THREE.Group();
       gunGroup.add(gunModel);
       scene.add(gunGroup);
@@ -188,24 +194,24 @@
       loaderEl.classList.add('hidden');
       setTimeout(() => loaderEl.style.display = 'none', 500);
 
-      // 🔥 TOP LEVEL ANIMATION LOOP (Light Movement + Floating)
+      // 🔥 TOP LEVEL ANIMATION LOOP
       const clock = new THREE.Clock();
       
       function animate() {
         requestAnimationFrame(animate);
         const t = clock.getElapsedTime();
 
-        // 1. Gun da halka jeha float karna (Hawa vich)
+        // Gun da halka jeha float karna
         gunGroup.position.y = Math.sin(t * 1.5) * 0.06;
         gunGroup.rotation.z = Math.sin(t * 0.8) * 0.02;
 
-        // 2. Dynamic Lighting Animation (Roshni ghumdi rahegi jihde naal reflection live lagega)
+        // Dynamic Lighting Animation (Roshni ghumdi rahegi jihde naal chamak live lagegi)
         keyLight.position.x = Math.sin(t * 1.2) * 8;
         keyLight.position.z = Math.cos(t * 1.2) * 8;
         keyLight.position.y = 5 + Math.sin(t * 2.0) * 2;
 
-        // Rim light da pulse (Gold/Brown glow)
-        rimLight.intensity = 1.5 + Math.sin(t * 2.5) * 0.6;
+        // Rim light pulse
+        rimLight.intensity = 2.0 + Math.sin(t * 2.5) * 0.8;
 
         controls.update();
         renderer.render(scene, camera);
