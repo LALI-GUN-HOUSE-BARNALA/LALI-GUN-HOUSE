@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Classic Wooden Rifle</title>
+<title>Classic Rifle - Premium Wood Edition</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
     width: 100%; height: 100%; overflow: hidden;
-    background: #0a0a0a; /* Dark background to make wood pop */
+    background: #0a0705; /* Dark warm background */
     font-family: -apple-system, 'Segoe UI', sans-serif;
     overscroll-behavior: none;
   }
@@ -21,22 +21,22 @@
     top: max(16px, env(safe-area-inset-top));
     left: max(16px, env(safe-area-inset-left));
     pointer-events: none;
-    background: rgba(15, 15, 15, 0.7);
+    background: rgba(20, 12, 6, 0.75);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     padding: 14px 20px;
     border-radius: 8px;
     color: #fff;
-    border-left: 4px solid #8b4513; /* Wood brown accent */
+    border-left: 4px solid #c08840;
     box-shadow: 0 4px 15px rgba(0,0,0,0.8);
   }
-  .ui-overlay h1 { font-size: 1.2rem; color: #d2a679; font-weight: 700; margin-bottom: 4px; letter-spacing: 0.5px; }
-  .ui-overlay p { font-size: 0.8rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+  .ui-overlay h1 { font-size: 1.2rem; color: #d4a860; font-weight: 700; margin-bottom: 4px; letter-spacing: 0.5px; }
+  .ui-overlay p { font-size: 0.8rem; color: #ccc; text-transform: uppercase; letter-spacing: 1px; }
 
   .loading {
     position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    color: #ccc; font-size: 1rem;
+    color: #d4a860; font-size: 1rem;
     text-align: center; letter-spacing: 2px;
     pointer-events: none;
   }
@@ -49,7 +49,7 @@
 
   <div class="ui-overlay" id="ui">
     <h1>Classic Rifle</h1>
-    <p>Wood & Steel Edition</p>
+    <p>Premium Wood Edition</p>
   </div>
 
   <div class="loading" id="loader">LOADING...</div>
@@ -62,17 +62,17 @@
     // 1. SCENE SETUP
     const container = document.getElementById('canvas-container');
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0a0a0a); 
+    scene.background = new THREE.Color(0x0a0705); // Dark background matching Winchester
 
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 1.5, 6);
+    camera.position.set(0, 1.5, 8);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2; 
+    renderer.toneMappingExposure = 1.3; 
     container.appendChild(renderer.domElement);
 
     renderer.domElement.style.touchAction = 'none';
@@ -80,38 +80,45 @@
     renderer.domElement.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
 
     // 2. LIGHTING (Cinematic Setup)
-    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
     
-    // Main Key Light (Ghumda rahega)
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
+    // Main Key Light (Ghumda rahega animation vich)
+    const keyLight = new THREE.DirectionalLight(0xffffff, 3.0);
     keyLight.position.set(5, 8, 5);
     scene.add(keyLight);
     
-    // Fill Light (Thodi warm light wood layi)
-    const fillLight = new THREE.DirectionalLight(0xffccaa, 1.2);
+    // Fill Light (Warm light wood layi)
+    const fillLight = new THREE.DirectionalLight(0xffccaa, 1.5);
     fillLight.position.set(-5, 5, 5);
     scene.add(fillLight);
     
-    // Rim Light (Pichhe ton)
-    const rimLight = new THREE.PointLight(0xffffff, 1.5, 20, 2);
+    // Rim Light (Pichhe ton pulse)
+    const rimLight = new THREE.PointLight(0xd4a860, 2.5, 20, 2);
     rimLight.position.set(0, 5, -5);
     scene.add(rimLight);
 
-    // 3. ENVIRONMENT MAP (For Metal Shine)
+    // 3. ENVIRONMENT MAP (For Wood Shine & Reflection)
     const pmrem = new THREE.PMREMGenerator(renderer);
     const envCanvas = document.createElement('canvas');
     envCanvas.width = 1024; envCanvas.height = 512;
     const ctx = envCanvas.getContext('2d');
     
-    // Studio Gradient
+    // Rich Brown/Warm Gradient for reflection
     const grad = ctx.createLinearGradient(0, 0, 0, 512);
-    grad.addColorStop(0, '#111'); 
-    grad.addColorStop(0.45, '#333'); 
-    grad.addColorStop(0.5, '#ffffff'); // Bright horizon
-    grad.addColorStop(0.55, '#333'); 
-    grad.addColorStop(1, '#000');
+    grad.addColorStop(0, '#1a1005'); 
+    grad.addColorStop(0.45, '#4a2c15'); 
+    grad.addColorStop(0.5, '#ffeedd'); // Bright horizon
+    grad.addColorStop(0.55, '#4a2c15'); 
+    grad.addColorStop(1, '#0a0500');
     ctx.fillStyle = grad; 
     ctx.fillRect(0, 0, 1024, 512);
+
+    // Add white streaks for extra reflection
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowBlur = 40;
+    ctx.shadowColor = '#ffffff';
+    ctx.fillRect(250, 150, 40, 200);
+    ctx.fillRect(750, 150, 40, 200);
 
     const envTex = new THREE.CanvasTexture(envCanvas);
     envTex.mapping = THREE.EquirectangularReflectionMapping;
@@ -124,53 +131,37 @@
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.autoRotate = true;
-    controls.autoRotateSpeed = 1.0; // Rifle vadi hai islayi slow rotate
+    controls.autoRotateSpeed = 1.2; 
     controls.enablePan = false;
     
     // 🔥 ZOOM SETTINGS
     controls.enableZoom = true;
     controls.zoomSpeed = 1.0;       
-    controls.minDistance = 1.0;     
+    controls.minDistance = 1.5;     
     controls.maxDistance = 20.0;    
 
     controls.addEventListener('start', () => controls.autoRotate = false);
     controls.addEventListener('end', () => {
-      setTimeout(() => controls.autoRotate = true, 2000);
+      setTimeout(() => controls.autoRotate = true, 2500);
     });
 
     // 5. LOAD MODEL
     const loaderEl = document.getElementById('loader');
     const loader = new THREE.GLTFLoader();
     
-    // 🔥 File da naam rifle.glb rakh lavo
     loader.load('rifle.glb', function (gltf) {
       const gunModel = gltf.scene;
 
-      // 🔥 TEXTURE LOGIC: Wood & Metal
+      // 🔥 FULL BROWN & MAX REFLECTION LOGIC
       gunModel.traverse((node) => {
         if (node.isMesh) {
-          const name = (node.name + ' ' + (node.material?.name || '')).toLowerCase();
-          
-          // Jehdi cheez Wood (Lakdi) di hai
-          if (/wood|stock|handle|butt/.test(name)) {
-            node.material = new THREE.MeshStandardMaterial({
-              color: 0x6b3e1b,       // Rich Wood Brown
-              metalness: 0.1,        // Wood metal nahi hunda
-              roughness: 0.6,        // Thodi rough
-              envMap: envMap,
-              envMapIntensity: 0.5
-            });
-          } 
-          // Jehdi cheez Metal (Loha) di hai
-          else {
-            node.material = new THREE.MeshStandardMaterial({
-              color: 0x111111,       // Dark Metal
-              metalness: 1.0,        // Pure Metal
-              roughness: 0.15,       // Glossy finish
-              envMap: envMap,
-              envMapIntensity: 2.5   // High reflection
-            });
-          }
+          node.material = new THREE.MeshStandardMaterial({
+            color: 0x6b3e1b,       // Rich Wood Brown (Winchester style)
+            metalness: 0.6,        // Metalness thodi vadhayi taaki khud nu reflect kare
+            roughness: 0.15,       // Glossy finish (Zabardast chamak)
+            envMap: envMap,
+            envMapIntensity: 3.0   // Reflection max
+          });
         }
       });
 
@@ -185,7 +176,7 @@
       if (size.y > size.x && size.y > size.z) {
         gunModel.rotation.z = -Math.PI / 2; 
       }
-      // Camera de aage barrel set karo
+      // Barrel nu aage karo
       gunModel.rotation.y = Math.PI / 2; 
 
       const gunGroup = new THREE.Group();
@@ -194,15 +185,15 @@
 
       // Auto-fit camera
       const maxDim = Math.max(size.x, size.y, size.z);
-      const dist = maxDim * 1.6; // Rifle vadi hai islayi door khada kitta
+      const dist = maxDim * 1.6; 
       
       camera.position.set(0, maxDim * 0.2, dist);
       camera.near = maxDim * 0.01;
       camera.far = maxDim * 200;
       camera.updateProjectionMatrix();
 
-      controls.minDistance = maxDim * 0.4; 
-      controls.maxDistance = maxDim * 4;   
+      controls.minDistance = maxDim * 0.5; 
+      controls.maxDistance = maxDim * 5;   
       
       controls.target.set(0, 0, 0);
       controls.update();
@@ -217,14 +208,18 @@
         requestAnimationFrame(animate);
         const t = clock.getElapsedTime();
 
-        // Halka jeha float
-        gunGroup.position.y = Math.sin(t * 1.2) * 0.04;
+        // Halka jeha float (Hawa vich)
+        gunGroup.position.y = Math.sin(t * 1.2) * 0.05;
         gunGroup.rotation.z = Math.sin(t * 0.6) * 0.01;
 
-        // Dynamic Light Animation
-        keyLight.position.x = Math.sin(t * 0.8) * 8;
-        keyLight.position.z = Math.cos(t * 0.8) * 8;
-        
+        // Dynamic Light Animation (Roshni ghumdi rahegi jihde naal reflection live lagega)
+        keyLight.position.x = Math.sin(t * 1.0) * 8;
+        keyLight.position.z = Math.cos(t * 1.0) * 8;
+        keyLight.position.y = 5 + Math.sin(t * 2.0) * 2;
+
+        // Rim light pulse
+        rimLight.intensity = 2.0 + Math.sin(t * 2.5) * 0.6;
+
         controls.update();
         renderer.render(scene, camera);
       }
