@@ -291,12 +291,23 @@
     .btn-full:disabled { opacity:0.6; cursor:not-allowed; }
     .form-toggle { text-align:center; margin-top:1rem; font-size:0.8rem; color:var(--ink-muted); }
     .form-toggle a { color:var(--brass); font-weight:600; cursor:pointer; }
-    .otp-note { font-size:0.75rem; color:var(--green-safe); margin-top:0.5rem; display:none; font-weight:600; }
-    .otp-note.show { display:block; }
+    .form-error { display:none; margin-bottom:1rem; padding:0.65rem 0.9rem; border-radius:var(--radius-md); background:rgba(124,46,33,0.08); border:1px solid rgba(124,46,33,0.25); color:var(--crimson); font-size:0.8rem; font-weight:500; }
+    .form-error.show { display:block; }
+    .otp-input { text-align:center; font-family:var(--font-mono); font-size:1.6rem !important; letter-spacing:0.5rem; padding:0.8rem !important; }
+    .otp-meta { display:flex; justify-content:space-between; align-items:center; font-size:0.78rem; color:var(--ink-muted); margin-top:1rem; }
+    .otp-meta a { color:var(--brass); font-weight:600; cursor:pointer; }
+    .otp-meta a.disabled { color:var(--ink-muted); pointer-events:none; opacity:0.7; }
     .cart-items { margin-bottom:1.5rem; }
-    .cart-item { display:flex; justify-content:space-between; align-items:center; padding:0.8rem 0; border-bottom:1px solid rgba(27,42,32,0.08); font-size:0.9rem; }
+    .cart-item { display:flex; align-items:center; gap:0.75rem; padding:0.8rem 0; border-bottom:1px solid rgba(27,42,32,0.08); font-size:0.9rem; }
     .cart-item:last-child { border-bottom:none; }
+    .cart-item input[type="checkbox"] { width:18px; height:18px; accent-color:var(--crimson); cursor:pointer; flex-shrink:0; }
+    .cart-item-name { flex:1; }
+    .cart-item.unselected .cart-item-name, .cart-item.unselected .cart-item-price { opacity:0.45; text-decoration:line-through; }
+    .cart-item-price { font-weight:600; white-space:nowrap; }
+    .cart-remove { background:none; border:none; cursor:pointer; color:var(--ink-muted); font-size:1.2rem; line-height:1; padding:0.2rem 0.4rem; border-radius:6px; transition:all 0.2s; }
+    .cart-remove:hover { color:var(--crimson); background:rgba(124,46,33,0.08); }
     .cart-total { display:flex; justify-content:space-between; font-weight:700; font-size:1.1rem; padding-top:1rem; border-top:2px solid var(--brass); margin-bottom:1.5rem; }
+    .cart-hint { font-size:0.75rem; color:var(--ink-muted); margin-bottom:1rem !important; }
     .empty-cart { text-align:center; padding:2rem 1rem; color:var(--ink-muted); }
     .payment-options { display:flex; flex-direction:column; gap:0.75rem; margin-bottom:1rem; }
     .payment-option { display:flex; align-items:center; gap:0.75rem; padding:0.9rem 1rem; border-radius:var(--radius-md); border:2px solid rgba(27,42,32,0.1); cursor:pointer; transition:all 0.2s; }
@@ -317,6 +328,7 @@
     .utr-input input { width:100%; padding:0.7rem; border-radius:var(--radius-md); border:1px solid rgba(27,42,32,0.15); font-family:var(--font-mono); font-size:0.9rem; letter-spacing:0.1em; }
     .trust-note { display:flex; align-items:center; gap:0.4rem; font-size:0.7rem; color:var(--ink-muted); margin-top:0.75rem; justify-content:center; }
     .delivery-note { text-align:center; font-size:0.8rem; color:var(--green-safe); font-weight:600; margin-bottom:1rem; padding:0.6rem; background:var(--green-safe-bg); border-radius:var(--radius-md); }
+    .account-chip { display:inline-block; font-family:var(--font-mono); font-size:0.7rem; background:var(--cream); padding:0.25rem 0.7rem; border-radius:var(--radius-pill); color:var(--ink); margin-bottom:1rem; }
 
     /* TOAST */
     .toast { position:fixed; bottom:2rem; left:50%; transform:translateX(-50%) translateY(100px); background:var(--ink); color:var(--cream); padding:0.8rem 1.5rem; border-radius:var(--radius-pill); font-size:0.85rem; font-weight:500; z-index:3000; opacity:0; transition:all 0.3s; max-width:90vw; text-align:center; }
@@ -549,18 +561,18 @@
   <!-- AIRGUNS -->
   <section class="airguns-section" id="airguns">
     <div class="container">
-      <p class="section-eyebrow reveal" style="justify-content:center;">Shop Online — No License Require</p>
+      <p class="section-eyebrow reveal" style="justify-content:center;">Shop Online — No License Required</p>
       <h2 class="airguns-heading reveal reveal-delay-1">Airguns Collection</h2>
       <p class="airguns-sub reveal reveal-delay-2">Buy airguns online with UPI payment. All airguns below are legal to purchase without an arms license in India. Delivery within 7 days.</p>
       <div class="license-notice reveal reveal-delay-2">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
-        No License Require — Muzzle energy below 20 Joules
+        No License Required — Muzzle energy below 20 Joules
       </div>
       <div class="airguns-grid">
 
         <div class="product-card reveal reveal-delay-1">
           <div class="product-img">
-            <span class="product-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>No License Require</span>
+            <span class="product-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>No License Required</span>
             <img src="asg-barra-1866-1.jpg" alt="ASG Barra 1866 CO2 Airgun" loading="lazy" />
           </div>
           <div class="product-info">
@@ -577,7 +589,7 @@
 
         <div class="product-card reveal reveal-delay-2">
           <div class="product-img">
-            <span class="product-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>No License Require</span>
+            <span class="product-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>No License Required</span>
             <img src="isscm22-1.jpg" alt="ASG ISSC M22 CO2 Air Pistol" loading="lazy" />
           </div>
           <div class="product-info">
@@ -594,7 +606,7 @@
 
         <div class="product-card reveal reveal-delay-3">
           <div class="product-img">
-            <span class="product-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>No License Require</span>
+            <span class="product-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>No License Required</span>
             <img src="makarov-pm-1.jpg" alt="Pistol Makarov PM CO2 Air Pistol" loading="lazy" />
           </div>
           <div class="product-info">
@@ -611,7 +623,7 @@
 
         <div class="product-card reveal reveal-delay-4">
           <div class="product-img">
-            <span class="product-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>No License Require</span>
+            <span class="product-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>No License Required</span>
             <img src="luger-p08-1.jpg" alt="Luger P08 CO2 Air Pistol" loading="lazy" />
           </div>
           <div class="product-info">
@@ -794,25 +806,46 @@
   <!-- AUTH MODAL -->
   <div class="modal-overlay" id="authModal">
     <div class="modal">
-      <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+      <button class="modal-close" onclick="closeAuthModal()" aria-label="Close">&times;</button>
+
+      <!-- Sign in -->
       <div id="loginForm">
         <h3>Sign In</h3>
-        <p>Login to place your order</p>
-        <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="your@email.com"></div>
-        <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
-        <button class="btn-full" onclick="handleLogin()">Sign In</button>
-        <div class="form-toggle">New here? <a onclick="switchToRegister()">Create account</a></div>
+        <p>Sign in to your account to place an order.</p>
+        <div class="form-error" id="loginError"></div>
+        <div class="form-group"><label for="loginEmail">Email</label><input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="email"></div>
+        <div class="form-group"><label for="loginPassword">Password</label><input type="password" id="loginPassword" placeholder="Your password" autocomplete="current-password"></div>
+        <button class="btn-full" id="loginBtn" onclick="handleLogin()">Sign In</button>
+        <div class="form-toggle">New here? <a onclick="switchToRegister()">Create an account</a></div>
       </div>
+
+      <!-- Register: step 1 (details) -->
       <div id="registerForm" style="display:none;">
         <h3>Create Account</h3>
-        <p>Register to shop with us</p>
-        <div class="form-group"><label>Full Name</label><input type="text" id="regName" placeholder="Your name"></div>
-        <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="your@email.com"></div>
-        <div class="form-group"><label>Phone</label><input type="tel" id="regPhone" placeholder="10-digit mobile"></div>
-        <div class="form-group"><label>Password</label><input type="password" id="regPassword" placeholder="Min 6 characters"></div>
-        <button class="btn-full" onclick="handleRegister()">Create Account</button>
-        <div class="otp-note" id="otpNote">✓ Account created! You are now signed in.</div>
+        <p>We will send a 6-digit verification code to your email.</p>
+        <div class="form-error" id="regError"></div>
+        <div class="form-group"><label for="regName">Full Name</label><input type="text" id="regName" placeholder="Your full name" autocomplete="name"></div>
+        <div class="form-group"><label for="regEmail">Email</label><input type="email" id="regEmail" placeholder="your@email.com" autocomplete="email"></div>
+        <div class="form-group"><label for="regPhone">Mobile Number</label><input type="tel" id="regPhone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric" autocomplete="tel"></div>
+        <div class="form-group"><label for="regPassword">Password</label><input type="password" id="regPassword" placeholder="At least 6 characters" autocomplete="new-password"></div>
+        <button class="btn-full" id="sendOtpBtn" onclick="handleSendOtp()">Send Verification Code</button>
         <div class="form-toggle">Already have an account? <a onclick="switchToLogin()">Sign in</a></div>
+      </div>
+
+      <!-- Register: step 2 (OTP) -->
+      <div id="otpForm" style="display:none;">
+        <h3>Verify Your Email</h3>
+        <p id="otpSubtitle">Enter the 6-digit code sent to your email.</p>
+        <div class="form-error" id="otpError"></div>
+        <div class="form-group">
+          <label for="otpInput">Verification Code</label>
+          <input type="text" id="otpInput" class="otp-input" placeholder="••••••" maxlength="6" inputmode="numeric" autocomplete="one-time-code">
+        </div>
+        <button class="btn-full" id="verifyOtpBtn" onclick="handleVerifyOtp()">Verify &amp; Create Account</button>
+        <div class="otp-meta">
+          <a onclick="backToRegister()">Change email</a>
+          <a id="resendLink" class="disabled" onclick="handleResendOtp()">Resend code</a>
+        </div>
       </div>
     </div>
   </div>
@@ -820,7 +853,7 @@
   <!-- CART MODAL -->
   <div class="modal-overlay" id="cartModal">
     <div class="modal" style="max-width:520px;">
-      <button class="modal-close" onclick="closeCartModal()">&times;</button>
+      <button class="modal-close" onclick="closeCartModal()" aria-label="Close">&times;</button>
       <h3>Your Cart</h3>
       <div id="cartContent"></div>
     </div>
@@ -829,40 +862,42 @@
   <!-- CHECKOUT MODAL -->
   <div class="modal-overlay" id="checkoutModal">
     <div class="modal" style="max-width:520px;">
-      <button class="modal-close" onclick="closeCheckoutModal()">&times;</button>
+      <button class="modal-close" onclick="closeCheckoutModal()" aria-label="Close">&times;</button>
       <h3>Checkout</h3>
       <p id="checkoutSummary"></p>
+      <div class="account-chip" id="accountChip"></div>
       <div class="delivery-note">🚚 Delivery within 7 days across India</div>
-      <div class="form-group"><label>Full Name</label><input type="text" id="shipName" placeholder="Your name"></div>
-      <div class="form-group"><label>Phone</label><input type="tel" id="shipPhone" placeholder="10-digit mobile"></div>
-      <div class="form-group"><label>Email</label><input type="email" id="shipEmail" placeholder="your@email.com"></div>
-      <div class="form-group"><label>Full Address</label><textarea id="shipAddress" rows="2" placeholder="House no, street, city, pincode"></textarea></div>
+      <div class="form-error" id="checkoutError"></div>
+      <div class="form-group"><label for="shipName">Full Name</label><input type="text" id="shipName" placeholder="Your full name"></div>
+      <div class="form-group"><label for="shipPhone">Mobile Number</label><input type="tel" id="shipPhone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric"></div>
+      <div class="form-group"><label for="shipEmail">Email</label><input type="email" id="shipEmail" placeholder="your@email.com" readonly></div>
+      <div class="form-group"><label for="shipAddress">Delivery Address</label><textarea id="shipAddress" rows="2" placeholder="House no., street, city, state, pincode"></textarea></div>
 
       <div class="payment-options">
         <div class="payment-option selected">
           <input type="radio" name="pay" checked>
-          <span><strong>UPI Payment</strong> (GPay / PhonePe / Paytm)</span>
+          <span><strong>UPI Payment</strong> (Google Pay / PhonePe / Paytm)</span>
         </div>
       </div>
 
       <div class="pay-apps">
         <a class="pay-app-btn main" id="payUpiAny" href="#">💳 Pay with UPI App</a>
-        <a class="pay-app-btn" id="payGpay" href="#">GPay</a>
+        <a class="pay-app-btn" id="payGpay" href="#">Google Pay</a>
         <a class="pay-app-btn" id="payPhonePe" href="#">PhonePe</a>
         <a class="pay-app-btn" id="payPaytm" href="#">Paytm</a>
       </div>
-      <p class="pay-hint">Button dabate hi aapka UPI app khulega, amount aur Order ID pehle se bhara hoga. Payment karke is page par wapas aao aur neeche Order Confirm karo.</p>
+      <p class="pay-hint">Your UPI app will open with the amount and order reference pre-filled. After completing the payment, return to this page and confirm your order below.</p>
 
       <div class="qr-section show" id="qrSection">
         <img id="upiQrImg" src="" alt="UPI QR Code">
         <div class="upi-id" id="upiIdLabel"></div>
-        <p style="font-size:0.72rem;color:var(--ink-muted);margin:0.5rem 0 0;">Computer par ho to QR scan karo</p>
+        <p style="font-size:0.72rem;color:var(--ink-muted);margin:0.5rem 0 0;">On a computer, scan this QR code with any UPI app.</p>
         <div class="utr-input">
-          <label>UTR / Transaction ID (optional)</label>
-          <input type="text" id="utrInput" placeholder="Optional" maxlength="12">
+          <label for="utrInput">UTR / Transaction ID (optional)</label>
+          <input type="text" id="utrInput" placeholder="12-digit UTR number" maxlength="12">
         </div>
       </div>
-      <button class="btn-full" onclick="placeOrder()" id="placeOrderBtn" style="margin-top:1rem;">Payment Kar Diya — Order Confirm Karo</button>
+      <button class="btn-full" onclick="placeOrder()" id="placeOrderBtn" style="margin-top:1rem;">I Have Paid — Confirm Order</button>
       <div class="trust-note">🔒 Secure checkout · Your data is safe</div>
     </div>
   </div>
@@ -873,116 +908,255 @@
   <script>
     /* ============================================
        CONFIG
+       Paste the Web App URL of your deployed Google Apps Script (Code.gs) below.
        ============================================ */
-    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwOQcG1eeKs8ngJ0RQgC2XA3qa840PbR9NSQWAfxopkN3RYHDbwmBaHTxRrDiyA3hzy/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzKZ3pG9K8QsLDHAHJczT_iFN0Vee7kxbHfPd8oQg8MsKWfWudIfhDL5LCuCPMmxXe8/exec';
     const UPI_ID = 'singlalali9250-2@okaxis';
     const MERCHANT_NAME = 'Lali Gun House';
 
     /* ============================================
        STATE
+       cart item: { name, price, selected }
+       session:   { user: {id,name,email,phone}, token }
        ============================================ */
-    let cart = JSON.parse(localStorage.getItem('lgh_cart') || '[]');
-    let currentUser = JSON.parse(localStorage.getItem('lgh_user') || 'null');
+    let cart = loadJSON('lgh_cart', []).map(i => ({ name: i.name, price: i.price, selected: i.selected !== false }));
+    let session = loadJSON('lgh_session', null);
+    let pendingEmail = '';
+    let resendTimer = null;
 
-    /* TOAST */
+    localStorage.removeItem('lgh_user'); // legacy insecure storage
+
+    function loadJSON(key, fallback) {
+      try { const v = JSON.parse(localStorage.getItem(key)); return v === null || v === undefined ? fallback : v; }
+      catch (e) { return fallback; }
+    }
+    function saveCart() { localStorage.setItem('lgh_cart', JSON.stringify(cart)); }
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+    }
+    function formatINR(n) { return '₹' + Number(n).toLocaleString('en-IN'); }
+
+    /* ---------- API ---------- */
+    async function api(payload) {
+      if (!API_URL || API_URL.indexOf('PASTE_') === 0) {
+        return { ok: false, error: 'The store backend is not configured yet. Please contact us by phone.' };
+      }
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        return await res.json();
+      } catch (e) {
+        return { ok: false, error: 'Unable to reach the server. Please check your connection and try again.' };
+      }
+    }
+
+    /* ---------- TOAST / ERRORS ---------- */
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg;
       t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), 3200);
     }
+    function showError(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.classList.add('show');
+    }
+    function clearError(id) { document.getElementById(id).classList.remove('show'); }
+    function setBusy(btnId, busy, busyText, normalText) {
+      const b = document.getElementById(btnId);
+      b.disabled = busy;
+      b.textContent = busy ? busyText : normalText;
+    }
 
-    /* AUTH */
+    /* ============================================
+       AUTH
+       ============================================ */
+    function showAuthStep(step) {
+      ['loginForm', 'registerForm', 'otpForm'].forEach(id => {
+        document.getElementById(id).style.display = (id === step) ? 'block' : 'none';
+      });
+      ['loginError', 'regError', 'otpError'].forEach(clearError);
+    }
     function openAuthModal() {
-      if (currentUser) {
-        if (confirm('You are logged in as ' + currentUser.name + '. Logout?')) logout();
+      if (session) {
+        if (confirm('You are signed in as ' + session.user.name + ' (' + session.user.id + ').\n\nDo you want to sign out?')) logout();
         return;
       }
+      showAuthStep('loginForm');
       document.getElementById('authModal').classList.add('active');
     }
     function closeAuthModal() { document.getElementById('authModal').classList.remove('active'); }
-    function switchToRegister() {
-      document.getElementById('loginForm').style.display = 'none';
-      document.getElementById('registerForm').style.display = 'block';
-      document.getElementById('otpNote').classList.remove('show');
+    function switchToRegister() { showAuthStep('registerForm'); }
+    function switchToLogin() { showAuthStep('loginForm'); }
+    function backToRegister() { stopResendTimer(); showAuthStep('registerForm'); }
+
+    function startResendTimer(seconds) {
+      const link = document.getElementById('resendLink');
+      let left = seconds;
+      link.classList.add('disabled');
+      link.textContent = 'Resend code in ' + left + 's';
+      stopResendTimer();
+      resendTimer = setInterval(() => {
+        left--;
+        if (left <= 0) {
+          stopResendTimer();
+          link.classList.remove('disabled');
+          link.textContent = 'Resend code';
+        } else {
+          link.textContent = 'Resend code in ' + left + 's';
+        }
+      }, 1000);
     }
-    function switchToLogin() {
-      document.getElementById('registerForm').style.display = 'none';
-      document.getElementById('loginForm').style.display = 'block';
-    }
-    function handleRegister() {
-      const name = document.getElementById('regName').value.trim();
-      const email = document.getElementById('regEmail').value.trim();
-      const phone = document.getElementById('regPhone').value.trim();
-      const password = document.getElementById('regPassword').value;
-      if (!name || !email || !phone || password.length < 6) {
-        showToast('Please fill all fields. Password 6+ characters.'); return;
-      }
-      const user = { name, email, phone, password };
-      localStorage.setItem('lgh_user', JSON.stringify(user));
-      currentUser = user;
-      document.getElementById('otpNote').classList.add('show');
-      showToast('Account created! Signed in.');
-      setTimeout(() => {
-        closeAuthModal();
-        updateAuthButton();
-        document.getElementById('otpNote').classList.remove('show');
-        ['regName','regEmail','regPhone','regPassword'].forEach(id => document.getElementById(id).value = '');
-      }, 1400);
-    }
-    function handleLogin() {
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPassword').value;
-      const saved = JSON.parse(localStorage.getItem('lgh_user') || 'null');
-      if (!saved) { showToast('No account found. Register first.'); return; }
-      if (saved.email !== email || saved.password !== password) { showToast('Invalid email or password.'); return; }
-      currentUser = saved;
-      closeAuthModal();
-      updateAuthButton();
-      showToast('Welcome back, ' + saved.name.split(' ')[0] + '!');
-      document.getElementById('loginEmail').value = '';
-      document.getElementById('loginPassword').value = '';
-    }
-    function logout() {
-      currentUser = null;
-      localStorage.removeItem('lgh_user');
-      updateAuthButton();
-      showToast('Logged out.');
-    }
-    function updateAuthButton() {
-      const btn = document.getElementById('authBtn');
-      btn.textContent = currentUser ? currentUser.name.split(' ')[0] : 'Sign In';
+    function stopResendTimer() { if (resendTimer) { clearInterval(resendTimer); resendTimer = null; } }
+
+    function readRegisterForm() {
+      return {
+        name: document.getElementById('regName').value.trim(),
+        email: document.getElementById('regEmail').value.trim().toLowerCase(),
+        phone: document.getElementById('regPhone').value.trim(),
+        password: document.getElementById('regPassword').value
+      };
     }
 
-    /* CART */
+    async function requestOtp(buttonId, normalText, errorId) {
+      const f = readRegisterForm();
+      clearError(errorId);
+      if (f.name.length < 2) return showError(errorId, 'Please enter your full name.');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) return showError(errorId, 'Please enter a valid email address.');
+      if (!/^[6-9]\d{9}$/.test(f.phone)) return showError(errorId, 'Please enter a valid 10-digit mobile number.');
+      if (f.password.length < 6) return showError(errorId, 'Password must be at least 6 characters.');
+
+      setBusy(buttonId, true, 'Sending code…', normalText);
+      const r = await api({ action: 'send_otp', name: f.name, email: f.email, phone: f.phone, password: f.password });
+      setBusy(buttonId, false, '', normalText);
+
+      if (!r.ok) return showError(errorId, r.error || 'Unable to send the code. Please try again.');
+
+      pendingEmail = f.email;
+      document.getElementById('otpSubtitle').textContent = 'Enter the 6-digit code sent to ' + f.email + '.';
+      document.getElementById('otpInput').value = '';
+      showAuthStep('otpForm');
+      startResendTimer(60);
+      document.getElementById('otpInput').focus();
+    }
+    function handleSendOtp() { requestOtp('sendOtpBtn', 'Send Verification Code', 'regError'); }
+    function handleResendOtp() {
+      if (document.getElementById('resendLink').classList.contains('disabled')) return;
+      requestOtp('verifyOtpBtn', 'Verify & Create Account', 'otpError');
+    }
+
+    async function handleVerifyOtp() {
+      clearError('otpError');
+      const otp = document.getElementById('otpInput').value.trim();
+      if (!/^\d{6}$/.test(otp)) return showError('otpError', 'Please enter the 6-digit code.');
+
+      setBusy('verifyOtpBtn', true, 'Verifying…', 'Verify & Create Account');
+      const r = await api({ action: 'verify_otp', email: pendingEmail, otp: otp });
+      setBusy('verifyOtpBtn', false, '', 'Verify & Create Account');
+
+      if (!r.ok) return showError('otpError', r.error || 'Verification failed. Please try again.');
+
+      stopResendTimer();
+      setSession(r.user, r.token);
+      closeAuthModal();
+      ['regName', 'regEmail', 'regPhone', 'regPassword', 'otpInput'].forEach(id => document.getElementById(id).value = '');
+      showToast('Account created. Your Account ID is ' + r.user.id);
+    }
+
+    async function handleLogin() {
+      clearError('loginError');
+      const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+      const password = document.getElementById('loginPassword').value;
+      if (!email || !password) return showError('loginError', 'Please enter your email and password.');
+
+      setBusy('loginBtn', true, 'Signing in…', 'Sign In');
+      const r = await api({ action: 'login', email: email, password: password });
+      setBusy('loginBtn', false, '', 'Sign In');
+
+      if (!r.ok) return showError('loginError', r.error || 'Sign in failed. Please try again.');
+
+      setSession(r.user, r.token);
+      closeAuthModal();
+      document.getElementById('loginEmail').value = '';
+      document.getElementById('loginPassword').value = '';
+      showToast('Welcome back, ' + r.user.name.split(' ')[0] + '!');
+    }
+
+    function setSession(user, token) {
+      session = { user: user, token: token };
+      localStorage.setItem('lgh_session', JSON.stringify(session));
+      updateAuthButton();
+    }
+    function logout() {
+      session = null;
+      localStorage.removeItem('lgh_session');
+      updateAuthButton();
+      showToast('You have been signed out.');
+    }
+    function updateAuthButton() {
+      document.getElementById('authBtn').textContent = session ? session.user.name.split(' ')[0] : 'Sign In';
+    }
+
+    /* ============================================
+       CART
+       ============================================ */
+    function selectedItems() { return cart.filter(i => i.selected); }
+    function selectedTotal() { return selectedItems().reduce((s, i) => s + i.price, 0); }
+
     function addToCart(name, price) {
-      cart.push({ name, price });
-      localStorage.setItem('lgh_cart', JSON.stringify(cart));
+      cart.push({ name: name, price: price, selected: true });
+      saveCart();
       updateCartCount();
       showToast(name + ' added to cart');
     }
     function updateCartCount() { document.getElementById('cartCount').textContent = cart.length; }
+    function toggleCartItem(index) {
+      if (!cart[index]) return;
+      cart[index].selected = !cart[index].selected;
+      saveCart();
+      renderCart();
+    }
+    function removeCartItem(index) {
+      cart.splice(index, 1);
+      saveCart();
+      updateCartCount();
+      renderCart();
+    }
     function openCartModal() { document.getElementById('cartModal').classList.add('active'); renderCart(); }
     function closeCartModal() { document.getElementById('cartModal').classList.remove('active'); }
+
     function renderCart() {
       const el = document.getElementById('cartContent');
       if (cart.length === 0) {
         el.innerHTML = '<div class="empty-cart">Your cart is empty.<br><br><button class="btn-add" onclick="closeCartModal()" style="width:auto;padding:0.6rem 2rem;">Continue Shopping</button></div>';
         return;
       }
-      let html = '<div class="cart-items">';
-      cart.forEach(item => { html += `<div class="cart-item"><span>${item.name}</span><span>₹${item.price.toLocaleString('en-IN')}</span></div>`; });
+      let html = '<p class="cart-hint">Untick an item to leave it out of this order, or use × to remove it from your cart.</p><div class="cart-items">';
+      cart.forEach((item, i) => {
+        html += '<div class="cart-item' + (item.selected ? '' : ' unselected') + '">' +
+          '<input type="checkbox" ' + (item.selected ? 'checked' : '') + ' onchange="toggleCartItem(' + i + ')" aria-label="Include ' + escapeHtml(item.name) + ' in order">' +
+          '<span class="cart-item-name">' + escapeHtml(item.name) + '</span>' +
+          '<span class="cart-item-price">' + formatINR(item.price) + '</span>' +
+          '<button class="cart-remove" onclick="removeCartItem(' + i + ')" aria-label="Remove ' + escapeHtml(item.name) + '">&times;</button>' +
+          '</div>';
+      });
       html += '</div>';
-      const total = cart.reduce((s, i) => s + i.price, 0);
-      html += `<div class="cart-total"><span>Total</span><span>₹${total.toLocaleString('en-IN')}</span></div>`;
-      html += `<button class="btn-full" onclick="proceedToCheckout()">Proceed to Checkout</button>`;
-      html += `<div style="text-align:center;margin-top:0.75rem;font-size:0.75rem;color:var(--ink-muted);">🚚 Delivery in 7 days · Secure UPI payment</div>`;
+      const count = selectedItems().length;
+      html += '<div class="cart-total"><span>Total (' + count + ' selected)</span><span>' + formatINR(selectedTotal()) + '</span></div>';
+      html += '<button class="btn-full" onclick="proceedToCheckout()" ' + (count === 0 ? 'disabled' : '') + '>Proceed to Checkout</button>';
+      html += '<div style="text-align:center;margin-top:0.75rem;font-size:0.75rem;color:var(--ink-muted);">🚚 Delivery within 7 days · Secure UPI payment</div>';
       el.innerHTML = html;
     }
+
     function proceedToCheckout() {
-      if (!currentUser) {
+      if (selectedItems().length === 0) { showToast('Please select at least one item.'); return; }
+      if (!session) {
         closeCartModal();
-        showToast('Please sign in to checkout');
+        showToast('Please sign in to continue to checkout.');
         openAuthModal();
         return;
       }
@@ -990,17 +1164,19 @@
       openCheckoutModal();
     }
 
-    /* CHECKOUT + UPI PAYMENT */
+    /* ============================================
+       CHECKOUT + UPI PAYMENT
+       ============================================ */
     function openCheckoutModal() {
       document.getElementById('checkoutModal').classList.add('active');
-      const total = cart.reduce((s, i) => s + i.price, 0);
+      clearError('checkoutError');
+      const items = selectedItems();
       document.getElementById('checkoutSummary').innerHTML =
-        `You are purchasing <strong>${cart.length} item(s)</strong> for <strong>₹${total.toLocaleString('en-IN')}</strong>`;
-      if (currentUser) {
-        document.getElementById('shipName').value = currentUser.name || '';
-        document.getElementById('shipPhone').value = currentUser.phone || '';
-        document.getElementById('shipEmail').value = currentUser.email || '';
-      }
+        'You are purchasing <strong>' + items.length + ' item' + (items.length > 1 ? 's' : '') + '</strong> for <strong>' + formatINR(selectedTotal()) + '</strong>.';
+      document.getElementById('accountChip').textContent = 'Account ID: ' + session.user.id;
+      document.getElementById('shipName').value = session.user.name || '';
+      document.getElementById('shipPhone').value = session.user.phone || '';
+      document.getElementById('shipEmail').value = session.user.email || '';
       generateQR();
     }
     function closeCheckoutModal() { document.getElementById('checkoutModal').classList.remove('active'); }
@@ -1008,14 +1184,14 @@
     function getOrderId() {
       let id = localStorage.getItem('lgh_order_id');
       if (!id) {
-        id = 'LGH' + Math.random().toString(36).slice(2, 8).toUpperCase();
+        id = 'LGH' + Math.random().toString(36).slice(2, 8).toUpperCase().padEnd(6, '0');
         localStorage.setItem('lgh_order_id', id);
       }
       return id;
     }
 
     function generateQR() {
-      const total = cart.reduce((s, i) => s + i.price, 0);
+      const total = selectedTotal();
       if (total === 0) return;
       const orderId = getOrderId();
       const q = 'pa=' + encodeURIComponent(UPI_ID) +
@@ -1032,69 +1208,63 @@
       document.getElementById('upiIdLabel').textContent = UPI_ID + ' · Order ' + orderId;
     }
 
-    function placeOrder() {
-      const btn = document.getElementById('placeOrderBtn');
+    async function placeOrder() {
+      clearError('checkoutError');
       const name = document.getElementById('shipName').value.trim();
       const phone = document.getElementById('shipPhone').value.trim();
-      const email = document.getElementById('shipEmail').value.trim();
       const address = document.getElementById('shipAddress').value.trim();
       const utr = document.getElementById('utrInput').value.trim();
 
-      if (!name || !phone || !email || !address) {
-        showToast('Please fill name, phone, email and address.');
-        return;
-      }
-      if (email.indexOf('@') === -1) {
-        showToast('Please enter a valid email.');
-        return;
-      }
-      if (!confirm('Kya aapne UPI se payment kar diya hai?')) return;
+      if (!session) return showError('checkoutError', 'Your session has expired. Please sign in again.');
+      if (!name || !phone || !address) return showError('checkoutError', 'Please enter your name, mobile number and delivery address.');
+      if (!/^[6-9]\d{9}$/.test(phone)) return showError('checkoutError', 'Please enter a valid 10-digit mobile number.');
+      if (address.length < 10) return showError('checkoutError', 'Please enter your complete delivery address.');
+      if (utr && !/^\d{12}$/.test(utr)) return showError('checkoutError', 'The UTR must be a 12-digit number, or leave it blank.');
+      if (!confirm('Have you completed the UPI payment for this order?')) return;
 
-      btn.disabled = true;
-      btn.textContent = 'Please wait...';
+      const items = selectedItems();
+      const total = selectedTotal();
+      const orderRef = getOrderId();
 
-      const total = cart.reduce((s, i) => s + i.price, 0);
-      const itemsList = cart.map(i => i.name).join(', ');
-      const orderId = getOrderId();
-
-      const orderData = {
-        timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
-        order_id: orderId,
+      setBusy('placeOrderBtn', true, 'Placing order…', 'I Have Paid — Confirm Order');
+      const r = await api({
+        action: 'place_order',
+        user_id: session.user.id,
+        token: session.token,
+        order_ref: orderRef,
         customer_name: name,
         customer_phone: phone,
-        customer_email: email,
         delivery_address: address,
-        items: itemsList,
-        total_amount: total,
-        utr: utr || 'Not provided',
-        status: 'Pending Verification'
-      };
+        items: items.map(i => i.name),
+        utr: utr
+      });
+      setBusy('placeOrderBtn', false, '', 'I Have Paid — Confirm Order');
 
-      fetch(GOOGLE_SHEET_URL, {
-        method: 'POST', mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData)
-      }).catch(() => {});
+      if (!r.ok) return showError('checkoutError', r.error || 'We could not place your order. Please try again.');
 
-      document.querySelector('#checkoutModal .modal').innerHTML = `
-        <div style="text-align:center;padding:1rem;">
-          <div style="font-size:3rem;margin-bottom:1rem;">✅</div>
-          <h3>Order Placed!</h3>
-          <p style="margin-bottom:1rem;">Thank you, ${name}!</p>
-          <p style="font-size:0.9rem;margin-bottom:0.5rem;"><strong>Order ID: ${orderId}</strong></p>
-          <p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:0.5rem;">Order Total: ₹${total.toLocaleString('en-IN')}</p>
-          <p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:1.5rem;">Your order will be delivered within <strong>7 days</strong>.</p>
-          <p style="font-size:0.75rem;color:var(--ink-muted);margin-bottom:1.5rem;">Confirmation email aapki email par bheji ja rahi hai (Spam folder bhi check karein). Hum aapka payment verify karke dispatch karenge.</p>
-          <button class="btn-full" onclick="location.reload()">Done</button>
-        </div>
-      `;
-      cart = [];
-      localStorage.setItem('lgh_cart', JSON.stringify(cart));
+      // keep unselected items in the cart, remove purchased ones
+      cart = cart.filter(i => !i.selected);
+      saveCart();
       localStorage.removeItem('lgh_order_id');
       updateCartCount();
+
+      document.querySelector('#checkoutModal .modal').innerHTML =
+        '<div style="text-align:center;padding:1rem;">' +
+          '<div style="font-size:3rem;margin-bottom:1rem;">✅</div>' +
+          '<h3>Order Placed</h3>' +
+          '<p style="margin-bottom:1rem;">Thank you, ' + escapeHtml(name) + '.</p>' +
+          '<p style="font-size:0.9rem;margin-bottom:0.25rem;"><strong>Order ID: ' + escapeHtml(r.order_id) + '</strong></p>' +
+          '<p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:0.25rem;">Account ID: ' + escapeHtml(session.user.id) + '</p>' +
+          '<p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:0.5rem;">Order total: ' + formatINR(r.total || total) + '</p>' +
+          '<p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:1rem;">Your order will be delivered within <strong>7 days</strong>.</p>' +
+          '<p style="font-size:0.75rem;color:var(--ink-muted);margin-bottom:1.5rem;">A confirmation email has been sent to ' + escapeHtml(session.user.email) + '. Please check your spam folder if you do not see it. We will verify your payment and dispatch your order.</p>' +
+          '<button class="btn-full" onclick="location.reload()">Done</button>' +
+        '</div>';
     }
 
-    /* NAVBAR / MOBILE / SCROLL / SEAL */
+    /* ============================================
+       NAVBAR / MOBILE / SCROLL / SEAL
+       ============================================ */
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 60); }, { passive: true });
 
@@ -1227,6 +1397,12 @@
       if (stamp) stamp.classList.add('stamped');
       if (processLineFill) processLineFill.classList.add('visible');
     }
+
+    /* Enter key support in the auth forms */
+    document.getElementById('loginPassword').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+    document.getElementById('otpInput').addEventListener('keydown', e => { if (e.key === 'Enter') handleVerifyOtp(); });
+    document.getElementById('otpInput').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6); });
+    ['regPhone', 'shipPhone'].forEach(id => document.getElementById(id).addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10); }));
 
     updateCartCount();
     updateAuthButton();
