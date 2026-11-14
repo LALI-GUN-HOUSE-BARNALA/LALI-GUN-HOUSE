@@ -373,46 +373,9 @@
       .hero-file-ref, .hero-sub, .hero-btns { opacity:1; transform:none; }
       .fab-btn { opacity:1; transform:none; animation:none!important; }
     }
-
-    /* ===== DIWALI CELEBRATION ===== */
-    #diwaliFx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:800;}
-    .dw-petal{position:fixed;top:-30px;pointer-events:none;z-index:801;border-radius:60% 40% 60% 40%;opacity:.9;animation:dwFall linear infinite;}
-    @keyframes dwFall{0%{transform:translate3d(0,-30px,0) rotate(0);}100%{transform:translate3d(var(--dx),110vh,0) rotate(720deg);}}
-    .dw-diyas{position:fixed;left:0;bottom:0;display:flex;gap:clamp(14px,5vw,46px);padding:0 14px;z-index:799;pointer-events:none;}
-    .dw-diya{width:34px;height:26px;position:relative;}
-    .dw-diya svg{width:100%;height:100%;display:block;}
-    .dw-flame{position:absolute;left:50%;top:-14px;width:10px;height:18px;margin-left:-5px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:radial-gradient(circle at 50% 70%,#fff6c4,#ffb62e 55%,#ff6a00);box-shadow:0 0 14px 5px rgba(255,170,40,.65),0 0 34px 12px rgba(255,120,0,.3);animation:dwFlicker 1.2s ease-in-out infinite alternate;transform-origin:50% 90%;}
-    @keyframes dwFlicker{0%{transform:scale(1,1) rotate(-2deg);opacity:.95;}50%{transform:scale(.9,1.12) rotate(2deg);}100%{transform:scale(1.05,.95) rotate(-1deg);opacity:1;}}
-    @media (max-width:640px){.dw-diya:nth-child(even){display:none;}}
-
-    .dw-overlay{position:fixed;inset:0;background:rgba(27,42,32,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:2500;display:none;align-items:center;justify-content:center;padding:1rem;}
-    .dw-overlay.show{display:flex;animation:dwFade .5s ease;}
-    @keyframes dwFade{from{opacity:0;}to{opacity:1;}}
-    .dw-card{position:relative;max-width:440px;width:100%;text-align:center;padding:2.2rem 1.6rem 1.8rem;border-radius:var(--radius-lg);background:linear-gradient(160deg,#FFF6DD,#F3E2B3);border:2px solid var(--brass-light);box-shadow:0 20px 60px rgba(0,0,0,.4),inset 0 0 0 6px rgba(147,117,58,.12);animation:dwPop .7s cubic-bezier(.34,1.56,.64,1);}
-    @keyframes dwPop{0%{transform:scale(.6) rotate(-4deg);opacity:0;}100%{transform:scale(1) rotate(0);opacity:1;}}
-    .dw-card .dw-diyas-row{font-size:1.8rem;letter-spacing:.5rem;margin-bottom:.4rem;animation:dwFlicker 1.4s ease-in-out infinite alternate;}
-    .dw-card h2{font-size:clamp(1.8rem,6vw,2.4rem);color:var(--crimson);margin-bottom:.2rem;}
-    .dw-card .dw-sub{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);margin-bottom:1rem;}
-    .dw-card p{font-size:.95rem;color:var(--ink);line-height:1.7;margin-bottom:1.3rem;}
-    .dw-close{position:absolute;top:.6rem;right:.9rem;background:none;border:none;font-size:1.6rem;cursor:pointer;color:var(--ink-muted);}
-    @media (prefers-reduced-motion:reduce){#diwaliFx,.dw-petal{display:none;}.dw-flame,.dw-card,.dw-card .dw-diyas-row{animation:none;}}
   </style>
 </head>
 <body>
-
-  <!-- DIWALI CELEBRATION -->
-  <canvas id="diwaliFx" aria-hidden="true"></canvas>
-  <div class="dw-diyas" id="dwDiyas" aria-hidden="true"></div>
-  <div class="dw-overlay" id="dwOverlay" role="dialog" aria-label="Diwali greetings">
-    <div class="dw-card">
-      <button class="dw-close" onclick="closeDiwali()" aria-label="Close">&times;</button>
-      <div class="dw-diyas-row">🪔 ✨ 🪔</div>
-      <h2>Shubh Deepawali!</h2>
-      <p class="dw-sub">Happy Diwali · Lali Gun House</p>
-      <p>Lali Gun House ki taraf se aapko aur aapke poore parivar ko Diwali ki hardik shubhkamnaayein. Maa Lakshmi aapke ghar sukh, samriddhi aur khushiyan layein. 🙏</p>
-      <button class="btn-full" onclick="closeDiwali()">Dhanyavaad, Shubh Deepawali 🪔</button>
-    </div>
-  </div>
 
   <!-- NAVBAR -->
   <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
@@ -1443,91 +1406,6 @@
 
     updateCartCount();
     updateAuthButton();
-
-    /* ===== DIWALI CELEBRATION ===== */
-    (function () {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-      /* greeting popup (once per session) */
-      const ov = document.getElementById('dwOverlay');
-      window.closeDiwali = function () { ov.classList.remove('show'); };
-      try {
-        if (!sessionStorage.getItem('lgh_diwali_seen')) {
-          setTimeout(() => ov.classList.add('show'), 900);
-          sessionStorage.setItem('lgh_diwali_seen', '1');
-        }
-      } catch (e) { setTimeout(() => ov.classList.add('show'), 900); }
-      ov.addEventListener('click', e => { if (e.target === ov) closeDiwali(); });
-      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDiwali(); });
-
-      /* diyas along the bottom */
-      const row = document.getElementById('dwDiyas');
-      const diyaSVG = '<svg viewBox="0 0 34 26"><path d="M2 8h30c0 10-7 17-15 17S2 18 2 8z" fill="#B5651D" stroke="#7a3f0c" stroke-width="1.5"/><path d="M5 8h24" stroke="#E8A84B" stroke-width="2"/></svg>';
-      const diyaCount = Math.min(14, Math.floor(window.innerWidth / 70));
-      for (let i = 0; i < diyaCount; i++) {
-        const d = document.createElement('div');
-        d.className = 'dw-diya';
-        d.innerHTML = '<span class="dw-flame" style="animation-delay:' + (Math.random() * 1.2).toFixed(2) + 's"></span>' + diyaSVG;
-        row.appendChild(d);
-      }
-
-      /* falling marigold petals */
-      const petalColors = ['#FF9F1C', '#FFB703', '#F77F00', '#E85D04', '#FFD166'];
-      const petalCount = window.innerWidth < 640 ? 12 : 22;
-      for (let i = 0; i < petalCount; i++) {
-        const p = document.createElement('span');
-        p.className = 'dw-petal';
-        const s = 8 + Math.random() * 10;
-        p.style.cssText = 'left:' + (Math.random() * 100) + 'vw;width:' + s + 'px;height:' + (s * 1.3) + 'px;background:' +
-          petalColors[(Math.random() * petalColors.length) | 0] + ';--dx:' + ((Math.random() * 160 - 80) | 0) + 'px;animation-duration:' +
-          (9 + Math.random() * 9).toFixed(1) + 's;animation-delay:-' + (Math.random() * 15).toFixed(1) + 's;';
-        document.body.appendChild(p);
-      }
-
-      /* fireworks */
-      const cv = document.getElementById('diwaliFx');
-      const ctx = cv.getContext('2d');
-      let W, H, parts = [], nextBurst = 0, running = true;
-      const colors = ['#FFD166', '#FF9F1C', '#FF4D4D', '#FFFFFF', '#F7B801', '#FF7B54'];
-      function resize() {
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        W = innerWidth; H = innerHeight;
-      }
-      resize(); addEventListener('resize', resize);
-
-      function burst() {
-        const x = W * (0.15 + Math.random() * 0.7), y = H * (0.12 + Math.random() * 0.4);
-        const c = colors[(Math.random() * colors.length) | 0];
-        const n = W < 640 ? 36 : 60;
-        for (let i = 0; i < n; i++) {
-          const a = (Math.PI * 2 * i) / n, sp = 1.5 + Math.random() * 3;
-          parts.push({ x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 1, c, r: 1.5 + Math.random() * 1.5 });
-        }
-      }
-      function frame(t) {
-        if (!running) return;
-        ctx.clearRect(0, 0, W, H);
-        if (t > nextBurst) { burst(); nextBurst = t + 1400 + Math.random() * 1800; }
-        ctx.globalCompositeOperation = 'lighter';
-        for (let i = parts.length - 1; i >= 0; i--) {
-          const p = parts[i];
-          p.x += p.vx; p.y += p.vy; p.vy += 0.04; p.vx *= 0.985; p.life -= 0.012;
-          if (p.life <= 0) { parts.splice(i, 1); continue; }
-          ctx.globalAlpha = p.life; ctx.fillStyle = p.c;
-          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.283); ctx.fill();
-        }
-        ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
-        requestAnimationFrame(frame);
-      }
-      requestAnimationFrame(frame);
-      document.addEventListener('visibilitychange', () => {
-        const wasRunning = running;
-        running = !document.hidden;
-        if (running && !wasRunning) requestAnimationFrame(frame);
-      });
-    })();
   </script>
 </body>
 </html>
