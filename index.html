@@ -330,6 +330,15 @@
     .delivery-note { text-align:center; font-size:0.8rem; color:var(--green-safe); font-weight:600; margin-bottom:1rem; padding:0.6rem; background:var(--green-safe-bg); border-radius:var(--radius-md); }
     .account-chip { display:inline-block; font-family:var(--font-mono); font-size:0.7rem; background:var(--cream); padding:0.25rem 0.7rem; border-radius:var(--radius-pill); color:var(--ink); margin-bottom:1rem; }
 
+    /* ADDRESS FORM (NEW) */
+    .addr-title { font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--brass); margin:1.2rem 0 0.6rem; padding-top:1rem; border-top:1px solid rgba(27,42,32,0.1); }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; }
+    @media (max-width:480px) { .form-row { grid-template-columns:1fr; gap:0; } }
+    .form-group select { width:100%; padding:0.7rem 0.9rem; border-radius:var(--radius-md); border:1px solid rgba(27,42,32,0.15); background:white; font-family:var(--font-body); font-size:0.9rem; }
+    .form-group select:focus { outline:2px solid var(--brass); border-color:transparent; }
+    .req { color:var(--crimson); }
+    .utr-warning { background:rgba(124,46,33,0.08); border:1px solid rgba(124,46,33,0.3); color:var(--crimson); font-size:0.78rem; font-weight:600; padding:0.65rem 0.9rem; border-radius:var(--radius-md); margin-bottom:0.8rem; text-align:left; line-height:1.5; }
+
     /* TOAST */
     .toast { position:fixed; bottom:2rem; left:50%; transform:translateX(-50%) translateY(100px); background:var(--ink); color:var(--cream); padding:0.8rem 1.5rem; border-radius:var(--radius-pill); font-size:0.85rem; font-weight:500; z-index:3000; opacity:0; transition:all 0.3s; max-width:90vw; text-align:center; }
     .toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
@@ -379,7 +388,6 @@
   </style>
 </head>
 <body>
-
   <!-- NAVBAR -->
   <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
     <div class="container">
@@ -640,7 +648,6 @@
             </div>
           </div>
         </div>
-
 
         <!-- NX100 -->
         <div class="product-card reveal reveal-delay-1">
@@ -922,10 +929,29 @@
       <div class="account-chip" id="accountChip"></div>
       <div class="delivery-note">🚚 Delivery within 7 days across India</div>
       <div class="form-error" id="checkoutError"></div>
-      <div class="form-group"><label for="shipName">Full Name</label><input type="text" id="shipName" placeholder="Your full name"></div>
-      <div class="form-group"><label for="shipPhone">Mobile Number</label><input type="tel" id="shipPhone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric"></div>
+
+      <div class="form-group"><label for="shipName">Full Name <span class="req">*</span></label><input type="text" id="shipName" placeholder="Your full name"></div>
+      <div class="form-group"><label for="shipPhone">Mobile Number <span class="req">*</span></label><input type="tel" id="shipPhone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric"></div>
       <div class="form-group"><label for="shipEmail">Email</label><input type="email" id="shipEmail" placeholder="your@email.com" readonly></div>
-      <div class="form-group"><label for="shipAddress">Delivery Address</label><textarea id="shipAddress" rows="2" placeholder="House no., street, city, state, pincode"></textarea></div>
+
+      <p class="addr-title">Delivery Address (all fields required)</p>
+      <div class="form-group"><label for="shipHouse">House / Flat No. &amp; Building <span class="req">*</span></label><input type="text" id="shipHouse" placeholder="e.g. House No. 123, Shiv Colony" autocomplete="address-line1"></div>
+      <div class="form-group"><label for="shipStreet">Street No. / Gali / Mohalla <span class="req">*</span></label><input type="text" id="shipStreet" placeholder="Street number or name" autocomplete="address-line2"></div>
+      <div class="form-group"><label for="shipArea">Village / Area / Colony <span class="req">*</span></label><input type="text" id="shipArea" placeholder="Village or area name"></div>
+      <div class="form-row">
+        <div class="form-group"><label for="shipCity">City / Town <span class="req">*</span></label><input type="text" id="shipCity" placeholder="City or town" autocomplete="address-level2"></div>
+        <div class="form-group"><label for="shipDistrict">District <span class="req">*</span></label><input type="text" id="shipDistrict" placeholder="District"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label for="shipState">State <span class="req">*</span></label>
+          <select id="shipState" autocomplete="address-level1">
+            <option value="">Select state</option>
+            <option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option><option>Bihar</option><option>Chhattisgarh</option><option>Goa</option><option>Gujarat</option><option>Haryana</option><option>Himachal Pradesh</option><option>Jharkhand</option><option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option><option>Maharashtra</option><option>Manipur</option><option>Meghalaya</option><option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Punjab</option><option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option><option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option>
+            <option>Andaman and Nicobar Islands</option><option>Chandigarh</option><option>Dadra and Nagar Haveli and Daman and Diu</option><option>Delhi</option><option>Jammu and Kashmir</option><option>Ladakh</option><option>Lakshadweep</option><option>Puducherry</option>
+          </select>
+        </div>
+        <div class="form-group"><label for="shipPin">Pincode <span class="req">*</span></label><input type="tel" id="shipPin" placeholder="6-digit pincode" maxlength="6" inputmode="numeric" autocomplete="postal-code"></div>
+      </div>
 
       <div class="payment-options">
         <div class="payment-option selected">
@@ -940,15 +966,16 @@
         <a class="pay-app-btn" id="payPhonePe" href="#">PhonePe</a>
         <a class="pay-app-btn" id="payPaytm" href="#">Paytm</a>
       </div>
-      <p class="pay-hint">Your UPI app will open with the amount and order reference pre-filled. After completing the payment, return to this page and confirm your order below.</p>
+      <p class="pay-hint">Your UPI app will open with the amount and order reference pre-filled. After completing the payment, return to this page, enter the 12-digit UTR number and confirm your order below.</p>
 
       <div class="qr-section show" id="qrSection">
         <img id="upiQrImg" src="" alt="UPI QR Code">
         <div class="upi-id" id="upiIdLabel"></div>
         <p style="font-size:0.72rem;color:var(--ink-muted);margin:0.5rem 0 0;">On a computer, scan this QR code with any UPI app.</p>
         <div class="utr-input">
-          <label for="utrInput">UTR / Transaction ID (optional)</label>
-          <input type="text" id="utrInput" placeholder="12-digit UTR number" maxlength="12">
+          <div class="utr-warning">⚠️ Payment karne ton baad UTR / Transaction ID bharna zaruri hai. Bina UTR de order confirm nahi hovega. UTR tuhade UPI app dī payment history vich 12-digit number hunda hai.</div>
+          <label for="utrInput">UTR / Transaction ID <span class="req">*</span></label>
+          <input type="text" id="utrInput" placeholder="12-digit UTR number" maxlength="12" inputmode="numeric">
         </div>
       </div>
       <button class="btn-full" onclick="placeOrder()" id="placeOrderBtn" style="margin-top:1rem;">I Have Paid — Confirm Order</button>
@@ -958,11 +985,9 @@
 
   <!-- TOAST -->
   <div class="toast" id="toast"></div>
-
   <script>
     /* ============================================
        CONFIG
-       Paste the Web App URL of your deployed Google Apps Script (Code.gs) below.
        ============================================ */
     const API_URL = 'https://script.google.com/macros/s/AKfycbzKZ3pG9K8QsLDHAHJczT_iFN0Vee7kxbHfPd8oQg8MsKWfWudIfhDL5LCuCPMmxXe8/exec';
     const UPI_ID = 'singlalali9250-2@okaxis';
@@ -970,8 +995,6 @@
 
     /* ============================================
        STATE
-       cart item: { name, price, selected }
-       session:   { user: {id,name,email,phone}, token }
        ============================================ */
     let cart = loadJSON('lgh_cart', []).map(i => ({ name: i.name, price: i.price, selected: i.selected !== false }));
     let session = loadJSON('lgh_session', null);
@@ -1221,6 +1244,8 @@
     /* ============================================
        CHECKOUT + UPI PAYMENT
        ============================================ */
+    const ADDRESS_FIELDS = ['shipHouse', 'shipStreet', 'shipArea', 'shipCity', 'shipDistrict', 'shipState', 'shipPin'];
+
     function openCheckoutModal() {
       document.getElementById('checkoutModal').classList.add('active');
       clearError('checkoutError');
@@ -1262,19 +1287,39 @@
       document.getElementById('upiIdLabel').textContent = UPI_ID + ' · Order ' + orderId;
     }
 
+    function val(id) { return document.getElementById(id).value.trim(); }
+
     async function placeOrder() {
       clearError('checkoutError');
-      const name = document.getElementById('shipName').value.trim();
-      const phone = document.getElementById('shipPhone').value.trim();
-      const address = document.getElementById('shipAddress').value.trim();
-      const utr = document.getElementById('utrInput').value.trim();
+
+      const name = val('shipName');
+      const phone = val('shipPhone');
+      const house = val('shipHouse');
+      const street = val('shipStreet');
+      const area = val('shipArea');
+      const city = val('shipCity');
+      const district = val('shipDistrict');
+      const state = val('shipState');
+      const pincode = val('shipPin');
+      const utr = val('utrInput');
 
       if (!session) return showError('checkoutError', 'Your session has expired. Please sign in again.');
-      if (!name || !phone || !address) return showError('checkoutError', 'Please enter your name, mobile number and delivery address.');
+      if (name.length < 2) return showError('checkoutError', 'Please enter your full name.');
       if (!/^[6-9]\d{9}$/.test(phone)) return showError('checkoutError', 'Please enter a valid 10-digit mobile number.');
-      if (address.length < 10) return showError('checkoutError', 'Please enter your complete delivery address.');
-      if (utr && !/^\d{12}$/.test(utr)) return showError('checkoutError', 'The UTR must be a 12-digit number, or leave it blank.');
+      if (house.length < 2) return showError('checkoutError', 'Please enter your House / Flat No. and Building.');
+      if (street.length < 1) return showError('checkoutError', 'Please enter your Street No. / Gali / Mohalla.');
+      if (area.length < 2) return showError('checkoutError', 'Please enter your Village / Area / Colony.');
+      if (city.length < 2) return showError('checkoutError', 'Please enter your City / Town.');
+      if (district.length < 2) return showError('checkoutError', 'Please enter your District.');
+      if (!state) return showError('checkoutError', 'Please select your State.');
+      if (!/^[1-9]\d{5}$/.test(pincode)) return showError('checkoutError', 'Please enter a valid 6-digit pincode.');
+
+      if (!utr) return showError('checkoutError', 'UTR / Transaction ID is required. After paying, copy the 12-digit UTR from your UPI app and enter it above.');
+      if (!/^\d{12}$/.test(utr)) return showError('checkoutError', 'The UTR must be exactly 12 digits. Please check your UPI app payment history.');
+
       if (!confirm('Have you completed the UPI payment for this order?')) return;
+
+      const fullAddress = [house, street, area, city, district, state, pincode].join(', ');
 
       const items = selectedItems();
       const total = selectedTotal();
@@ -1288,7 +1333,14 @@
         order_ref: orderRef,
         customer_name: name,
         customer_phone: phone,
-        delivery_address: address,
+        delivery_address: fullAddress,
+        address_house: house,
+        address_street: street,
+        address_area: area,
+        address_city: city,
+        address_district: district,
+        address_state: state,
+        address_pincode: pincode,
         items: items.map(i => i.name),
         utr: utr
       });
@@ -1452,11 +1504,13 @@
       if (processLineFill) processLineFill.classList.add('visible');
     }
 
-    /* Enter key support in the auth forms */
+    /* Enter key support + input cleaning */
     document.getElementById('loginPassword').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
     document.getElementById('otpInput').addEventListener('keydown', e => { if (e.key === 'Enter') handleVerifyOtp(); });
     document.getElementById('otpInput').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6); });
     ['regPhone', 'shipPhone'].forEach(id => document.getElementById(id).addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10); }));
+    document.getElementById('shipPin').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6); });
+    document.getElementById('utrInput').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 12); });
 
     updateCartCount();
     updateAuthButton();
