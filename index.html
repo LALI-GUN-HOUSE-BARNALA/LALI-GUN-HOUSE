@@ -376,6 +376,10 @@
 
     .airguns-grid .product-card:last-child:nth-child(odd){grid-column:1/-1;width:calc(50% - .875rem);justify-self:center;}
     @media (max-width:640px){.airguns-grid .product-card:last-child:nth-child(odd){width:100%;}}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
+    .form-section-title{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink);margin:1.2rem 0 0.8rem;padding-bottom:0.4rem;border-bottom:1px solid rgba(147,117,58,0.3);}
+    .form-group .opt{text-transform:none;letter-spacing:0;font-weight:400;color:var(--ink-muted);}
+    @media (max-width:480px){.form-row{grid-template-columns:1fr;gap:0;}}
   </style>
 </head>
 <body>
@@ -437,7 +441,7 @@
   <section class="hero" id="hero">
     <div class="container">
       <div class="hero-content">
-        <p class="hero-file-ref">LGH/BNL/148101 — Barnala, Punjab</p>
+        <p class="hero-file-ref">LGH/BNL/001 — Barnala, Punjab</p>
         <h1 class="hero-heading">
           <span class="line"><span class="line-inner">Arms,</span></span>
           <span class="line"><span class="line-inner">Ammunition &amp;</span></span>
@@ -650,7 +654,7 @@
           </div>
           <div class="product-info">
             <span class="product-spec">Air Rifle · Spring Piston</span>
-            <h3>Precihole NX100</h3>
+            <h3>NX100</h3>
             <p class="product-desc">Reliable air rifle for target practice and plinking. Comfortable stock and smooth, accurate shooting.</p>
             <div class="product-price">₹ 10,500</div>
             <div class="product-actions">
@@ -667,7 +671,7 @@
           </div>
           <div class="product-info">
             <span class="product-spec">Air Rifle · Spring Piston</span>
-            <h3>Precihole NX200</h3>
+            <h3>NX200</h3>
             <p class="product-desc">Upgraded air rifle with a solid build and better power delivery. A great pick for regular shooters.</p>
             <div class="product-price">₹ 11,500</div>
             <div class="product-actions">
@@ -683,8 +687,8 @@
             <img src="VX100.png" alt="VX100 Air Rifle" loading="lazy" />
           </div>
           <div class="product-info">
-            <span class="product-spec">Air Rifle · Spring Action</span>
-            <h3>Precihole VX100</h3>
+            <span class="product-spec">Air Rifle · Spring Piston</span>
+            <h3>VX100</h3>
             <p class="product-desc">Value Max VX100 air rifle built for accuracy and everyday use. Good value for new and experienced shooters.</p>
             <div class="product-price">₹ 8,500</div>
             <div class="product-actions">
@@ -925,7 +929,18 @@
       <div class="form-group"><label for="shipName">Full Name</label><input type="text" id="shipName" placeholder="Your full name"></div>
       <div class="form-group"><label for="shipPhone">Mobile Number</label><input type="tel" id="shipPhone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric"></div>
       <div class="form-group"><label for="shipEmail">Email</label><input type="email" id="shipEmail" placeholder="your@email.com" readonly></div>
-      <div class="form-group"><label for="shipAddress">Delivery Address</label><textarea id="shipAddress" rows="2" placeholder="House no., street, city, state, pincode"></textarea></div>
+      <div class="form-section-title">Delivery Address</div>
+      <div class="form-group"><label for="shipHouse">House / Flat / Building No.</label><input type="text" id="shipHouse" placeholder="e.g. H.No. 123, Flat 4B" autocomplete="address-line1"></div>
+      <div class="form-group"><label for="shipStreet">Street / Area / Locality</label><input type="text" id="shipStreet" placeholder="e.g. Street No. 5, Shakti Nagar" autocomplete="address-line2"></div>
+      <div class="form-group"><label for="shipLandmark">Landmark <span class="opt">(optional)</span></label><input type="text" id="shipLandmark" placeholder="e.g. Near Government School"></div>
+      <div class="form-row">
+        <div class="form-group"><label for="shipCity">Village / Town / City</label><input type="text" id="shipCity" placeholder="e.g. Barnala" autocomplete="address-level2"></div>
+        <div class="form-group"><label for="shipDistrict">District</label><input type="text" id="shipDistrict" placeholder="e.g. Barnala"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label for="shipState">State</label><input type="text" id="shipState" placeholder="e.g. Punjab" autocomplete="address-level1"></div>
+        <div class="form-group"><label for="shipPin">PIN Code</label><input type="tel" id="shipPin" placeholder="6-digit PIN" maxlength="6" inputmode="numeric" autocomplete="postal-code"></div>
+      </div>
 
       <div class="payment-options">
         <div class="payment-option selected">
@@ -964,7 +979,8 @@
        CONFIG
        Paste the Web App URL of your deployed Google Apps Script (Code.gs) below.
        ============================================ */
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzKZ3pG9K8QsLDHAHJczT_iFN0Vee7kxbHfPd8oQg8MsKWfWudIfhDL5LCuCPMmxXe8/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwSbdNXnaJXHu9TKirn7jXgDQBMwQVunZ9p5QsTL1_CZ5bk4P5_Y_HNUZhV7dYFrxfjLw/exec';';
+const ORDERS_API_URL = 'https://script.google.com/macros/s/AKfycbww5vHQZeG1TYqi8UZNJODycAdvppWD5kqrACVgqmebXjfnGcWAwe2ehFmsPThLmvIQ3w/exec';
     const UPI_ID = 'singlalali9250-2@okaxis';
     const MERCHANT_NAME = 'Lali Gun House';
 
@@ -992,20 +1008,21 @@
 
     /* ---------- API ---------- */
     async function api(payload) {
-      if (!API_URL || API_URL.indexOf('PASTE_') === 0) {
-        return { ok: false, error: 'The store backend is not configured yet. Please contact us by phone.' };
-      }
-      try {
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
-        });
-        return await res.json();
-      } catch (e) {
-        return { ok: false, error: 'Unable to reach the server. Please check your connection and try again.' };
-      }
-    }
+  const url = payload.action === 'place_order' ? ORDERS_API_URL : API_URL;
+  if (!url || url.indexOf('PASTE_') === 0) {
+    return { ok: false, error: 'The store backend is not configured yet. Please contact us by phone.' };
+  }
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    return await res.json();
+  } catch (e) {
+    return { ok: false, error: 'Unable to reach the server. Please check your connection and try again.' };
+  }
+}
 
     /* ---------- TOAST / ERRORS ---------- */
     function showToast(msg) {
@@ -1266,13 +1283,21 @@
       clearError('checkoutError');
       const name = document.getElementById('shipName').value.trim();
       const phone = document.getElementById('shipPhone').value.trim();
-      const address = document.getElementById('shipAddress').value.trim();
+      const g = id => document.getElementById(id).value.trim();
+      const house = g('shipHouse'), street = g('shipStreet'), landmark = g('shipLandmark');
+      const city = g('shipCity'), district = g('shipDistrict'), state = g('shipState'), pin = g('shipPin');
+      const address = [house, street, landmark ? 'Near ' + landmark : '', city, district, state, pin].filter(Boolean).join(', ');
       const utr = document.getElementById('utrInput').value.trim();
 
       if (!session) return showError('checkoutError', 'Your session has expired. Please sign in again.');
-      if (!name || !phone || !address) return showError('checkoutError', 'Please enter your name, mobile number and delivery address.');
+      if (!name || !phone) return showError('checkoutError', 'Please enter your name and mobile number.');
       if (!/^[6-9]\d{9}$/.test(phone)) return showError('checkoutError', 'Please enter a valid 10-digit mobile number.');
-      if (address.length < 10) return showError('checkoutError', 'Please enter your complete delivery address.');
+      if (!house) return showError('checkoutError', 'Please enter your house / flat / building number.');
+      if (!street) return showError('checkoutError', 'Please enter your street / area / locality.');
+      if (!city) return showError('checkoutError', 'Please enter your village / town / city.');
+      if (!district) return showError('checkoutError', 'Please enter your district.');
+      if (!state) return showError('checkoutError', 'Please enter your state.');
+      if (!/^[1-9]\d{5}$/.test(pin)) return showError('checkoutError', 'Please enter a valid 6-digit PIN code.');
       if (utr && !/^\d{12}$/.test(utr)) return showError('checkoutError', 'The UTR must be a 12-digit number, or leave it blank.');
       if (!confirm('Have you completed the UPI payment for this order?')) return;
 
@@ -1289,6 +1314,13 @@
         customer_name: name,
         customer_phone: phone,
         delivery_address: address,
+        addr_house: house,
+        addr_street: street,
+        addr_landmark: landmark,
+        addr_city: city,
+        addr_district: district,
+        addr_state: state,
+        addr_pin: pin,
         items: items.map(i => i.name),
         utr: utr
       });
@@ -1456,6 +1488,7 @@
     document.getElementById('loginPassword').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
     document.getElementById('otpInput').addEventListener('keydown', e => { if (e.key === 'Enter') handleVerifyOtp(); });
     document.getElementById('otpInput').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6); });
+    document.getElementById('shipPin').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6); });
     ['regPhone', 'shipPhone'].forEach(id => document.getElementById(id).addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10); }));
 
     updateCartCount();
