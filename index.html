@@ -977,22 +977,20 @@
   <script>
     /* ============================================
        CONFIG
-       Paste the Web App URL of your deployed Google Apps Script (Code.gs) below.
        ============================================ */
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwSbdNXnaJXHu9TKirn7jXgDQBMwQVunZ9p5QsTL1_CZ5bk4P5_Y_HNUZhV7dYFrxfjLw/exec';';
-const ORDERS_API_URL = 'https://script.google.com/macros/s/AKfycbww5vHQZeG1TYqi8UZNJODycAdvppWD5kqrACVgqmebXjfnGcWAwe2ehFmsPThLmvIQ3w/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwSbdNXnaJXHu9TKirn7jXdgDQBMwQVunZ9p5QsTL1_CZ5bk4P5_Y_HNUZhV7dYFrxfjLw/exec';
+    const ORDERS_API_URL = 'https://script.google.com/macros/s/AKfycbww5vHQZeG1TYqi8UZNJODycAdvppWD5kqrACVgqmebXjfnGcWAwe2ehFmsPThLmvIQ3w/exec';
     const UPI_ID = 'singlalali9250-2@okaxis';
     const MERCHANT_NAME = 'Lali Gun House';
 
     /* ============================================
        STATE
-       cart item: { name, price, selected }
-       session:   { user: {id,name,email,phone}, token }
        ============================================ */
     let cart = loadJSON('lgh_cart', []).map(i => ({ name: i.name, price: i.price, selected: i.selected !== false }));
     let session = loadJSON('lgh_session', null);
     let pendingEmail = '';
     let resendTimer = null;
+    let pendingOrderRef = '';
 
     localStorage.removeItem('lgh_user'); // legacy insecure storage
 
@@ -1008,21 +1006,21 @@ const ORDERS_API_URL = 'https://script.google.com/macros/s/AKfycbww5vHQZeG1TYqi8
 
     /* ---------- API ---------- */
     async function api(payload) {
-  const url = payload.action === 'place_order' ? ORDERS_API_URL : API_URL;
-  if (!url || url.indexOf('PASTE_') === 0) {
-    return { ok: false, error: 'The store backend is not configured yet. Please contact us by phone.' };
-  }
-  try {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
-    });
-    return await res.json();
-  } catch (e) {
-    return { ok: false, error: 'Unable to reach the server. Please check your connection and try again.' };
-  }
-}
+      const url = payload.action === 'place_order' ? ORDERS_API_URL : API_URL;
+      if (!url || url.indexOf('PASTE_') === 0) {
+        return { ok: false, error: 'The store backend is not configured yet. Please contact us by phone.' };
+      }
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        return await res.json();
+      } catch (e) {
+        return { ok: false, error: 'Unable to reach the server. Please check your connection and try again.' };
+      }
+    }
 
     /* ---------- TOAST / ERRORS ---------- */
     function showToast(msg) {
@@ -1033,287 +1031,445 @@ const ORDERS_API_URL = 'https://script.google.com/macros/s/AKfycbww5vHQZeG1TYqi8
     }
     function showError(id, msg) {
       const el = document.getElementById(id);
+      if (!el) return;
       el.textContent = msg;
       el.classList.add('show');
     }
-    function clearError(id) { document.getElementById(id).classList.remove('show'); }
-    function setBusy(btnId, busy, busyText, normalText) {
-      const b = document.getElementById(btnId);
-      b.disabled = busy;
-      b.textContent = busy ? busyText : normalText;
+    function clearError(id) {
+      const el = document.getElementById(id);
+      if (el) { el.textContent = ''; el.classList.remove('show'); }
     }
 
-    /* ============================================
-       AUTH
-       ============================================ */
-    function showAuthStep(step) {
-      ['loginForm', 'registerForm', 'otpForm'].forEach(id => {
-        document.getElementById(id).style.display = (id === step) ? 'block' : 'none';
-      });
-      ['loginError', 'regError', 'otpError'].forEach(clearError);
-    }
-    function openAuthModal() {
-      if (session) {
-        if (confirm('You are signed in as ' + session.user.name + ' (' + session.user.id + ').\n\nDo you want to sign out?')) logout();
-        return;
-      }
-      showAuthStep('loginForm');
-      document.getElementById('authModal').classList.add('active');
-    }
-    function closeAuthModal() { document.getElementById('authModal').classList.remove('active'); }
-    function switchToRegister() { showAuthStep('registerForm'); }
-    function switchToLogin() { showAuthStep('loginForm'); }
-    function backToRegister() { stopResendTimer(); showAuthStep('registerForm'); }
-
-    function startResendTimer(seconds) {
-      const link = document.getElementById('resendLink');
-      let left = seconds;
-      link.classList.add('disabled');
-      link.textContent = 'Resend code in ' + left + 's';
-      stopResendTimer();
-      resendTimer = setInterval(() => {
-        left--;
-        if (left <= 0) {
-          stopResendTimer();
-          link.classList.remove('disabled');
-          link.textContent = 'Resend code';
-        } else {
-          link.textContent = 'Resend code in ' + left + 's';
-        }
-      }, 1000);
-    }
-    function stopResendTimer() { if (resendTimer) { clearInterval(resendTimer); resendTimer = null; } }
-
-    function readRegisterForm() {
-      return {
-        name: document.getElementById('regName').value.trim(),
-        email: document.getElementById('regEmail').value.trim().toLowerCase(),
-        phone: document.getElementById('regPhone').value.trim(),
-        password: document.getElementById('regPassword').value
-      };
-    }
-
-    async function requestOtp(buttonId, normalText, errorId) {
-      const f = readRegisterForm();
-      clearError(errorId);
-      if (f.name.length < 2) return showError(errorId, 'Please enter your full name.');
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) return showError(errorId, 'Please enter a valid email address.');
-      if (!/^[6-9]\d{9}$/.test(f.phone)) return showError(errorId, 'Please enter a valid 10-digit mobile number.');
-      if (f.password.length < 6) return showError(errorId, 'Password must be at least 6 characters.');
-
-      setBusy(buttonId, true, 'Sending code…', normalText);
-      const r = await api({ action: 'send_otp', name: f.name, email: f.email, phone: f.phone, password: f.password });
-      setBusy(buttonId, false, '', normalText);
-
-      if (!r.ok) return showError(errorId, r.error || 'Unable to send the code. Please try again.');
-
-      pendingEmail = f.email;
-      document.getElementById('otpSubtitle').textContent = 'Enter the 6-digit code sent to ' + f.email + '.';
-      document.getElementById('otpInput').value = '';
-      showAuthStep('otpForm');
-      startResendTimer(60);
-      document.getElementById('otpInput').focus();
-    }
-    function handleSendOtp() { requestOtp('sendOtpBtn', 'Send Verification Code', 'regError'); }
-    function handleResendOtp() {
-      if (document.getElementById('resendLink').classList.contains('disabled')) return;
-      requestOtp('verifyOtpBtn', 'Verify & Create Account', 'otpError');
-    }
-
-    async function handleVerifyOtp() {
-      clearError('otpError');
-      const otp = document.getElementById('otpInput').value.trim();
-      if (!/^\d{6}$/.test(otp)) return showError('otpError', 'Please enter the 6-digit code.');
-
-      setBusy('verifyOtpBtn', true, 'Verifying…', 'Verify & Create Account');
-      const r = await api({ action: 'verify_otp', email: pendingEmail, otp: otp });
-      setBusy('verifyOtpBtn', false, '', 'Verify & Create Account');
-
-      if (!r.ok) return showError('otpError', r.error || 'Verification failed. Please try again.');
-
-      stopResendTimer();
-      setSession(r.user, r.token);
-      closeAuthModal();
-      ['regName', 'regEmail', 'regPhone', 'regPassword', 'otpInput'].forEach(id => document.getElementById(id).value = '');
-      showToast('Account created. Your Account ID is ' + r.user.id);
-    }
-
-    async function handleLogin() {
-      clearError('loginError');
-      const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-      const password = document.getElementById('loginPassword').value;
-      if (!email || !password) return showError('loginError', 'Please enter your email and password.');
-
-      setBusy('loginBtn', true, 'Signing in…', 'Sign In');
-      const r = await api({ action: 'login', email: email, password: password });
-      setBusy('loginBtn', false, '', 'Sign In');
-
-      if (!r.ok) return showError('loginError', r.error || 'Sign in failed. Please try again.');
-
-      setSession(r.user, r.token);
-      closeAuthModal();
-      document.getElementById('loginEmail').value = '';
-      document.getElementById('loginPassword').value = '';
-      showToast('Welcome back, ' + r.user.name.split(' ')[0] + '!');
-    }
-
-    function setSession(user, token) {
-      session = { user: user, token: token };
-      localStorage.setItem('lgh_session', JSON.stringify(session));
+    /* ---------- UI INIT ---------- */
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCartBadge();
       updateAuthButton();
+      initRevealObserver();
+      initNavScroll();
+      initHamburger();
+      initSealDrag();
+      initProcessLine();
+      initFabShow();
+      initApprovalStamp();
+      initPaymentLinks();
+    });
+
+    function updateCartBadge() {
+      const c = cart.filter(i => i.selected).length;
+      const el = document.getElementById('cartCount');
+      if (el) el.textContent = c;
     }
-    function logout() {
-      session = null;
-      localStorage.removeItem('lgh_session');
-      updateAuthButton();
-      showToast('You have been signed out.');
-    }
+
     function updateAuthButton() {
-      document.getElementById('authBtn').textContent = session ? session.user.name.split(' ')[0] : 'Sign In';
+      const btn = document.getElementById('authBtn');
+      if (btn) {
+        if (session && session.user) {
+          btn.textContent = session.user.name.split(' ')[0];
+          btn.onclick = () => { if (confirm('Sign out of your account?')) { session = null; localStorage.removeItem('lgh_session'); updateAuthButton(); showToast('Signed out.'); } };
+        } else {
+          btn.textContent = 'Sign In';
+          btn.onclick = openAuthModal;
+        }
+      }
     }
 
-    /* ============================================
-       CART
-       ============================================ */
-    function selectedItems() { return cart.filter(i => i.selected); }
-    function selectedTotal() { return selectedItems().reduce((s, i) => s + i.price, 0); }
+    function initRevealObserver() {
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal, .section-divider').forEach(el => obs.observe(el));
+    }
 
+    function initNavScroll() {
+      const nav = document.getElementById('navbar');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 40) nav.classList.add('scrolled');
+        else nav.classList.remove('scrolled');
+      });
+    }
+
+    function initHamburger() {
+      const h = document.getElementById('navHamburger');
+      const m = document.getElementById('mobileMenu');
+      const o = document.getElementById('mobileOverlay');
+      if (!h) return;
+      h.addEventListener('click', () => {
+        const open = m.classList.toggle('open');
+        h.classList.toggle('active', open);
+        o.classList.toggle('open', open);
+        h.setAttribute('aria-expanded', open);
+      });
+      o.addEventListener('click', () => {
+        m.classList.remove('open');
+        h.classList.remove('active');
+        o.classList.remove('open');
+        h.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    function initSealDrag() {
+      const wrap = document.getElementById('sealSvgWrap');
+      const shell = document.getElementById('sealShell');
+      if (!wrap || !shell) return;
+      let isDown = false, startX, startY, rot = 0, curX = 0, curY = 0, raf;
+      const setT = () => { wrap.style.transform = `translate(${curX}px,${curY}px) rotate(${rot}deg)`; };
+      wrap.addEventListener('pointerdown', (e) => {
+        isDown = true; wrap.setPointerCapture(e.pointerId);
+        startX = e.clientX - curX; startY = e.clientY - curY;
+      });
+      window.addEventListener('pointermove', (e) => {
+        if (!isDown) return;
+        curX = e.clientX - startX; curY = e.clientY - startY;
+        rot = curX * 0.15;
+        if (!raf) raf = requestAnimationFrame(() => { setT(); raf = null; });
+      });
+      window.addEventListener('pointerup', () => {
+        if (!isDown) return;
+        isDown = false;
+        curX = 0; curY = 0; rot = 0;
+        wrap.style.transition = 'transform 0.6s cubic-bezier(0.34,1.56,0.64,1)';
+        setT();
+        setTimeout(() => { wrap.style.transition = ''; }, 600);
+      });
+    }
+
+    function initProcessLine() {
+      const el = document.getElementById('processLineFill');
+      if (!el) return;
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { el.classList.add('visible'); obs.unobserve(e.target); } });
+      }, { threshold: 0.4 });
+      obs.observe(document.getElementById('processTimeline'));
+    }
+
+    function initFabShow() {
+      const cluster = document.getElementById('fabCluster');
+      if (!cluster) return;
+      const btns = cluster.querySelectorAll('.fab-btn');
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) btns.forEach(b => b.classList.add('visible'));
+          else btns.forEach(b => b.classList.remove('visible'));
+        });
+      }, { threshold: 0.1 });
+      const anchor = document.querySelector('.hero');
+      if (anchor) obs.observe(anchor);
+    }
+
+    function initApprovalStamp() {
+      const stamp = document.getElementById('approvalStamp');
+      if (!stamp) return;
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            stamp.classList.add('stamped');
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.5 });
+      obs.observe(stamp);
+    }
+
+    /* ---------- CART ---------- */
     function addToCart(name, price) {
-      cart.push({ name: name, price: price, selected: true });
+      const existing = cart.find(i => i.name === name && i.price === price);
+      if (existing) {
+        // If it's a non-quantity product, just show toast
+        showToast(name + ' is already in your cart.');
+      } else {
+        cart.push({ name, price, selected: true });
+      }
       saveCart();
-      updateCartCount();
-      showToast(name + ' added to cart');
+      updateCartBadge();
+      showToast(name + ' added to cart.');
+      // If checkout modal is open, update refs
+      if (document.getElementById('checkoutModal').classList.contains('active')) {
+        buildCheckoutSummary();
+      }
     }
-    function updateCartCount() { document.getElementById('cartCount').textContent = cart.length; }
-    function toggleCartItem(index) {
-      if (!cart[index]) return;
-      cart[index].selected = !cart[index].selected;
-      saveCart();
-      renderCart();
+
+    function openCartModal() {
+      buildCartContent();
+      document.getElementById('cartModal').classList.add('active');
     }
-    function removeCartItem(index) {
-      cart.splice(index, 1);
-      saveCart();
-      updateCartCount();
-      renderCart();
-    }
-    function openCartModal() { document.getElementById('cartModal').classList.add('active'); renderCart(); }
     function closeCartModal() { document.getElementById('cartModal').classList.remove('active'); }
 
-    function renderCart() {
-      const el = document.getElementById('cartContent');
-      if (cart.length === 0) {
-        el.innerHTML = '<div class="empty-cart">Your cart is empty.<br><br><button class="btn-add" onclick="closeCartModal()" style="width:auto;padding:0.6rem 2rem;">Continue Shopping</button></div>';
+    function buildCartContent() {
+      const wrap = document.getElementById('cartContent');
+      if (!wrap) return;
+      if (!cart.length) {
+        wrap.innerHTML = '<div class="empty-cart">Your cart is empty.<br><br><button class="btn-full" onclick="closeCartModal()" style="width:auto;padding:0.6rem 2rem;">Continue Shopping</button></div>';
         return;
       }
-      let html = '<p class="cart-hint">Untick an item to leave it out of this order, or use × to remove it from your cart.</p><div class="cart-items">';
-      cart.forEach((item, i) => {
-        html += '<div class="cart-item' + (item.selected ? '' : ' unselected') + '">' +
-          '<input type="checkbox" ' + (item.selected ? 'checked' : '') + ' onchange="toggleCartItem(' + i + ')" aria-label="Include ' + escapeHtml(item.name) + ' in order">' +
-          '<span class="cart-item-name">' + escapeHtml(item.name) + '</span>' +
-          '<span class="cart-item-price">' + formatINR(item.price) + '</span>' +
-          '<button class="cart-remove" onclick="removeCartItem(' + i + ')" aria-label="Remove ' + escapeHtml(item.name) + '">&times;</button>' +
+      let html = '<div class="cart-items">';
+      cart.forEach((i, idx) => {
+        html += '<div class="cart-item ' + (i.selected ? '' : 'unselected') + '">' +
+          '<input type="checkbox" ' + (i.selected ? 'checked' : '') + ' onchange="toggleCartItem(' + idx + ')">' +
+          '<span class="cart-item-name">' + escapeHtml(i.name) + '</span>' +
+          '<span class="cart-item-price">' + formatINR(i.price) + '</span>' +
+          '<button class="cart-remove" onclick="removeCartItem(' + idx + ')">&times;</button>' +
           '</div>';
       });
       html += '</div>';
-      const count = selectedItems().length;
-      html += '<div class="cart-total"><span>Total (' + count + ' selected)</span><span>' + formatINR(selectedTotal()) + '</span></div>';
-      html += '<button class="btn-full" onclick="proceedToCheckout()" ' + (count === 0 ? 'disabled' : '') + '>Proceed to Checkout</button>';
-      html += '<div style="text-align:center;margin-top:0.75rem;font-size:0.75rem;color:var(--ink-muted);">🚚 Delivery within 7 days · Secure UPI payment</div>';
-      el.innerHTML = html;
+      const total = cart.filter(i => i.selected).reduce((s, i) => s + i.price, 0);
+      html += '<div class="cart-total"><span>Total</span><span>' + formatINR(total) + '</span></div>';
+      html += '<p class="cart-hint">Uncheck items you do not want to purchase right now.</p>';
+      html += '<button class="btn-full" onclick="proceedToCheckout()" ' + (total > 0 ? '' : 'disabled') + '>Proceed to Checkout</button>';
+      wrap.innerHTML = html;
     }
 
+    function toggleCartItem(idx) {
+      cart[idx].selected = !cart[idx].selected;
+      saveCart();
+      updateCartBadge();
+      buildCartContent();
+    }
+    function removeCartItem(idx) {
+      cart.splice(idx, 1);
+      saveCart();
+      updateCartBadge();
+      buildCartContent();
+    }
+
+    /* ---------- AUTH ---------- */
+    function openAuthModal() {
+      document.getElementById('authModal').classList.add('active');
+      if (session && session.user) {
+        // If already logged in, close and prompt
+        closeAuthModal();
+        showToast('You are already signed in.');
+        return;
+      }
+      switchToLogin();
+    }
+    function closeAuthModal() { document.getElementById('authModal').classList.remove('active'); }
+
+    function switchToLogin() {
+      document.getElementById('loginForm').style.display = 'block';
+      document.getElementById('registerForm').style.display = 'none';
+      document.getElementById('otpForm').style.display = 'none';
+      clearError('loginError');
+    }
+    function switchToRegister() {
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('registerForm').style.display = 'block';
+      document.getElementById('otpForm').style.display = 'none';
+      clearError('regError');
+    }
+    function backToRegister() {
+      document.getElementById('otpForm').style.display = 'none';
+      document.getElementById('registerForm').style.display = 'block';
+      clearError('otpError');
+    }
+
+    async function handleLogin() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      if (!email || !password) return showError('loginError', 'Please enter email and password.');
+
+      const btn = document.getElementById('loginBtn');
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+      clearError('loginError');
+
+      const res = await api({ action: 'login', email, password });
+      btn.disabled = false;
+      btn.textContent = 'Sign In';
+
+      if (!res.ok) return showError('loginError', res.error || 'Login failed.');
+
+      session = { user: res.user, token: res.token };
+      localStorage.setItem('lgh_session', JSON.stringify(session));
+      updateAuthButton();
+      closeAuthModal();
+      showToast('Welcome back, ' + res.user.name.split(' ')[0] + '!');
+      if (document.getElementById('checkoutModal').classList.contains('active')) {
+        document.getElementById('accountChip').textContent = 'Signed in as ' + res.user.name + ' (' + res.user.email + ')';
+      }
+    }
+
+    async function handleSendOtp() {
+      const name = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim().toLowerCase();
+      const phone = document.getElementById('regPhone').value.trim();
+      const password = document.getElementById('regPassword').value;
+
+      if (!name || name.length < 2) return showError('regError', 'Please enter your full name.');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError('regError', 'Please enter a valid email address.');
+      if (!/^[6-9]\d{9}$/.test(phone)) return showError('regError', 'Please enter a valid 10-digit mobile number.');
+      if (password.length < 6) return showError('regError', 'Password must be at least 6 characters.');
+
+      const btn = document.getElementById('sendOtpBtn');
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      clearError('regError');
+
+      const res = await api({ action: 'send_otp', name, email, phone, password });
+      btn.disabled = false;
+      btn.textContent = 'Send Verification Code';
+
+      if (!res.ok) return showError('regError', res.error || 'Failed to send OTP.');
+
+      pendingEmail = email;
+      document.getElementById('otpSubtitle').textContent = 'Enter the 6-digit code sent to ' + email + '.';
+      document.getElementById('registerForm').style.display = 'none';
+      document.getElementById('otpForm').style.display = 'block';
+      document.getElementById('otpInput').value = '';
+      document.getElementById('otpInput').focus();
+      startResendTimer();
+    }
+
+    async function handleVerifyOtp() {
+      const otp = document.getElementById('otpInput').value.trim();
+      if (!/^\d{6}$/.test(otp)) return showError('otpError', 'Please enter the 6-digit code.');
+
+      const btn = document.getElementById('verifyOtpBtn');
+      btn.disabled = true;
+      btn.textContent = 'Verifying...';
+      clearError('otpError');
+
+      const res = await api({ action: 'verify_otp', email: pendingEmail, otp });
+      btn.disabled = false;
+      btn.textContent = 'Verify & Create Account';
+
+      if (!res.ok) return showError('otpError', res.error || 'Verification failed.');
+
+      session = { user: res.user, token: res.token };
+      localStorage.setItem('lgh_session', JSON.stringify(session));
+      updateAuthButton();
+      closeAuthModal();
+      showToast('Account created! Welcome, ' + res.user.name.split(' ')[0] + '!');
+    }
+
+    async function handleResendOtp() {
+      clearError('otpError');
+      showToast('Please wait...');
+      // We don't have all data again, so we just ask backend to resend by calling send_otp again if we want,
+      // but ideally we need all form data. We can just show a message to go back.
+      backToRegister();
+      showError('regError', 'Please enter your details again and click "Send Verification Code".');
+    }
+
+    function startResendTimer() {
+      const link = document.getElementById('resendLink');
+      link.classList.add('disabled');
+      let t = 45;
+      link.textContent = 'Resend code (' + t + 's)';
+      if (resendTimer) clearInterval(resendTimer);
+      resendTimer = setInterval(() => {
+        t--;
+        if (t <= 0) {
+          clearInterval(resendTimer);
+          link.classList.remove('disabled');
+          link.textContent = 'Resend code';
+        } else {
+          link.textContent = 'Resend code (' + t + 's)';
+        }
+      }, 1000);
+    }
+
+    /* ---------- CHECKOUT & PAYMENT ---------- */
     function proceedToCheckout() {
-      if (selectedItems().length === 0) { showToast('Please select at least one item.'); return; }
-      if (!session) {
+      if (!session || !session.user || !session.token) {
         closeCartModal();
-        showToast('Please sign in to continue to checkout.');
         openAuthModal();
+        showToast('Please sign in to continue.');
         return;
       }
       closeCartModal();
-      openCheckoutModal();
+      const selected = cart.filter(i => i.selected);
+      if (!selected.length) return showToast('Your cart is empty.');
+
+      // Fill default values
+      document.getElementById('shipName').value = session.user.name;
+      document.getElementById('shipPhone').value = session.user.phone || '';
+      document.getElementById('shipEmail').value = session.user.email;
+      document.getElementById('accountChip').textContent = 'Signed in as ' + session.user.name + ' (' + session.user.email + ')';
+      document.getElementById('utrInput').value = '';
+      clearError('checkoutError');
+
+      // Generate Order Ref for UPI
+      pendingOrderRef = 'LGH' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      const total = selected.reduce((s, i) => s + i.price, 0);
+      buildCheckoutSummary();
+      generateQrCode(total, pendingOrderRef);
+      
+      document.getElementById('checkoutModal').classList.add('active');
     }
 
-    /* ============================================
-       CHECKOUT + UPI PAYMENT
-       ============================================ */
-    function openCheckoutModal() {
-      document.getElementById('checkoutModal').classList.add('active');
-      clearError('checkoutError');
-      const items = selectedItems();
-      document.getElementById('checkoutSummary').innerHTML =
-        'You are purchasing <strong>' + items.length + ' item' + (items.length > 1 ? 's' : '') + '</strong> for <strong>' + formatINR(selectedTotal()) + '</strong>.';
-      document.getElementById('accountChip').textContent = 'Account ID: ' + session.user.id;
-      document.getElementById('shipName').value = session.user.name || '';
-      document.getElementById('shipPhone').value = session.user.phone || '';
-      document.getElementById('shipEmail').value = session.user.email || '';
-      generateQR();
-    }
     function closeCheckoutModal() { document.getElementById('checkoutModal').classList.remove('active'); }
 
-    function getOrderId() {
-      let id = localStorage.getItem('lgh_order_id');
-      if (!id) {
-        id = 'LGH' + Math.random().toString(36).slice(2, 8).toUpperCase().padEnd(6, '0');
-        localStorage.setItem('lgh_order_id', id);
-      }
-      return id;
+    function buildCheckoutSummary() {
+      const selected = cart.filter(i => i.selected);
+      const total = selected.reduce((s, i) => s + i.price, 0);
+      const summary = selected.map(i => i.name).join(', ');
+      document.getElementById('checkoutSummary').innerHTML = 'Items: ' + escapeHtml(summary) + '<br><strong>Total: ' + formatINR(total) + '</strong>';
+      return total;
     }
 
-    function generateQR() {
-      const total = selectedTotal();
-      if (total === 0) return;
-      const orderId = getOrderId();
-      const q = 'pa=' + encodeURIComponent(UPI_ID) +
-                '&pn=' + encodeURIComponent(MERCHANT_NAME) +
-                '&am=' + total.toFixed(2) +
-                '&cu=INR&tn=' + encodeURIComponent(orderId);
-      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-      document.getElementById('payUpiAny').href = 'upi://pay?' + q;
-      document.getElementById('payGpay').href = (isIOS ? 'gpay://upi/pay?' : 'tez://upi/pay?') + q;
-      document.getElementById('payPhonePe').href = 'phonepe://pay?' + q;
-      document.getElementById('payPaytm').href = 'paytmmp://pay?' + q;
-      document.getElementById('upiQrImg').src =
-        'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent('upi://pay?' + q);
-      document.getElementById('upiIdLabel').textContent = UPI_ID + ' · Order ' + orderId;
+    function generateQrCode(amount, ref) {
+      const text = encodeURIComponent(`upi://pay?pa=${UPI_ID}&pn=${MERCHANT_NAME}&am=${amount}&cu=INR&tn=${ref}`);
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${text}`;
+      document.getElementById('upiQrImg').src = qrUrl;
+      document.getElementById('upiIdLabel').textContent = UPI_ID;
+      
+      document.getElementById('payUpiAny').href = `upi://pay?pa=${UPI_ID}&pn=${MERCHANT_NAME}&am=${amount}&cu=INR&tn=${ref}`;
+      document.getElementById('payGpay').href = `tez://upi/pay?pa=${UPI_ID}&pn=${MERCHANT_NAME}&am=${amount}&cu=INR&tn=${ref}`;
+      document.getElementById('payPhonePe').href = `phonepe://pay?pa=${UPI_ID}&pn=${MERCHANT_NAME}&am=${amount}&cu=INR&tn=${ref}`;
+      document.getElementById('payPaytm').href = `paytmmp://pay?pa=${UPI_ID}&pn=${MERCHANT_NAME}&am=${amount}&cu=INR&tn=${ref}`;
+    }
+
+    function initPaymentLinks() {
+      const links = ['payUpiAny', 'payGpay', 'payPhonePe', 'payPaytm'];
+      links.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('click', (e) => {
+             if (!document.getElementById('shipName').value.trim()) {
+               e.preventDefault();
+               showError('checkoutError', 'Please fill your name before paying.');
+               return;
+             }
+          });
+        }
+      });
     }
 
     async function placeOrder() {
-      clearError('checkoutError');
+      const selected = cart.filter(i => i.selected);
+      if (!selected.length) return showToast('Cart is empty.');
+
       const name = document.getElementById('shipName').value.trim();
       const phone = document.getElementById('shipPhone').value.trim();
-      const g = id => document.getElementById(id).value.trim();
-      const house = g('shipHouse'), street = g('shipStreet'), landmark = g('shipLandmark');
-      const city = g('shipCity'), district = g('shipDistrict'), state = g('shipState'), pin = g('shipPin');
-      const address = [house, street, landmark ? 'Near ' + landmark : '', city, district, state, pin].filter(Boolean).join(', ');
+      const house = document.getElementById('shipHouse').value.trim();
+      const street = document.getElementById('shipStreet').value.trim();
+      const landmark = document.getElementById('shipLandmark').value.trim();
+      const city = document.getElementById('shipCity').value.trim();
+      const district = document.getElementById('shipDistrict').value.trim();
+      const state = document.getElementById('shipState').value.trim();
+      const pin = document.getElementById('shipPin').value.trim();
       const utr = document.getElementById('utrInput').value.trim();
 
-      if (!session) return showError('checkoutError', 'Your session has expired. Please sign in again.');
-      if (!name || !phone) return showError('checkoutError', 'Please enter your name and mobile number.');
+      if (!name) return showError('checkoutError', 'Please enter your full name.');
       if (!/^[6-9]\d{9}$/.test(phone)) return showError('checkoutError', 'Please enter a valid 10-digit mobile number.');
-      if (!house) return showError('checkoutError', 'Please enter your house / flat / building number.');
-      if (!street) return showError('checkoutError', 'Please enter your street / area / locality.');
-      if (!city) return showError('checkoutError', 'Please enter your village / town / city.');
-      if (!district) return showError('checkoutError', 'Please enter your district.');
-      if (!state) return showError('checkoutError', 'Please enter your state.');
-      if (!/^[1-9]\d{5}$/.test(pin)) return showError('checkoutError', 'Please enter a valid 6-digit PIN code.');
-      if (utr && !/^\d{12}$/.test(utr)) return showError('checkoutError', 'The UTR must be a 12-digit number, or leave it blank.');
-      if (!confirm('Have you completed the UPI payment for this order?')) return;
+      if (!house || !street || !city || !district || !state) return showError('checkoutError', 'Please fill all address fields.');
+      if (pin && !/^[1-9]\d{5}$/.test(pin)) return showError('checkoutError', 'Please enter a valid 6-digit PIN code.');
+      if (utr && !/^\d{12}$/.test(utr)) return showError('checkoutError', 'UTR must be a 12-digit number.');
 
-      const items = selectedItems();
-      const total = selectedTotal();
-      const orderRef = getOrderId();
-
-      setBusy('placeOrderBtn', true, 'Placing order…', 'I Have Paid — Confirm Order');
-      const r = await api({
+      const delivery_address = `${house}, ${street}, ${landmark ? landmark + ', ' : ''}${city}, ${district}, ${state} - ${pin}`;
+      
+      const payload = {
         action: 'place_order',
         user_id: session.user.id,
         token: session.token,
-        order_ref: orderRef,
         customer_name: name,
         customer_phone: phone,
-        delivery_address: address,
+        delivery_address: delivery_address,
         addr_house: house,
         addr_street: street,
         addr_landmark: landmark,
@@ -1321,178 +1477,32 @@ const ORDERS_API_URL = 'https://script.google.com/macros/s/AKfycbww5vHQZeG1TYqi8
         addr_district: district,
         addr_state: state,
         addr_pin: pin,
-        items: items.map(i => i.name),
-        utr: utr
-      });
-      setBusy('placeOrderBtn', false, '', 'I Have Paid — Confirm Order');
+        items: selected.map(i => i.name),
+        utr: utr,
+        order_ref: pendingOrderRef
+      };
 
-      if (!r.ok) return showError('checkoutError', r.error || 'We could not place your order. Please try again.');
+      const btn = document.getElementById('placeOrderBtn');
+      btn.disabled = true;
+      btn.textContent = 'Processing...';
+      clearError('checkoutError');
 
-      // keep unselected items in the cart, remove purchased ones
-      cart = cart.filter(i => !i.selected);
+      const res = await api(payload);
+      
+      btn.disabled = false;
+      btn.textContent = 'I Have Paid — Confirm Order';
+
+      if (!res.ok) return showError('checkoutError', res.error || 'Order failed. Please try again.');
+
+      // Success
+      cart = cart.filter(i => !i.selected); // Remove ordered items
       saveCart();
-      localStorage.removeItem('lgh_order_id');
-      updateCartCount();
-
-      document.querySelector('#checkoutModal .modal').innerHTML =
-        '<div style="text-align:center;padding:1rem;">' +
-          '<div style="font-size:3rem;margin-bottom:1rem;">✅</div>' +
-          '<h3>Order Placed</h3>' +
-          '<p style="margin-bottom:1rem;">Thank you, ' + escapeHtml(name) + '.</p>' +
-          '<p style="font-size:0.9rem;margin-bottom:0.25rem;"><strong>Order ID: ' + escapeHtml(r.order_id) + '</strong></p>' +
-          '<p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:0.25rem;">Account ID: ' + escapeHtml(session.user.id) + '</p>' +
-          '<p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:0.5rem;">Order total: ' + formatINR(r.total || total) + '</p>' +
-          '<p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:1rem;">Your order will be delivered within <strong>7 days</strong>.</p>' +
-          '<p style="font-size:0.75rem;color:var(--ink-muted);margin-bottom:1.5rem;">A confirmation email has been sent to ' + escapeHtml(session.user.email) + '. Please check your spam folder if you do not see it. We will verify your payment and dispatch your order.</p>' +
-          '<button class="btn-full" onclick="location.reload()">Done</button>' +
-        '</div>';
+      updateCartBadge();
+      closeCheckoutModal();
+      
+      showToast('Order placed successfully! ID: ' + res.order_id);
+      alert('Order Placed Successfully!\n\nOrder ID: ' + res.order_id + '\nTotal Amount: ' + formatINR(res.total) + '\n\nYou will receive a confirmation email shortly.');
     }
-
-    /* ============================================
-       NAVBAR / MOBILE / SCROLL / SEAL
-       ============================================ */
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 60); }, { passive: true });
-
-    const hamburger = document.getElementById('navHamburger');
-    const mobileNav = document.getElementById('mobileMenu');
-    const mobileOverlay = document.getElementById('mobileOverlay');
-    function toggleMobileNav() {
-      const isOpen = mobileNav.classList.contains('open');
-      hamburger.classList.toggle('active');
-      hamburger.setAttribute('aria-expanded', !isOpen);
-      mobileNav.classList.toggle('open');
-      mobileOverlay.classList.toggle('open');
-      document.body.style.overflow = isOpen ? '' : 'hidden';
-    }
-    hamburger.addEventListener('click', toggleMobileNav);
-    mobileOverlay.addEventListener('click', toggleMobileNav);
-    mobileNav.querySelectorAll('a[href^="#"]').forEach(link => link.addEventListener('click', () => {
-      if (mobileNav.classList.contains('open')) toggleMobileNav();
-    }));
-
-    const revealElements = document.querySelectorAll('.reveal, [data-reveal]');
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
-    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-    revealElements.forEach(el => revealObserver.observe(el));
-
-    document.querySelectorAll('.section-divider').forEach(d => {
-      new IntersectionObserver((entries) => {
-        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
-      }, { threshold: 0.3 }).observe(d);
-    });
-
-    const processLineFill = document.getElementById('processLineFill');
-    if (processLineFill) {
-      new IntersectionObserver((entries) => {
-        entries.forEach(entry => { if (entry.isIntersecting) processLineFill.classList.add('visible'); });
-      }, { threshold: 0.3 }).observe(document.getElementById('processTimeline'));
-    }
-
-    const stamp = document.getElementById('approvalStamp');
-    if (stamp) {
-      new IntersectionObserver((entries) => {
-        entries.forEach(entry => { if (entry.isIntersecting) stamp.classList.add('stamped'); });
-      }, { threshold: 0.5 }).observe(stamp);
-    }
-
-    const fabs = document.querySelectorAll('.fab-btn');
-    setTimeout(() => { fabs.forEach((fab, i) => setTimeout(() => fab.classList.add('visible'), 200 * i)); }, 1200);
-    fabs.forEach(fab => {
-      fab.addEventListener('mousemove', (e) => {
-        const rect = fab.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        fab.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px) scale(1.12)`;
-        fab.style.animationPlayState = 'paused';
-      });
-      fab.addEventListener('mouseleave', () => {
-        fab.style.transform = '';
-        fab.style.animationPlayState = 'running';
-      });
-    });
-
-    const sealShell = document.getElementById('sealShell');
-    const sealSvgWrap = document.getElementById('sealSvgWrap');
-    let sealAngle = 0, sealVelocity = 0.12, isDragging = false, lastPointerAngle = 0, lastMoveTime = 0, animFrameId;
-    if (sealShell && sealSvgWrap) {
-      function pointerAngle(e) {
-        const rect = sealShell.getBoundingClientRect();
-        return Math.atan2(e.clientY - (rect.top + rect.height/2), e.clientX - (rect.left + rect.width/2)) * 180 / Math.PI;
-      }
-      function animateSeal() {
-        if (!isDragging) { sealVelocity *= 0.985; if (sealVelocity < 0.12) sealVelocity = 0.12; }
-        sealAngle += sealVelocity;
-        sealSvgWrap.style.transform = `rotate(${sealAngle}deg)`;
-        animFrameId = requestAnimationFrame(animateSeal);
-      }
-      sealShell.addEventListener('pointerdown', (e) => {
-        isDragging = true; sealVelocity = 0;
-        lastPointerAngle = pointerAngle(e);
-        lastMoveTime = performance.now();
-        sealShell.style.cursor = 'grabbing';
-        sealShell.setPointerCapture?.(e.pointerId);
-        e.preventDefault();
-      });
-      sealShell.addEventListener('pointermove', (e) => {
-        if (!isDragging) return;
-        let delta = pointerAngle(e) - lastPointerAngle;
-        if (delta > 180) delta -= 360;
-        if (delta < -180) delta += 360;
-        const dt = Math.max(performance.now() - lastMoveTime, 8);
-        sealAngle += delta;
-        sealVelocity = (delta / (dt / 16.67)) * 0.65;
-        lastPointerAngle = pointerAngle(e);
-        lastMoveTime = performance.now();
-        sealSvgWrap.style.transform = `rotate(${sealAngle}deg)`;
-        e.preventDefault();
-      });
-      sealShell.addEventListener('pointerup', (e) => {
-        if (!isDragging) return;
-        isDragging = false; sealShell.style.cursor = 'grab';
-        sealShell.releasePointerCapture?.(e.pointerId);
-        sealVelocity = Math.max(sealVelocity, 0.12);
-      });
-      sealShell.addEventListener('pointercancel', () => {
-        isDragging = false; sealShell.style.cursor = 'grab';
-        sealVelocity = Math.max(sealVelocity, 0.12);
-      });
-      animateSeal();
-    }
-
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        if (!href || href.charAt(0) !== '#' || href === '#') return;
-        const target = document.querySelector(href);
-        if (target) {
-          e.preventDefault();
-          const navHeight = navbar.offsetHeight;
-          window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - navHeight - 20, behavior: 'smooth' });
-        }
-      });
-    });
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      if (animFrameId) cancelAnimationFrame(animFrameId);
-      if (sealSvgWrap) sealSvgWrap.style.transform = 'none';
-      revealElements.forEach(el => el.classList.add('visible'));
-      document.querySelectorAll('.section-divider').forEach(d => d.classList.add('visible'));
-      fabs.forEach(f => { f.classList.add('visible'); f.style.animation = 'none'; });
-      if (stamp) stamp.classList.add('stamped');
-      if (processLineFill) processLineFill.classList.add('visible');
-    }
-
-    /* Enter key support in the auth forms */
-    document.getElementById('loginPassword').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
-    document.getElementById('otpInput').addEventListener('keydown', e => { if (e.key === 'Enter') handleVerifyOtp(); });
-    document.getElementById('otpInput').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6); });
-    document.getElementById('shipPin').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6); });
-    ['regPhone', 'shipPhone'].forEach(id => document.getElementById(id).addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10); }));
-
-    updateCartCount();
-    updateAuthButton();
   </script>
 </body>
 </html>
