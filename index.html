@@ -976,7 +976,7 @@
 
   <script>
     /* ============================================
-       CONFIG
+       CONFIG - Yahan apna latest URL dalein
        ============================================ */
     const API_URL = 'https://script.google.com/macros/s/AKfycbwSbdNXnaJXHu9TKirn7jXdgDQBMwQVunZ9p5QsTL1_CZ5bk4P5_Y_HNUZhV7dYFrxfjLw/exec';
     const ORDERS_API_URL = 'https://script.google.com/macros/s/AKfycbww5vHQZeG1TYqi8UZNJODycAdvppWD5kqrACVgqmebXjfnGcWAwe2ehFmsPThLmvIQ3w/exec';
@@ -992,8 +992,6 @@
     let resendTimer = null;
     let pendingOrderRef = '';
 
-    localStorage.removeItem('lgh_user'); // legacy insecure storage
-
     function loadJSON(key, fallback) {
       try { const v = JSON.parse(localStorage.getItem(key)); return v === null || v === undefined ? fallback : v; }
       catch (e) { return fallback; }
@@ -1007,9 +1005,6 @@
     /* ---------- API ---------- */
     async function api(payload) {
       const url = payload.action === 'place_order' ? ORDERS_API_URL : API_URL;
-      if (!url || url.indexOf('PASTE_') === 0) {
-        return { ok: false, error: 'The store backend is not configured yet. Please contact us by phone.' };
-      }
       try {
         const res = await fetch(url, {
           method: 'POST',
@@ -1018,7 +1013,8 @@
         });
         return await res.json();
       } catch (e) {
-        return { ok: false, error: 'Unable to reach the server. Please check your connection and try again.' };
+        console.error('Fetch Error:', e);
+        return { ok: false, error: 'Network error. Please check your internet or try again later.' };
       }
     }
 
@@ -1179,7 +1175,6 @@
     function addToCart(name, price) {
       const existing = cart.find(i => i.name === name && i.price === price);
       if (existing) {
-        // If it's a non-quantity product, just show toast
         showToast(name + ' is already in your cart.');
       } else {
         cart.push({ name, price, selected: true });
@@ -1187,7 +1182,6 @@
       saveCart();
       updateCartBadge();
       showToast(name + ' added to cart.');
-      // If checkout modal is open, update refs
       if (document.getElementById('checkoutModal').classList.contains('active')) {
         buildCheckoutSummary();
       }
@@ -1240,7 +1234,6 @@
     function openAuthModal() {
       document.getElementById('authModal').classList.add('active');
       if (session && session.user) {
-        // If already logged in, close and prompt
         closeAuthModal();
         showToast('You are already signed in.');
         return;
@@ -1349,8 +1342,6 @@
     async function handleResendOtp() {
       clearError('otpError');
       showToast('Please wait...');
-      // We don't have all data again, so we just ask backend to resend by calling send_otp again if we want,
-      // but ideally we need all form data. We can just show a message to go back.
       backToRegister();
       showError('regError', 'Please enter your details again and click "Send Verification Code".');
     }
@@ -1385,7 +1376,6 @@
       const selected = cart.filter(i => i.selected);
       if (!selected.length) return showToast('Your cart is empty.');
 
-      // Fill default values
       document.getElementById('shipName').value = session.user.name;
       document.getElementById('shipPhone').value = session.user.phone || '';
       document.getElementById('shipEmail').value = session.user.email;
@@ -1393,7 +1383,6 @@
       document.getElementById('utrInput').value = '';
       clearError('checkoutError');
 
-      // Generate Order Ref for UPI
       pendingOrderRef = 'LGH' + Math.random().toString(36).substring(2, 8).toUpperCase();
       const total = selected.reduce((s, i) => s + i.price, 0);
       buildCheckoutSummary();
@@ -1494,8 +1483,7 @@
 
       if (!res.ok) return showError('checkoutError', res.error || 'Order failed. Please try again.');
 
-      // Success
-      cart = cart.filter(i => !i.selected); // Remove ordered items
+      cart = cart.filter(i => !i.selected);
       saveCart();
       updateCartBadge();
       closeCheckoutModal();
