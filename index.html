@@ -978,7 +978,7 @@
     /* ============================================
        CONFIG - Yahan apna latest URL dalein
        ============================================ */
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwSbdNXnaJXHu9TKirn7jXdgDQBMwQVunZ9p5QsTL1_CZ5bk4P5_Y_HNUZhV7dYFrxfjLw/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyig1HxHf9TLYORW5bt7ZSCDYOdRkkbPnxFqeins8Gj4HjLORjLNA4WE_LJTJiS-ltjFw/exec';
     const ORDERS_API_URL = 'https://script.google.com/macros/s/AKfycbww5vHQZeG1TYqi8UZNJODycAdvppWD5kqrACVgqmebXjfnGcWAwe2ehFmsPThLmvIQ3w/exec';
     const UPI_ID = 'singlalali9250-2@okaxis';
     const MERCHANT_NAME = 'Lali Gun House';
@@ -1003,11 +1003,13 @@
     function formatINR(n) { return '₹' + Number(n).toLocaleString('en-IN'); }
 
     /* ---------- API ---------- */
-    async function api(payload) {
+            async function api(payload) {
       const url = payload.action === 'place_order' ? ORDERS_API_URL : API_URL;
       try {
         const res = await fetch(url, {
           method: 'POST',
+          mode: 'cors', // Ye line add ki hai
+          redirect: 'follow', // Ye line add ki hai
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify(payload)
         });
