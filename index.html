@@ -582,6 +582,16 @@
       .hero-file-ref, .hero-sub, .hero-btns, .hero-trust { opacity:1; transform:none; }
       body::after { animation:none; }
     }
+    #authBtn { max-width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .forgot-row { text-align:right; margin:-0.4rem 0 1rem; font-size:0.78rem; }
+    .forgot-row a { color:var(--brass); font-weight:600; cursor:pointer; }
+    .paste-btn { display:block; margin:-0.2rem auto 1rem; background:none; border:1px solid var(--brass-light); color:var(--brass); padding:0.45rem 1.1rem; border-radius:var(--radius-pill); font-family:var(--font-body); font-size:0.78rem; font-weight:600; cursor:pointer; transition:all .3s var(--spring); }
+    .paste-btn:hover { background:var(--brass); color:var(--white-warm); }
+    .acct-avatar { width:64px; height:64px; border-radius:50%; margin:0 auto 0.8rem; display:flex; align-items:center; justify-content:center; background:var(--brass); color:var(--white-warm); font-family:var(--font-display); font-size:1.6rem; font-weight:700; }
+    .acct-center { text-align:center; }
+    .acct-row { display:flex; justify-content:space-between; gap:1rem; padding:0.7rem 0; border-bottom:1px solid rgba(147,117,58,0.25); font-size:0.88rem; }
+    .acct-row span:first-child { color:var(--ink-muted); }
+    .acct-row span:last-child { font-weight:600; word-break:break-all; text-align:right; }
   </style>
 </head>
 <body>
@@ -959,34 +969,73 @@
   <div class="modal-overlay" id="authModal">
     <div class="modal lgb-box">
       <button class="modal-close" onclick="closeAuthModal()" aria-label="Close">&times;</button>
+
       <div id="loginForm">
         <h3>Sign In</h3>
         <p>Sign in to your account to place an order.</p>
         <div class="form-error" id="loginError"></div>
         <div class="form-group"><label for="loginEmail">Email</label><input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="email"></div>
         <div class="form-group"><label for="loginPassword">Password</label><input type="password" id="loginPassword" placeholder="Your password" autocomplete="current-password"></div>
+        <div class="forgot-row"><a onclick="switchToForgot()">Forgot password?</a></div>
         <button class="btn-full" id="loginBtn" onclick="handleLogin()">Sign In</button>
         <div class="form-toggle">New here? <a onclick="switchToRegister()">Create an account</a></div>
       </div>
+
       <div id="registerForm" style="display:none;">
         <h3>Create Account</h3>
         <p>We will send a 6-digit verification code to your email.</p>
         <div class="form-error" id="regError"></div>
-        <div class="form-group"><label for="regName">Full Name</label><input type="text" id="regName" placeholder="Your full name"></div>
-        <div class="form-group"><label for="regEmail">Email</label><input type="email" id="regEmail" placeholder="your@email.com"></div>
-        <div class="form-group"><label for="regPhone">Mobile Number</label><input type="tel" id="regPhone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric"></div>
-        <div class="form-group"><label for="regPassword">Password</label><input type="password" id="regPassword" placeholder="At least 6 characters"></div>
+        <div class="form-group"><label for="regName">Full Name</label><input type="text" id="regName" placeholder="Your full name" autocomplete="name"></div>
+        <div class="form-group"><label for="regEmail">Email</label><input type="email" id="regEmail" placeholder="your@email.com" autocomplete="email"></div>
+        <div class="form-group"><label for="regPhone">Mobile Number</label><input type="tel" id="regPhone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric" autocomplete="tel"></div>
+        <div class="form-group"><label for="regPassword">Password</label><input type="password" id="regPassword" placeholder="At least 6 characters" autocomplete="new-password"></div>
         <button class="btn-full" id="sendOtpBtn" onclick="handleSendOtp()">Send Verification Code</button>
         <div class="form-toggle">Already have an account? <a onclick="switchToLogin()">Sign in</a></div>
       </div>
+
       <div id="otpForm" style="display:none;">
         <h3>Verify Your Email</h3>
         <p id="otpSubtitle">Enter the 6-digit code sent to your email.</p>
         <div class="form-error" id="otpError"></div>
-        <div class="form-group"><label for="otpInput">Verification Code</label><input type="text" id="otpInput" class="otp-input" placeholder="••••••" maxlength="6" inputmode="numeric"></div>
+        <div class="form-group"><label for="otpInput">Verification Code</label><input type="text" id="otpInput" class="otp-input" placeholder="••••••" maxlength="6" inputmode="numeric" autocomplete="one-time-code"></div>
+        <button type="button" class="paste-btn" onclick="pasteOtp('otpInput')">Paste code from clipboard</button>
         <button class="btn-full" id="verifyOtpBtn" onclick="handleVerifyOtp()">Verify &amp; Create Account</button>
         <div class="otp-meta"><a onclick="backToRegister()">Change email</a><a id="resendLink" class="disabled" onclick="handleResendOtp()">Resend code</a></div>
       </div>
+
+      <div id="forgotForm" style="display:none;">
+        <h3>Forgot Password</h3>
+        <p>Enter your registered email. We will send a 6-digit code to reset your password.</p>
+        <div class="form-error" id="forgotError"></div>
+        <div class="form-group"><label for="forgotEmail">Email</label><input type="email" id="forgotEmail" placeholder="your@email.com" autocomplete="email"></div>
+        <button class="btn-full" id="forgotBtn" onclick="handleForgotSend()">Send Reset Code</button>
+        <div class="form-toggle">Remembered it? <a onclick="switchToLogin()">Sign in</a></div>
+      </div>
+
+      <div id="resetForm" style="display:none;">
+        <h3>Reset Password</h3>
+        <p id="resetSubtitle">Enter the 6-digit code and choose a new password.</p>
+        <div class="form-error" id="resetError"></div>
+        <div class="form-group"><label for="resetOtp">Reset Code</label><input type="text" id="resetOtp" class="otp-input" placeholder="••••••" maxlength="6" inputmode="numeric" autocomplete="one-time-code"></div>
+        <button type="button" class="paste-btn" onclick="pasteOtp('resetOtp')">Paste code from clipboard</button>
+        <div class="form-group"><label for="resetPassword">New Password</label><input type="password" id="resetPassword" placeholder="At least 6 characters" autocomplete="new-password"></div>
+        <div class="form-group"><label for="resetPassword2">Confirm New Password</label><input type="password" id="resetPassword2" placeholder="Type it again" autocomplete="new-password"></div>
+        <button class="btn-full" id="resetBtn" onclick="handleResetPassword()">Update Password</button>
+        <div class="otp-meta"><a onclick="switchToForgot()">Change email</a><a id="resetResend" class="disabled" onclick="handleForgotResend()">Resend code</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACCOUNT MODAL -->
+  <div class="modal-overlay" id="accountModal">
+    <div class="modal lgb-box" style="max-width:400px;">
+      <button class="modal-close" onclick="closeAccountModal()" aria-label="Close">&times;</button>
+      <div class="acct-avatar" id="acctAvatar">A</div>
+      <h3 class="acct-center" id="acctName"></h3>
+      <div class="acct-center"><span class="account-chip" id="acctId"></span></div>
+      <div class="acct-row"><span>Email</span><span id="acctEmail"></span></div>
+      <div class="acct-row"><span>Mobile</span><span id="acctPhone"></span></div>
+      <button class="btn-full" style="margin-top:1.4rem;" onclick="logout()">Sign Out</button>
     </div>
   </div>
 
@@ -1060,6 +1109,18 @@
     let pendingEmail = '';
     let resendTimer = null;
     let pendingOrderRef = '';
+    let pendingReg = null;
+
+    /* Purana ya kharab session (token ke bina / expire) ho to saaf kar do */
+    (function cleanSession() {
+      if (!session) return;
+      let bad = !session.token || !session.user || !session.user.id;
+      if (!bad) {
+        const p = String(session.token).split('.');
+        if (p.length !== 3 || Number(p[1]) < Date.now()) bad = true;
+      }
+      if (bad) { session = null; try { localStorage.removeItem('lgh_session'); } catch (e) {} }
+    })();
 
     function loadJSON(key, fallback) {
       try { const v = JSON.parse(localStorage.getItem(key)); return v === null || v === undefined ? fallback : v; }
@@ -1457,34 +1518,105 @@
     /* ============================================
        AUTH
        ============================================ */
+    const AUTH_STEPS = ['loginForm', 'registerForm', 'otpForm', 'forgotForm', 'resetForm'];
+    function showStep(id) {
+      AUTH_STEPS.forEach(x => { document.getElementById(x).style.display = (x === id) ? 'block' : 'none'; });
+      ['loginError', 'regError', 'otpError', 'forgotError', 'resetError'].forEach(hideError);
+    }
     function openAuthModal() {
-      if (session) {
-        if (confirm('Logout from ' + session.email + '?')) {
-          session = null;
-          localStorage.removeItem('lgh_session');
-          updateAuthUI();
-          showToast('Logged out');
-        }
-        return;
-      }
+      if (session) { openAccountModal(); return; }
       document.getElementById('authModal').classList.add('active');
-      switchToLogin();
+      showStep('loginForm');
     }
     function closeAuthModal() { document.getElementById('authModal').classList.remove('active'); }
-    function switchToLogin() {
-      document.getElementById('loginForm').style.display = 'block';
-      document.getElementById('registerForm').style.display = 'none';
-      document.getElementById('otpForm').style.display = 'none';
-      hideError('loginError'); hideError('regError'); hideError('otpError');
+    function switchToLogin() { showStep('loginForm'); }
+    function switchToRegister() { showStep('registerForm'); }
+    function switchToForgot() {
+      const le = document.getElementById('loginEmail').value.trim();
+      if (le && !document.getElementById('forgotEmail').value) document.getElementById('forgotEmail').value = le;
+      stopTimers();
+      showStep('forgotForm');
     }
-    function switchToRegister() {
-      document.getElementById('loginForm').style.display = 'none';
-      document.getElementById('registerForm').style.display = 'block';
-      document.getElementById('otpForm').style.display = 'none';
-      hideError('loginError'); hideError('regError'); hideError('otpError');
-    }
-    function backToRegister() { switchToRegister(); }
+    function backToRegister() { stopTimers(); showStep('registerForm'); }
 
+    /* ----- session ----- */
+    function setSession(r, fallbackEmail) {
+      const u = r.user || {};
+      session = {
+        token: r.token,
+        user: {
+          id: u.id || r.user_id || '',
+          name: u.name || r.name || '',
+          email: u.email || r.email || fallbackEmail || '',
+          phone: u.phone || r.phone || ''
+        }
+      };
+      try { localStorage.setItem('lgh_session', JSON.stringify(session)); } catch (e) {}
+      updateAuthUI();
+    }
+    function clearSession() {
+      session = null;
+      try { localStorage.removeItem('lgh_session'); } catch (e) {}
+      updateAuthUI();
+    }
+    function logout() {
+      clearSession();
+      closeAccountModal();
+      showToast('You have been signed out.');
+    }
+    function updateAuthUI() {
+      const btn = document.getElementById('authBtn');
+      if (session && session.user) {
+        const nm = String(session.user.name || '').trim();
+        btn.textContent = (nm ? nm.split(/\s+/)[0] : (session.user.email || 'Account').split('@')[0]);
+        btn.title = 'My account';
+      } else {
+        btn.textContent = 'Sign In';
+        btn.title = '';
+      }
+    }
+    function openAccountModal() {
+      const u = session.user;
+      const nm = String(u.name || '').trim() || u.email.split('@')[0];
+      document.getElementById('acctAvatar').textContent = nm.charAt(0).toUpperCase();
+      document.getElementById('acctName').textContent = nm;
+      document.getElementById('acctId').textContent = 'Account ID: ' + (u.id || '-');
+      document.getElementById('acctEmail').textContent = u.email || '-';
+      document.getElementById('acctPhone').textContent = u.phone || '-';
+      document.getElementById('accountModal').classList.add('active');
+    }
+    function closeAccountModal() { document.getElementById('accountModal').classList.remove('active'); }
+
+    /* ----- timers + paste ----- */
+    const timers = {};
+    function startTimer(linkId, sec) {
+      const link = document.getElementById(linkId);
+      let left = sec;
+      clearInterval(timers[linkId]);
+      link.classList.add('disabled');
+      link.textContent = 'Resend in ' + left + 's';
+      timers[linkId] = setInterval(() => {
+        left--;
+        if (left <= 0) {
+          clearInterval(timers[linkId]);
+          link.classList.remove('disabled');
+          link.textContent = 'Resend code';
+        } else { link.textContent = 'Resend in ' + left + 's'; }
+      }, 1000);
+    }
+    function stopTimers() { Object.keys(timers).forEach(k => clearInterval(timers[k])); }
+    async function pasteOtp(inputId) {
+      try {
+        const text = await navigator.clipboard.readText();
+        const m = (text || '').match(/\d{6}/);
+        if (m) { document.getElementById(inputId).value = m[0]; showToast('Code pasted'); }
+        else showToast('No 6-digit code found in your clipboard.');
+      } catch (e) {
+        showToast('Please long-press in the box and paste the code.');
+      }
+    }
+
+    /* ----- login ----- */
     async function handleLogin() {
       hideError('loginError');
       const email = document.getElementById('loginEmail').value.trim().toLowerCase();
@@ -1495,64 +1627,48 @@
       const r = await api({ action: 'login', email, password });
       btn.disabled = false; btn.textContent = 'Sign In';
       if (!r.ok) return showError('loginError', r.error || 'Login failed');
-      session = { email: r.email || email, name: r.name || email.split('@')[0], phone: r.phone || '' };
-      localStorage.setItem('lgh_session', JSON.stringify(session));
-      updateAuthUI();
+      setSession(r, email);
       closeAuthModal();
-      showToast('Welcome, ' + session.name);
+      document.getElementById('loginPassword').value = '';
+      showToast('Welcome, ' + (session.user.name || 'back') + '!');
     }
 
+    /* ----- register + OTP ----- */
+    async function sendRegisterOtp(btnId, btnText, errId) {
+      const btn = document.getElementById(btnId);
+      btn.disabled = true; btn.textContent = 'Sending...';
+      const r = await api({ action: 'send_otp', name: pendingReg.name, email: pendingReg.email, phone: pendingReg.phone, password: pendingReg.password });
+      btn.disabled = false; btn.textContent = btnText;
+      if (!r.ok) { showError(errId, r.error || 'Failed to send OTP'); return false; }
+      return true;
+    }
     async function handleSendOtp() {
       hideError('regError');
       const name = document.getElementById('regName').value.trim();
       const email = document.getElementById('regEmail').value.trim().toLowerCase();
       const phone = document.getElementById('regPhone').value.trim();
       const password = document.getElementById('regPassword').value;
-      if (!name) return showError('regError', 'Enter your name.');
+      if (name.length < 2) return showError('regError', 'Enter your name.');
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError('regError', 'Enter valid email.');
-      if (!/^\d{10}$/.test(phone)) return showError('regError', 'Enter 10-digit mobile.');
+      if (!/^[6-9]\d{9}$/.test(phone)) return showError('regError', 'Enter valid 10-digit mobile.');
       if (password.length < 6) return showError('regError', 'Password must be 6+ chars.');
 
-      const btn = document.getElementById('sendOtpBtn');
-      btn.disabled = true; btn.textContent = 'Sending...';
-      const r = await api({ action: 'send_otp', name, email, phone, password });
-      btn.disabled = false; btn.textContent = 'Send Verification Code';
-      if (!r.ok) return showError('regError', r.error || 'Failed to send OTP');
+      pendingReg = { name, email, phone, password };
       pendingEmail = email;
+      if (!(await sendRegisterOtp('sendOtpBtn', 'Send Verification Code', 'regError'))) return;
       document.getElementById('otpSubtitle').textContent = 'Code sent to ' + email;
-      document.getElementById('loginForm').style.display = 'none';
-      document.getElementById('registerForm').style.display = 'none';
-      document.getElementById('otpForm').style.display = 'block';
+      showStep('otpForm');
       document.getElementById('otpInput').value = '';
       document.getElementById('otpInput').focus();
-      startResendTimer();
+      startTimer('resendLink', 45);
       showToast('OTP sent to your email');
     }
-
-    function startResendTimer() {
-      let sec = 30;
-      const link = document.getElementById('resendLink');
-      link.classList.add('disabled');
-      link.textContent = 'Resend in ' + sec + 's';
-      clearInterval(resendTimer);
-      resendTimer = setInterval(() => {
-        sec--;
-        if (sec <= 0) {
-          clearInterval(resendTimer);
-          link.classList.remove('disabled');
-          link.textContent = 'Resend code';
-        } else { link.textContent = 'Resend in ' + sec + 's'; }
-      }, 1000);
-    }
-
     async function handleResendOtp() {
-      if (!pendingEmail) return;
-      const r = await api({ action: 'resend_otp', email: pendingEmail });
-      if (!r.ok) return showError('otpError', r.error || 'Failed to resend');
-      startResendTimer();
+      if (!pendingReg || document.getElementById('resendLink').classList.contains('disabled')) return;
+      if (!(await sendRegisterOtp('verifyOtpBtn', 'Verify & Create Account', 'otpError'))) return;
+      startTimer('resendLink', 45);
       showToast('New code sent');
     }
-
     async function handleVerifyOtp() {
       hideError('otpError');
       const otp = document.getElementById('otpInput').value.trim();
@@ -1562,18 +1678,69 @@
       const r = await api({ action: 'verify_otp', email: pendingEmail, otp });
       btn.disabled = false; btn.textContent = 'Verify & Create Account';
       if (!r.ok) return showError('otpError', r.error || 'Invalid code');
-      session = { email: r.email || pendingEmail, name: r.name || '', phone: r.phone || '' };
-      localStorage.setItem('lgh_session', JSON.stringify(session));
-      updateAuthUI();
+      stopTimers();
+      setSession(r, pendingEmail);
+      pendingReg = null;
       closeAuthModal();
-      showToast('Account created! Welcome, ' + session.name);
+      ['regName', 'regEmail', 'regPhone', 'regPassword', 'otpInput'].forEach(id => { document.getElementById(id).value = ''; });
+      showToast('Account created! Welcome, ' + (session.user.name || ''));
     }
 
-    function updateAuthUI() {
-      const btn = document.getElementById('authBtn');
-      if (session) btn.textContent = (session.name || '').split(' ')[0] || 'Account';
-      else btn.textContent = 'Sign In';
+    /* ----- forgot password ----- */
+    async function sendResetCode(btnId, btnText, errId) {
+      const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError(errId, 'Enter your registered email.'); return false; }
+      const btn = document.getElementById(btnId);
+      btn.disabled = true; btn.textContent = 'Sending...';
+      const r = await api({ action: 'forgot_otp', email });
+      btn.disabled = false; btn.textContent = btnText;
+      if (!r.ok) { showError(errId, r.error || 'Could not send the code. Please try again.'); return false; }
+      pendingEmail = email;
+      return true;
     }
+    async function handleForgotSend() {
+      hideError('forgotError');
+      if (!(await sendResetCode('forgotBtn', 'Send Reset Code', 'forgotError'))) return;
+      document.getElementById('resetSubtitle').textContent = 'If ' + pendingEmail + ' is registered, a code has been sent. Enter it below with your new password.';
+      showStep('resetForm');
+      ['resetOtp', 'resetPassword', 'resetPassword2'].forEach(id => { document.getElementById(id).value = ''; });
+      document.getElementById('resetOtp').focus();
+      startTimer('resetResend', 45);
+    }
+    async function handleForgotResend() {
+      if (document.getElementById('resetResend').classList.contains('disabled')) return;
+      if (!(await sendResetCode('resetBtn', 'Update Password', 'resetError'))) return;
+      startTimer('resetResend', 45);
+      showToast('New code sent');
+    }
+    async function handleResetPassword() {
+      hideError('resetError');
+      const otp = document.getElementById('resetOtp').value.trim();
+      const pw = document.getElementById('resetPassword').value;
+      const pw2 = document.getElementById('resetPassword2').value;
+      if (!/^\d{6}$/.test(otp)) return showError('resetError', 'Enter the 6-digit code.');
+      if (pw.length < 6) return showError('resetError', 'Password must be at least 6 characters.');
+      if (pw !== pw2) return showError('resetError', 'Both passwords must match.');
+      const btn = document.getElementById('resetBtn');
+      btn.disabled = true; btn.textContent = 'Updating...';
+      const r = await api({ action: 'reset_password', email: pendingEmail, otp, password: pw });
+      btn.disabled = false; btn.textContent = 'Update Password';
+      if (!r.ok) return showError('resetError', r.error || 'Could not reset the password.');
+      stopTimers();
+      showStep('loginForm');
+      document.getElementById('loginEmail').value = pendingEmail;
+      document.getElementById('loginPassword').value = '';
+      showToast('Password updated. Please sign in.');
+    }
+
+    /* Enter key */
+    [['loginPassword', 'handleLogin'], ['otpInput', 'handleVerifyOtp'], ['forgotEmail', 'handleForgotSend'], ['resetPassword2', 'handleResetPassword']].forEach(([id, fn]) => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') window[fn](); });
+    });
+    ['otpInput', 'resetOtp'].forEach(id => document.getElementById(id).addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6); }));
+    ['regPhone', 'shipPhone'].forEach(id => document.getElementById(id).addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10); }));
+    document.getElementById('shipPin').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6); });
 
     /* ============================================
        CART
@@ -1620,6 +1787,12 @@
     /* ============================================
        CHECKOUT
        ============================================ */
+    function newOrderRef() {
+      const ch = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let r = 'LGH';
+      for (let i = 0; i < 6; i++) r += ch[Math.floor(Math.random() * ch.length)];
+      return r;
+    }
     function proceedToCheckout() {
       if (!session) {
         closeCartModal();
@@ -1630,12 +1803,14 @@
       const total = cart.reduce((s, i) => s + (i.selected ? i.price : 0), 0);
       if (total === 0) return showToast('Select at least one item');
       closeCartModal();
+      const u = session.user;
       document.getElementById('checkoutSummary').textContent = `${cart.filter(i => i.selected).length} item(s) · Total ${formatINR(total)}`;
-      document.getElementById('accountChip').textContent = session.email;
-      document.getElementById('shipName').value = session.name || '';
-      document.getElementById('shipPhone').value = session.phone || '';
-      document.getElementById('shipEmail').value = session.email || '';
-      pendingOrderRef = 'LGH-' + Date.now().toString(36).toUpperCase();
+      document.getElementById('accountChip').textContent = 'Account ID: ' + (u.id || u.email);
+      document.getElementById('shipName').value = u.name || '';
+      document.getElementById('shipPhone').value = u.phone || '';
+      document.getElementById('shipEmail').value = u.email || '';
+      hideError('checkoutError');
+      pendingOrderRef = newOrderRef();
       buildUpiLinks(total);
       document.getElementById('checkoutModal').classList.add('active');
     }
@@ -1651,48 +1826,72 @@
       document.getElementById('payPaytm').href   = 'paytmmp://pay?' + base;
       const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=` + encodeURIComponent('upi://pay?' + base);
       document.getElementById('upiQrImg').src = qrUrl;
-      document.getElementById('upiIdLabel').textContent = UPI_ID;
+      document.getElementById('upiIdLabel').textContent = UPI_ID + ' · Order ' + pendingOrderRef;
     }
 
     async function placeOrder() {
       hideError('checkoutError');
-      const fields = ['shipName','shipPhone','shipHouse','shipStreet','shipCity','shipDistrict','shipState','shipPin'];
-      const vals = {};
-      for (const f of fields) {
-        const v = document.getElementById(f).value.trim();
-        if (!v) return showError('checkoutError', 'Please fill all required fields.');
-        vals[f] = v;
+      if (!session || !session.token) {
+        closeCheckoutModal(); clearSession();
+        showToast('Please sign in again to place your order.');
+        setTimeout(openAuthModal, 400);
+        return;
       }
-      if (!/^\d{10}$/.test(vals.shipPhone)) return showError('checkoutError', 'Enter valid 10-digit mobile.');
-      if (!/^\d{6}$/.test(vals.shipPin)) return showError('checkoutError', 'Enter valid 6-digit PIN.');
+      const g = id => document.getElementById(id).value.trim();
+      const required = ['shipName', 'shipPhone', 'shipHouse', 'shipStreet', 'shipCity', 'shipDistrict', 'shipState', 'shipPin'];
+      for (const f of required) { if (!g(f)) return showError('checkoutError', 'Please fill all required fields.'); }
+      if (!/^[6-9]\d{9}$/.test(g('shipPhone'))) return showError('checkoutError', 'Enter valid 10-digit mobile.');
+      if (!/^[1-9]\d{5}$/.test(g('shipPin'))) return showError('checkoutError', 'Enter valid 6-digit PIN.');
+      const utr = g('utrInput');
+      if (utr && !/^\d{12}$/.test(utr)) return showError('checkoutError', 'The UTR must be a 12-digit number, or leave it blank.');
 
-      const items = cart.filter(i => i.selected).map(i => ({ name: i.name, price: i.price }));
-      const total = items.reduce((s, i) => s + i.price, 0);
-      const order = {
-        action: 'place_order',
-        ref: pendingOrderRef,
-        user_email: session.email,
-        user_name: session.name,
-        items, total,
-        utr: document.getElementById('utrInput').value.trim(),
-        shipping: {
-          name: vals.shipName, phone: vals.shipPhone,
-          email: session.email,
-          address: `${vals.shipHouse}, ${vals.shipStreet}${document.getElementById('shipLandmark').value ? ', ' + document.getElementById('shipLandmark').value : ''}`,
-          city: vals.shipCity, district: vals.shipDistrict,
-          state: vals.shipState, pin: vals.shipPin
-        }
-      };
+      const picked = cart.filter(i => i.selected);
+      if (!picked.length) return showError('checkoutError', 'Your cart is empty.');
+      const house = g('shipHouse'), street = g('shipStreet'), landmark = g('shipLandmark');
+      const city = g('shipCity'), district = g('shipDistrict'), state = g('shipState'), pin = g('shipPin');
+      const address = [house, street, landmark ? 'Near ' + landmark : '', city, district, state, pin].filter(Boolean).join(', ');
 
       const btn = document.getElementById('placeOrderBtn');
       btn.disabled = true; btn.textContent = 'Placing order...';
-      const r = await api(order);
+      const r = await api({
+        action: 'place_order',
+        user_id: session.user.id,
+        token: session.token,
+        order_ref: pendingOrderRef,
+        customer_name: g('shipName'),
+        customer_phone: g('shipPhone'),
+        delivery_address: address,
+        addr_house: house, addr_street: street, addr_landmark: landmark,
+        addr_city: city, addr_district: district, addr_state: state, addr_pin: pin,
+        items: picked.map(i => i.name),
+        utr: utr
+      });
       btn.disabled = false; btn.textContent = 'I Have Paid — Confirm Order';
-      if (!r.ok) return showError('checkoutError', r.error || 'Order failed. Try again.');
 
-      cart = []; saveCart(); updateCartCount();
-      closeCheckoutModal();
-      showToast('✓ Order ' + pendingOrderRef + ' placed! We will contact you shortly.');
+      if (!r.ok) {
+        if (/session|sign in/i.test(r.error || '')) {
+          closeCheckoutModal(); clearSession();
+          showToast('Your session has expired. Please sign in again.');
+          setTimeout(openAuthModal, 400);
+          return;
+        }
+        return showError('checkoutError', r.error || 'Order failed. Try again.');
+      }
+
+      const custName = g('shipName');
+      const email = session.user.email, orderId = r.order_id || pendingOrderRef, total = r.total || picked.reduce((s, i) => s + i.price, 0);
+      cart = cart.filter(i => !i.selected); saveCart(); updateCartCount();
+      document.querySelector('#checkoutModal .modal').innerHTML =
+        '<div style="text-align:center;padding:1rem;">' +
+          '<div style="font-size:3rem;margin-bottom:1rem;">✅</div>' +
+          '<h3>Order Placed</h3>' +
+          '<p style="margin-bottom:1rem;">Thank you, ' + escapeHtml(custName) + '.</p>' +
+          '<p style="font-size:0.95rem;margin-bottom:0.25rem;"><strong>Order ID: ' + escapeHtml(orderId) + '</strong></p>' +
+          '<p style="font-size:0.85rem;margin-bottom:0.5rem;">Order total: ' + formatINR(total) + '</p>' +
+          '<p style="font-size:0.85rem;margin-bottom:1rem;">Your order will be delivered within <strong>7 days</strong>.</p>' +
+          '<p style="font-size:0.78rem;margin-bottom:1.5rem;">A confirmation email has been sent to ' + escapeHtml(email) + '. Please check your spam folder if you do not see it. We will verify your payment and dispatch your order.</p>' +
+          '<button class="btn-full" onclick="location.reload()">Done</button>' +
+        '</div>';
     }
 
     /* Modals: bahar click ya Esc se band */
